@@ -1,0 +1,103 @@
+<app-innercard titulo="Dependentes" [estiloCardTitulo]="{'padding': '1em',}">
+  <form [formGroup]="form" (submit)="onSubmit()">
+
+    <section>
+      <mat-form-field appearance="outline">
+        <mat-label>Parentesco</mat-label>
+        <mat-select formControlName="parentesco">
+          @for (item of tiposParentesco; track item) {
+          <mat-option [value]="item">{{tipoParentescoLabelMapping[item]}}</mat-option>
+          }
+        </mat-select>
+        @if(form.controls['parentesco'].hasError('required') && (form.controls['parentesco'].touched ||
+        form.controls['parentesco'].dirty)){
+        <mat-error>
+          O parentesco é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input type="text" matInput formControlName="nome">
+        @if(form.controls['nome'].hasError('required') && (form.controls['nome'].touched ||
+        form.controls['nome'].dirty)){
+        <mat-error>
+          O número é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+    </section>
+    <section>
+      <mat-form-field appearance="outline">
+        <mat-label>Data de nascimento</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="dataNascimento">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        @if(form.controls['dataNascimento'].hasError('required') && (form.controls['dataNascimento'].touched ||
+        form.controls['dataNascimento'].dirty)){
+        <mat-error>
+          A data de nascimento é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Sexo</mat-label>
+        <mat-select formControlName="sexo">
+          @for (item of tiposSexo; track item) {
+          <mat-option [value]="item">{{tipoSexoLabelMapping[item]}}</mat-option>
+          }
+        </mat-select>
+        @if(form.controls['sexo'].hasError('required') && (form.controls['sexo'].touched ||
+        form.controls['sexo'].dirty)){
+        <mat-error>
+          O sexo é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+
+
+
+      <mat-form-field appearance="outline">
+        <mat-label>CPF</mat-label>
+        <input type="text" matInput formControlName="docCPF" mask="999.999.999-99">
+        @if(form.controls['docCPF'].hasError('required') && (form.controls['docCPF'].touched ||
+        form.controls['docCPF'].dirty)){
+        <mat-error>
+          CPF é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+    </section>
+    <section class="botoes">
+      <button mat-raised-button color="primary" type="submit">Salvar</button>
+    </section>
+
+
+  </form>
+</app-innercard>
+@if(dependentesCliente().length > 0){
+<app-innercard titulo="Lisa de Dependentes" [estiloCardTitulo]="{'padding': '1em',}">
+  <div class="containerDependente">
+    @for (item of dependentesCliente(); track $index) {
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>{{item.nome}}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div>Data de Nascimento: {{item.dataNascimento | date:'dd/MM/yyyy' }}</div>
+        <div>CPF: {{item.docCPF | mask:'999.999.999-99' }}</div>
+        <div>Parentesco: {{item.parentescoDescricao }}</div>
+      </mat-card-content>
+      <mat-card-actions style="justify-content: flex-end;">
+        <button mat-mini-fab color="primary" type="button" (click)="apagar(item)" matTooltip="Excluir">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+    }
+  </div>
+
+
+</app-innercard>
+}

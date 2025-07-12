@@ -1,0 +1,173 @@
+@use '@angular/material' as mat;
+@include mat.core();
+
+$black-87-opacity: rgba(black, 0.87);
+$white-87-opacity: rgba(white, 0.87);
+
+$border-color: #e0e0e0;
+$headings-color: #333;
+// Primary (Based on #F68537 - Vibrant Orange)
+$primarias: (
+  50: #fef4ec,
+  100: #fde8d9,
+  200: #fbcdaa,
+  300: #f9b17b,
+  400: #f79858,
+  500: #f68537, // Your primary color
+  600: #e37a34,
+  700: #cf6e30,
+  800: #bb622d,
+  900: #a14e26,
+  A100: #ffffff, // Keeping it bright for contrast
+  A200: #ffc48d,
+  A400: #ff9e5b,
+  A700: #f68537, // Reusing 500 for A700
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white, // White text on this vibrant orange
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: $black-87-opacity,
+    A200: $black-87-opacity,
+    A400: $black-87-opacity,
+    A700: white,
+  ),
+);
+
+// Secondary (Based on #ECEDB0 - Very Light Yellow-Green/Cream)
+$secundarias: (
+  50: #fbfbea,
+  100: #f5f5e5,
+  200: #ecf0dd,
+  300: #e3e5b0, // Close to your secondary color, adjusted for progression
+  400: #d4d6a0,
+  500: #c3c590, // Your secondary color is quite light, so 500 is a calculated mid-tone
+  600: #b0b280,
+  700: #9e9f70,
+  800: #85865a,
+  900: #6f704a,
+  A100: #ffffff,
+  A200: #fffed1,
+  A400: #f6f7b9,
+  A700: #d4d6a0, // Using a darker accent for contrast
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: $black-87-opacity,
+    600: $black-87-opacity,
+    700: $black-87-opacity,
+    800: $black-87-opacity,
+    900: white,
+    A100: $black-87-opacity,
+    A200: $black-87-opacity,
+    A400: $black-87-opacity,
+    A700: $black-87-opacity,
+  ),
+);
+
+// Tertiary (Based on #EAD8A4 - Soft Gold/Cream)
+$terciarias: (
+  50: #fbf5e6,
+  100: #f7eed4,
+  200: #f2e4c4,
+  300: #eedfad,
+  400: #ead8a4, // Your tertiary color
+  500: #e3c792,
+  600: #d6b883,
+  700: #c9a873,
+  800: #bc9864,
+  900: #a78150,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: $black-87-opacity,
+    600: $black-87-opacity,
+    700: $black-87-opacity,
+    800: $black-87-opacity,
+    900: $black-87-opacity,
+  ),
+);
+
+// Neutra (Based on #D6D85D - Muted Yellow-Green)
+$neutra: (
+  50: #f5f6e6,
+  100: #eeefd3,
+  200: #e0e2b9,
+  300: #d6d85d, // Your neutral color
+  400: #c6c855,
+  500: #b4b64c,
+  600: #a1a344,
+  700: #8c8f3b,
+  800: #767932,
+  900: #595c27,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: $black-87-opacity,
+    600: $black-87-opacity,
+    700: $black-87-opacity,
+    800: $black-87-opacity,
+    900: white,
+  ),
+);
+
+// Success (Teal/Cyan hue)
+$success: (
+  50: #e0f2f1,
+  100: #b2dfdb,
+  200: #80cbc4,
+  300: #4db6ac,
+  400: #26a69a,
+  500: #009688, // Teal
+);
+
+// Error (Dark Red/Crimson hue - keeping it clear for errors)
+$error: (
+  50: #ffebee,
+  100: #ffcdd2,
+  200: #ef9a9a,
+  300: #e57373,
+  400: #ef5350,
+  500: #f44336, // Red (retaining a strong red for errors)
+);
+
+// Warning (Yellow hue)
+$warning: (
+  50: #fffde7,
+  100: #fff9c4,
+  200: #fff59d,
+  300: #fff176,
+  400: #ffee58,
+  500: #ffeb3b, // Yellow
+);
+
+// Info (Blue hue)
+$info: (
+  50: #e3f2fd,
+  100: #bbdefb,
+  200: #90caf9,
+  300: #64b5f6,
+  400: #42a5f5,
+  500: #2196f3, // Blue
+);
+
+
+$toolbar-text: #ffffff;
+$toolbar-background: mat.m2-get-color-from-palette($primarias, 500); // Now a darker red
+$toolbar-home-text: mat.m2-get-color-from-palette($secundarias, 200); // Now a brighter orange
+$toolbar-item-funcao-active: mat.m2-get-color-from-palette($secundarias, 200); // Now orange

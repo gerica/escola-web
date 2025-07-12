@@ -1,0 +1,252 @@
+@use './scss/settings/palette'; 
+@use './scss/settings/theme'; 
+
+@use '@angular/material' as mat;
+@include mat.core();
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+:root {
+  --mat-sidenav-content-background-color: initial;
+  --mat-stepper-container-color: transparent;
+}
+
+//Novo estilo para side-nav
+.mat-sidenav-container {
+  height: 100%;
+  display: flex;
+  flex: 1 1 auto;
+}
+.mat-nav-list .mat-list-item {
+  font-size: 15px;
+}
+
+.mat-sidenav,
+.mat-sidenav-content {
+  padding: 15px;
+}
+.mat-list-item.active {
+  background: rgba(0, 0, 0, 0.04);
+}
+.mat-sidenav-content {
+  padding: 25px 40px 0;
+}
+
+mat-sidenav mat-icon {
+  margin-right: 12px;
+}
+
+.mat-sidenav {
+  background-color: mat.m2-get-color-from-palette(palette.$primarias, 500) !important;
+}
+
+mat-nav-list .mdc-list-item__primary-text {
+  color: mat.m2-get-color-from-palette(palette.$secundarias, 200) !important;
+}
+
+.mat-radio-button,
+.mat-radio-group {
+  margin-right: 25px;
+}
+.controlers-wrapper > * {
+  width: 100%;
+  padding: 0;
+}
+.misc-bottom-padding {
+  margin: 8px 0 10px;
+}
+.misc-bottom-padding mat-label {
+  margin-right: 15px;
+}
+mat-radio-group mat-radio-button {
+  margin-left: 5px;
+}
+.button-wrapper button {
+  margin-right: 5px;
+}
+table.mat-table,
+table {
+  width: 100%;
+}
+body .mat-list-item {
+  margin-bottom: 10px;
+}
+.inner-wrapper {
+  padding: 15px 0 130px;
+  width: 100%;
+}
+.inner-wrapper mat-card {
+  display: inline-block;
+  margin: 0 6% 0 0;
+  vertical-align: top;
+  width: 44%;
+}
+
+@media (max-width: 1024px) {
+  .inner-wrapper mat-card {
+    width: 100%;
+  }
+  .mat-sidenav-content {
+    padding: 20px 20px 0;
+  }
+  .misc-bottom-padding mat-label {
+    display: block;
+    padding-bottom: 10px;
+  }
+  .mat-sidenav {
+    width: 90%;
+  }
+  .mat-nav-list .mat-list-item {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mat-sidenav-content {
+    padding: 10px 0 0;
+  }
+}
+// ESTILO BOTÕES
+
+.mdc-button {
+  padding: 0 8px 0 8px;
+  min-width: 8rem;
+  border-radius: 8px;
+  letter-spacing: 0.05rem;
+  font-weight: 600;
+  border-radius: 8px !important;
+  font-family: 'Roboto', sans-serif;
+}
+
+.mat-mdc-raised-button.mat-primary:not(:disabled) {
+  background-color: mat.m2-get-color-from-palette(palette.$primarias, 500);
+  color: mat.m2-get-color-from-palette(palette.$secundarias, 200);
+  &:hover {
+    background-color: mat.m2-get-color-from-palette(palette.$primarias, 700);
+    color: palette.$white-87-opacity;
+  }
+}
+
+.mat-mdc-unelevated-button.mat-primary:not(:disabled) {
+  color: mat.m2-get-color-from-palette(palette.$secundarias, 500) !important;
+}
+
+.mat-mdc-outlined-button {
+  border: 2px solid mat.m2-get-color-from-palette(palette.$primarias, 500) !important;  
+}
+
+.mat-mdc-fab.mat-primary:not(:disabled),
+.mat-mdc-mini-fab.mat-primary:not(:disabled) {
+  color: mat.m2-get-color-from-palette(palette.$secundarias, 500) !important;
+}
+
+//Novo estilo form fields
+
+mat-label {
+  font-weight: 700;
+  font-size: 0.9em;
+  color: mat.m2-get-color-from-palette(palette.$primarias, 500);
+}
+
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+  padding-top: 8px;
+  padding-bottom: 7px;
+}
+
+.mat-mdc-form-field-icon-prefix > .mat-icon,
+.mat-mdc-form-field-icon-suffix > .mat-icon {
+  padding: 8px !important;
+}
+
+
+//Slide toogle
+.mat-mdc-slide-toggle {
+  outline: 1;
+  margin-top: 0.5rem;
+}
+
+//novo estilo tabela
+mat-header-row.mat-mdc-header-row {
+  font-weight: bold;
+  background-color: #d9e5ec;
+}
+
+.mat-mdc-row:hover {
+  background-color: mat.m2-get-color-from-palette(palette.$primarias, 100) !important;
+}
+
+.mat-mdc-row:nth-child(even) {
+  background-color: #f6f6f7;
+}
+
+.mat-mdc-row:nth-child(odd) {
+  background: 0 0;
+}
+
+//mat-table responsivo
+@media screen and (max-width: 767px) {
+  .mat-mdc-table {
+    border: 0;
+    vertical-align: middle;
+  }
+
+  .mat-mdc-table caption {
+    font-size: 1em;
+  }
+
+  /*  Comentar se quiser que o header fique visivel*/
+  .mat-mdc-table .mat-mdc-header-cell {
+    border: 10px solid;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  .mat-mdc-table .mat-mdc-header-row {
+    display: none;
+  }
+
+  .mat-mdc-table .mat-mdc-row {
+    border-bottom: 5px solid #ddd;
+    display: block;
+  }
+
+  .mat-mdc-table .mat-mdc-cell {
+    border-bottom: 1px solid #ddd;
+    display: block;
+    font-size: 1em;
+    text-align: right;
+    font-weight: bold;
+    padding: 1rem;
+  }
+  .mat-mdc-table .mat-mdc-cell:before {
+    /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+    content: attr(data-label);
+    float: left;
+    font-weight: normal;
+    font-size: 0.85em;
+  }
+  .mat-mdc-table .mat-mdc-cell:last-child {
+    border-bottom: 0;
+  }
+  .mat-mdc-table .mat-mdc-cell:first-child {
+    margin-top: 4%;
+  }
+  .mdc-data-table__row:last-child .mat-mdc-cell {
+    border-bottom: 1px solid #ddd;
+  }
+}
+
+.cardDetalhes {
+  font-size: 14px;
+  text-align: justify;
+  margin: 0px 20px 10px 0px;
+}
