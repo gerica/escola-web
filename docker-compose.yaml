@@ -1,0 +1,20 @@
+name: escola
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - '4200:4200'
+    container_name: escola-web
+    networks:
+      - escola-network 
+    volumes:
+      - ./src:/app/src      
+    environment:
+      TZ: "America/Sao_Paulo"
+
+networks:
+  escola-network:
+    driver: bridge

@@ -1,0 +1,84 @@
+@use 'sass:map';
+@use 'palette';
+@use '@angular/material' as mat;
+
+@include mat.core();
+$web-primary: mat.m2-define-palette(palette.$primarias, A200, A100, A400);
+$web-accent: mat.m2-define-palette(palette.$secundarias);
+$web-warn: mat.m2-define-palette(mat.$m2-red-palette);
+
+// Define a light theme
+$web-theme: mat.m2-define-light-theme((color: (primary: $web-primary,
+        accent: $web-accent,
+        warn: $web-warn,
+      ),
+      typography: mat.m2-define-typography-config(),
+    ));
+
+// Define a dark theme
+$web-dark-theme: mat.m2-define-dark-theme((color: (primary: $web-accent,
+        accent: $web-primary,
+        warn: $web-warn,
+      ),
+      // Only include `typography` and `density` in the default dark theme.
+      typography: mat.m2-define-typography-config(),
+      density: 0,
+    ));
+
+@include mat.all-component-themes($web-theme);
+
+// --- Custom Tab Theme Overrides ---
+$selected-tab-indicator-color: mat.m2-get-color-from-palette(palette.$primarias, 500); // #ffd872
+$selected-tab-label-color: mat.m2-get-color-from-palette(palette.$primarias, 500);
+
+// Sobrescreve as variáveis CSS para o mat-tab-group com a cor padrão "primary"
+.mat-mdc-tab-group.mat-primary {
+  // Aba Ativa (Active Tab)
+  --mdc-tab-indicator-active-indicator-color: #{$selected-tab-indicator-color};
+  --mdc-tab-active-label-text-color: #{$selected-tab-label-color};
+  --mat-tab-header-active-ripple-color: #{$selected-tab-indicator-color};
+  --mat-tab-header-active-label-text-color: #{$selected-tab-label-color};  
+  --mat-tab-header-active-focus-label-text-color: #{$selected-tab-indicator-color};
+  --mat-tab-header-active-hover-indicator-color: #{$selected-tab-indicator-color};
+  --mat-tab-header-active-focus-indicator-color: #{$selected-tab-indicator-color};
+
+
+  // Aba Inativa (Inactive Tab)
+  // --mdc-tab-label-text-color: #{$selected-tab-indicator-color};
+  // --mat-tab-header-inactive-ripple-color: #{$selected-tab-indicator-color};
+  // --mat-tab-header-inactive-hover-label-text-color: #{$selected-tab-indicator-color};
+  // --mat-tab-header-inactive-focus-label-text-color: #{$selected-tab-indicator-color};
+
+  // Tipografia e Dimensões
+
+  // --mdc-secondary-navigation-tab-container-height	Altura total do cabeçalho das abas (padrão: 48px).
+  // --mat-tab-header-label-text-font	Família da fonte para o texto das abas.
+  // --mat-tab-header-label-text-size	Tamanho da fonte do texto das abas.
+  // --mat-tab-header-label-text-weight	Peso (espessura) da fonte do texto das abas.
+  // --mat-tab-header-label-text-tracking	Espaçamento entre as letras (letter-spacing).
+  // --mdc-tab-indicator-active-indicator-height	Espessura da linha indicadora (padrão: 2px).
+  // --mdc-tab-indicator-active-indicator-shape	border-radius da linha indicadora (ex: 2px 2px 0 0).
+  // Estilos Gerais do Cabeçalho
+
+  // --mat-tab-header-divider-color:#{$selected-tab-indicator-color};
+  // // --mat-tab-header-divider-height	Espessura da linha de base do cabeçalho (padrão: 1px).
+  // --mat-tab-header-pagination-icon-color:#{$selected-tab-indicator-color};
+  // --mat-tab-header-background-color:#{$selected-tab-indicator-color};
+}
+
+//Novos estilos dos componentes
+@include mat.icon-button-density(-4);
+@include mat.form-field-density(-4);
+
+// --- Custom Tab Icon Color Overrides ---
+.mat-mdc-tab-group.mat-primary {
+
+  .mat-mdc-tab.mdc-tab--active .mat-icon {
+    color: mat.m2-get-color-from-palette(palette.$primarias, 500);
+  }
+
+  .mat-mdc-tab:not(.mdc-tab--active) .mat-icon {
+    // Exemplo: Usa a cor padrão do Material Design para ícones inativos em temas claros.
+    color: rgba(0, 0, 0, 0.54);
+  }
+}

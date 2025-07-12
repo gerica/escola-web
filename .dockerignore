@@ -1,0 +1,5 @@
+# .dockerignore
+.git
+.idea
+node_modules
+dist

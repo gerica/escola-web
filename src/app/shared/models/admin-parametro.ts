@@ -1,0 +1,36 @@
+export interface AdminParametro {
+    ativoProvaVida: boolean,
+    ativoContraCheque: boolean,
+    checkControleProvaVida: boolean,
+    checkControleContraCheque: boolean,
+    ambienteTeste: boolean,
+    remetente: string,
+    serpUrl: string,
+    serpTipoRegistro: string,
+    emailSgpe: string,
+    emailSgm: string,
+    tituloProvaVida: string,
+    tituloContraCheque: string,
+    emailControle: string,
+    qtdPorVez: number,
+    intervalorEntre: number,
+
+}
+
+export const defaultAdminParams: AdminParametro = {
+    ativoProvaVida: false,
+    ativoContraCheque: false,
+    checkControleProvaVida: false,
+    checkControleContraCheque: false,
+    ambienteTeste: false,
+    remetente: '',
+    serpUrl: '',
+    serpTipoRegistro: '',
+    emailSgpe: '',
+    emailSgm: '',
+    tituloProvaVida: '',
+    tituloContraCheque: '',
+    emailControle: '',
+    qtdPorVez: 0,
+    intervalorEntre: 0,
+}

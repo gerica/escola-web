@@ -1,0 +1,174 @@
+@use '@angular/material' as mat;
+@include mat.core();
+
+$black-87-opacity: rgba(black, 0.87);
+$white-87-opacity: rgba(white, 0.87);
+
+$border-color: #e0e0e0;
+$headings-color: #333;
+
+// Primary (Based on #1f9792 - Teal/Aqua)
+$primarias: (
+  50: #e0f2f1,
+  100: #b2dfdb,
+  200: #80cbc4,
+  300: #4db6ac,
+  400: #26a69a,
+  500: #1f9792, // Your primary color
+  600: #1c8882,
+  700: #187973,
+  800: #146a64,
+  900: #0d4e4a,
+  A100: #26a69a,
+  A200: #1f9792,
+  A400: #187973,
+  A700: #146a64,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: $black-87-opacity,
+    A200: $black-87-opacity,
+    A400: $black-87-opacity,
+    A700: $black-87-opacity,
+  ),
+);
+
+// Secondary (Based on #fff4c5 - Light Yellow/Cream)
+$secundarias: (
+  50: #fffceb,
+  100: #fff9d7,
+  200: #fff6c0,
+  300: #fff4c5, // Your secondary color
+  400: #ffe89e,
+  500: #ffd872,
+  600: #ffcc5a,
+  700: #ffbe42,
+  800: #ffb02b,
+  900: #ff9d00,
+  A100: #ffffff,
+  A200: #fff4c5,
+  A400: #ffe89e,
+  A700: #ffd872,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: $black-87-opacity,
+    600: $black-87-opacity,
+    700: $black-87-opacity,
+    800: $black-87-opacity,
+    900: $black-87-opacity,
+    A100: $black-87-opacity,
+    A200: $black-87-opacity,
+    A400: $black-87-opacity,
+    A700: $black-87-opacity,
+  ),
+);
+
+// Tertiary (Based on #9dd7d5 - Soft Teal/Cyan)
+$terciarias: (
+  50: #eff8f7,
+  100: #e0f2f1,
+  200: #c9e9e8,
+  300: #b2e1df,
+  400: #9dd7d5, // Your tertiary color
+  500: #8ecbcb,
+  600: #7fc0bf,
+  700: #6fbbba,
+  800: #60b0af,
+  900: #499e9d,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: $black-87-opacity,
+    600: $black-87-opacity,
+    700: $black-87-opacity,
+    800: $black-87-opacity,
+    900: $black-87-opacity,
+  )
+);
+
+// Neutra (Based on #505050 - Dark Gray)
+$neutra: (
+  50: #efefef,
+  100: #e0e0e0,
+  200: #cccccc,
+  300: #b8b8b8,
+  400: #a3a3a3,
+  500: #505050, // Your neutral color
+  600: #4a4a4a,
+  700: #404040,
+  800: #363636,
+  900: #2b2b2b,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  ),
+);
+
+// Success (Teal/Cyan hue)
+$success: (
+  50: #e0f2f1,
+  100: #b2dfdb,
+  200: #80cbc4,
+  300: #4db6ac,
+  400: #26a69a,
+  500: #009688, // Teal
+);
+
+// Error (Dark Red/Crimson hue - keeping it clear for errors)
+$error: (
+  50: #ffebee,
+  100: #ffcdd2,
+  200: #ef9a9a,
+  300: #e57373,
+  400: #ef5350,
+  500: #f44336, // Red (retaining a strong red for errors)
+);
+
+// Warning (Yellow hue)
+$warning: (
+  50: #fffde7,
+  100: #fff9c4,
+  200: #fff59d,
+  300: #fff176,
+  400: #ffee58,
+  500: #ffeb3b, // Yellow
+);
+
+// Info (Blue hue)
+$info: (
+  50: #e3f2fd,
+  100: #bbdefb,
+  200: #90caf9,
+  300: #64b5f6,
+  400: #42a5f5,
+  500: #2196f3, // Blue
+);
+
+
+$toolbar-text: #ffffff;
+$toolbar-background: mat.m2-get-color-from-palette($primarias, 500); // Now a darker red
+$toolbar-home-text: mat.m2-get-color-from-palette($secundarias, 200); // Now a brighter orange
+$toolbar-item-funcao-active: mat.m2-get-color-from-palette($secundarias, 200); // Now orange

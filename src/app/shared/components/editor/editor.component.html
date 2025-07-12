@@ -1,0 +1,21 @@
+<h1>Quill Test Space</h1>
+
+<h2>Editor</h2>
+@if(showEditor) {
+<div class="editor-container">
+  <quill-editor [formControl]="contentCtrl" [modules]="modules" [styles]="editorStyles">
+  </quill-editor>
+</div>
+}
+
+<h2>View:: quill-view (ideal = quill in readonly mode)</h2>
+<div class="view-container">
+  <quill-view [content]="contentCtrl.value" format="html" theme="snow"></quill-view>
+</div>
+
+@if(contentCtrl.value) {
+<div class="side-note">
+  Notice how empty cells are ignored here. Likely DomSanitizer ignores them for some reason.
+  Table width is also ignored.
+</div>
+}

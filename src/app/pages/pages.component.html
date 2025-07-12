@@ -1,0 +1,24 @@
+<!-- Toolbar -->
+<app-toolbar [menu]="menu" />
+
+<!-- <button class="nav-tool-items" mat-mini-fab (click)="sidenav.toggle()" aria-label="Abrir e fechar menu">
+  <mat-icon>menu</mat-icon>
+</button> -->
+
+<mat-sidenav-container>
+  <!-- Sidenav -->
+  <mat-sidenav #sidenav [mode]="over()" [opened]="opened()" [fixedInViewport]="true" fixedTopGap="64">
+    @if(menu && menu.length > 0){
+    <mat-nav-list>
+      <mat-list-item *ngFor="let item of menu" [routerLink]="item.router">
+        <mat-icon>{{ item.icon }}</mat-icon>
+        {{ item.name }}
+      </mat-list-item>
+    </mat-nav-list>
+    }
+  </mat-sidenav>
+  <!-- Main content -->
+  <mat-sidenav-content>
+    <router-outlet />
+  </mat-sidenav-content>
+</mat-sidenav-container>

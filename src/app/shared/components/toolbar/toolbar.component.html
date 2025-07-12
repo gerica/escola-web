@@ -1,0 +1,76 @@
+<div class="toolbar">
+  <div class="toolbar__item toolbar__item--flex">
+    <section>
+      <a routerLink="/">
+        <div class="toolbar__home">
+          @if(appConfig()){
+          <div class="toolbar__home__logo">
+            <img src="./assets/images/logo.png" alt="{{ appConfig().buildInfo.description }}"
+              class="toolbar__home__logo__image" />
+          </div>
+          <div class="toolbar__home__sistema">
+            <div>{{ appConfig().buildInfo.description }}</div>
+            <div class="toolbar__home__sistema__versao"> v{{ appConfig().buildInfo.version }} </div>
+          </div>
+          }
+        </div>
+      </a>
+    </section>
+
+    @if(menu && menu.length > 0){
+    <section class="toolbar__item__funcoes">
+      @for(item of menu; track $index){
+      <span>
+        @if(!item.submenus.length){
+        <div class="toolbar__item__funcao" [routerLink]="item.router" routerLinkActive="toolbar__item__funcao---active"
+          tabindex="i">
+          {{ item.name }}
+        </div>
+        }
+        @if(item.submenus.length){
+        <span>
+          <div class="toolbar__item__funcao" mat-button [matMenuTriggerFor]="menu">{{ item.name }}</div>
+          <mat-menu #menu="matMenu" class="toolbar__submenu">
+            <div mat-menu-item *ngFor="let submenu of item.submenus; index as subi" class="toolbar__subitem"
+              [routerLink]="submenu.router" routerLinkActive="toolbar__subitem---active" tabindex="subi">
+              <span class="toolbar__subitem_text">{{ submenu.name }}</span>
+            </div>
+          </mat-menu>
+        </span>
+        }
+      </span>
+      }
+    </section>
+    }
+  </div>
+
+  <div class="toolbar__item">
+    <div [matMenuTriggerFor]="menuTop" class="toolbar__item__usuario">
+      <mat-icon>person</mat-icon>
+      <span class="toolbar__nome__usuario">{{ authService.loggedUser()?.firstName }} {{
+        authService.loggedUser()?.lastName }}</span>
+    </div>
+    <mat-menu #menuTop="matMenu" class="toolbar__submenu">
+      <div style="width: 280px">        
+        @if(authService.loggedUser()){
+        <div>
+          @if(authService.loggedUser()){
+          <button mat-menu-item class="toolbar__subitem toolbar__subitem_text" (click)="logout()">
+            <span class="toolbar__subitem_text">
+              <mat-icon class="toolbar__subitem_icon">cancel</mat-icon>
+              <span class="toolbar__subitem_text">Sair</span>
+            </span>
+          </button>
+          }
+        </div>
+        }
+        @if(!authService.loggedUser()){
+        <button mat-menu-item routerLink="/">
+          <mat-icon>person</mat-icon>
+          Login
+        </button>
+        }
+      </div>
+    </mat-menu>
+  </div>
+</div>

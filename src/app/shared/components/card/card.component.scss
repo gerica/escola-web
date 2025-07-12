@@ -1,0 +1,48 @@
+@use '../../../../scss/settings/palette';
+@use '@angular/material' as mat;
+@include mat.core();
+
+.card {
+  max-width: 100%;
+  margin: 1em 2em;
+  border: 1px solid #ebf7ff;
+  filter: drop-shadow(0px 5px 6px rgba(131, 131, 131, 0.3));
+  border-radius: 4px;
+  background-color: #fafafa;
+}
+
+@media (max-width: 767px) {
+  .card {
+    margin: 1em 1em;
+  }
+}
+
+.card__titulo {
+  padding: 1em;
+  background-color: mat.m2-get-color-from-palette(palette.$primarias, 700);
+  color: mat.m2-get-color-from-palette(palette.$secundarias, 400);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+}
+
+.card__conteudo {
+  padding: 1em;
+}
+
+// @media (prefers-color-scheme: dark) {
+//   .card {
+//     border: 1px solid transparent;
+//     filter: none;
+//     background-color: #0f0f0f;
+//   }
+//   .card__titulo {
+//     color: mat.m2-get-color-from-palette(palette.$secundarias, 300);
+//     background-color: #23242c;
+//   }
+//   .card__conteudo {
+//     background-color: #42434a;
+//   }
+// }

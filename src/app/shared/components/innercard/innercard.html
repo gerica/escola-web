@@ -1,0 +1,8 @@
+<div class="card" [ngStyle]="estiloCard">
+  @if(titulo){
+  <div class="card__titulo" [ngStyle]="estiloCardTitulo">{{ titulo }}</div>
+  }
+  <div class="card__conteudo" [ngStyle]="estiloCardConteudo">
+    <ng-content></ng-content>
+  </div>
+</div>

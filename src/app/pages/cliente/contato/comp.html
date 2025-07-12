@@ -1,0 +1,43 @@
+<app-innercard titulo="Contatos" [estiloCardTitulo]="{'padding': '1em',}">
+  <form [formGroup]="form" (submit)="onSubmit()">
+
+    <section>
+      <mat-form-field appearance="outline" style="width: 30%;">
+        <mat-label>Número de contato</mat-label>
+        <input type="text" matInput formControlName="numero" mask="(00)0000-0000">
+        @if(form.controls['numero'].hasError('required') && (form.controls['numero'].touched ||
+        form.controls['numero'].dirty)){
+        <mat-error>
+          O número é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+    </section>
+    <section class="botoes">
+      <button mat-raised-button color="primary" type="submit">Salvar</button>
+    </section>
+
+
+  </form>
+</app-innercard>
+@if(contatosCliente().length > 0){
+<app-innercard titulo="Lisa de Contatos" [estiloCardTitulo]="{'padding': '1em',}">
+  <div class="containerContatos">
+    @for (item of contatosCliente(); track $index) {
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Número: {{item.numero | mask:'(00)0000-0000' }}</mat-card-title>
+        <!-- <mat-card-subtitle>Número: {{item.numero | mask:'(00)0000-0000' }}</mat-card-subtitle> -->
+      </mat-card-header>
+      <mat-card-actions style="justify-content: flex-end;">
+        <button mat-mini-fab color="primary" type="button" (click)="apagar(item)" matTooltip="Excluir">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+    }
+  </div>
+
+
+</app-innercard>
+}

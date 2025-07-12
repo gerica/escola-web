@@ -1,0 +1,14 @@
+.botoes {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cursorSelect{
+  cursor: pointer;
+}
+
+.containerContatos{
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}

@@ -1,0 +1,52 @@
+<app-innercard [titulo]="'Cliente: '+ (data.nome | primeiraMaiuscula)" [estiloCardTitulo]="{'padding': '1em',}">
+
+  <div class="containerOut">
+    <div class="containerInner">
+      <span>Nome:</span>
+      <span>{{data.nome | primeiraMaiuscula}}</span>
+    </div>
+
+    <div class="containerInner">
+      <span>Data de Nascimento:</span>
+      <span>{{data.dataNascimento | date: 'dd/MM/yyyy'}}</span>
+    </div>
+
+    <div class="containerInner">
+      <span>CPF:</span>
+      <span>{{data.docCPF}}</span>
+    </div>
+
+    <div class="containerInner">
+      <span>RG:</span>
+      <span>{{data.docRG}}</span>
+    </div>
+
+    <div class="containerInner">
+      <span>Endereço:</span>
+      <span>{{data.endereco}} - {{data.cidade.descricao}} - {{data.cidade.uf}}</span>
+    </div>
+
+    <div class="containerInner">
+      <span>E-mail:</span>
+      <span>{{data.email}}</span>
+    </div>
+
+    <div class="containerInner">
+      <span>Profissão:</span>
+      <span>{{data.profissao}}</span>
+    </div>
+
+    <div class="containerInner">
+      <span>Local de Trabalho:</span>
+      <span>{{data.localTrabalho}}</span>
+    </div>
+
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <app-buttons-row style="margin-bottom: 4px;   display: flex;  justify-content: end;">
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Fechar</button>
+  </app-buttons-row>
+
+</app-innercard>

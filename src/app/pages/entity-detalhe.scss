@@ -1,0 +1,18 @@
+.containerOut {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 8px;
+}
+
+.containerInner {
+  display: flex;  
+  align-items: center;
+
+  span:first-child {
+    padding: 0.6em;
+    width: 150px;
+    color: #01426a;
+    font-weight: 700;
+    
+  }
+}

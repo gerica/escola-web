@@ -1,0 +1,135 @@
+@use '../../../../scss/settings/palette';
+@use '@angular/material' as mat;
+@include mat.core();
+
+a:link,
+a:visited {
+  text-decoration: none;
+}
+
+.toolbar {
+  background-color: palette.$toolbar-background;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  color: palette.$toolbar-text;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0 1.5rem 0 2.5rem;
+  height: 4rem;
+}
+
+@media (max-width: 767px) {
+  .toolbar__nome__usuario {
+    display: none !important;
+  }  
+}
+
+.toolbar__item {
+  flex: 0 0 auto;
+}
+.toolbar__item--flex {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+}
+
+.toolbar__home {
+  color: palette.$toolbar-home-text;
+  display: flex;
+}
+
+.toolbar__home__logo {
+  border-right: 1px solid palette.$toolbar-home-text;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toolbar__home__logo__image {
+  width: 1.5rem;
+  margin-right: 0.8rem;
+}
+
+.toolbar__home__sistema {
+  margin-left: 0.8rem;
+  font-size: 1rem;
+  font-weight: 500;
+  width: 200px;
+}
+
+.toolbar__home__sistema__versao {
+  font-size: 0.7rem;
+  margin-top: 0.1rem;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toolbar__item__funcoes {
+  margin-left: 3rem;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+}
+
+@media (max-width: 767px) {
+  .toolbar__item__funcoes {
+    display: none;
+  }
+}
+
+.toolbar__item__funcao {
+  margin: 1.5rem;
+  cursor: pointer;
+}
+
+.toolbar__item__funcao:hover {
+  color: palette.$toolbar-item-funcao-active;
+  transition: all 0.2s ease;
+}
+
+.toolbar__item__funcao---active {
+  color: palette.$toolbar-item-funcao-active;
+}
+
+.toolbar__item__usuario {
+  cursor: pointer;
+  display: flex;
+  line-height: 24px;
+}
+
+::ng-deep .mat-mdc-menu-content {
+  background-color: palette.$toolbar-background;
+  overflow: hidden;
+}
+
+.toolbar__subitem {
+  padding: 0 1.5rem;
+  height: 1.5rem;
+  color: palette.$toolbar-text;  
+}
+
+.toolbar__subitem---active {
+  color: palette.$toolbar-item-funcao-active;
+}
+
+.toolbar__subitem_text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+}
+
+.toolbar__subitem_icon {
+  color: palette.$toolbar-text !important;
+}
