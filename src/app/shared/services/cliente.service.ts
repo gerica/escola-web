@@ -10,7 +10,7 @@ export class ClienteService {
 
   private apollo = inject(Apollo);
 
-  salvar(id: number | undefined, cliente: Partial<Cliente>): Observable<Cliente> {    
+  salvar(id: number | undefined, cliente: Partial<Cliente>): Observable<Cliente> {
     console.log(cliente);
     return this.apollo.mutate<any>({
       mutation: SAVE_CLIENTE,
@@ -30,7 +30,10 @@ export class ClienteService {
           email: cliente.email,
           profissao: cliente.profissao,
           localTrabalho: cliente.localTrabalho,
-        }
+        },
+        context: {
+          uri: '/clients/graphql'
+        },
       },
     }).pipe(
       map(result => result.data.saveCliente as Cliente),
@@ -49,6 +52,9 @@ export class ClienteService {
         size: pageRequest.size,
         sort: pageRequest.sorts || [],
       },
+      context: {
+        uri: '/clients/graphql'
+      },
       fetchPolicy: 'network-only', // Or 'no-cache'      
     }).pipe(
       map(result => result.data.fetchAllClientes as Page<Cliente>),
@@ -64,6 +70,9 @@ export class ClienteService {
       query: FETCH_CLIENTE_BY_ID,
       variables: {
         id: id // Pass the ID directly
+      },
+      context: {
+        uri: '/clients/graphql'
       },
       fetchPolicy: 'network-only' // Use network-only or no-cache for individual fetches to ensure fresh data
     }).pipe(

@@ -16,8 +16,10 @@ export class ClienteContatoService {
           id: id || undefined,
           idCliente: idCliente,
           numero: entity.numero,
-        }
-      },
+        },
+      }, context: {
+        uri: '/clients/graphql'
+      }
     }).pipe(
       map(result => result.data.saveClienteContato as ClienteContato),
       // tap(value => {
@@ -31,6 +33,8 @@ export class ClienteContatoService {
       mutation: DELETE_CONTATO_BY_ID,
       variables: {
         id: id
+      }, context: {
+        uri: '/clients/graphql'
       },
     }).pipe(
       map(result => result.data.deleteContatoById as Boolean),
@@ -45,6 +49,8 @@ export class ClienteContatoService {
       query: FETCH_ALL_CONTATOS_BY_CLIENTE,
       variables: {
         id: idCliente
+      }, context: {
+        uri: '/clients/graphql'
       },
       fetchPolicy: 'network-only', // Or 'no-cache'      
     }).pipe(
@@ -61,6 +67,8 @@ export class ClienteContatoService {
       query: FETCH_CONTATO_BY_ID,
       variables: {
         id: id // Pass the ID directly
+      }, context: {
+        uri: '/clients/graphql'
       },
       fetchPolicy: 'network-only' // Use network-only or no-cache for individual fetches to ensure fresh data
     }).pipe(

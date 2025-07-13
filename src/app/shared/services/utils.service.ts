@@ -109,6 +109,9 @@ export class UtilsService {
     recuperarMunicipiosObservable(): Observable<Cidade[]> {
         return this.apollo.query<{ getMunicipios: Cidade[] }>({
             query: GET_MUNICIPIOS,
+            context: {
+                uri: '/clients/graphql'
+            }
         }).pipe(
             map(result => result.data.getMunicipios),
             // tap(result=>{

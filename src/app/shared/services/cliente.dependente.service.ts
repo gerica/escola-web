@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
 import ClienteDependente, { DELETE_DEPENDENTE_BY_ID, FETCH_ALL_DEPENDENTES_BY_CLIENTE, FETCH_DEPENDENTE_BY_ID, SAVE_CLIENTE_DEPENDENTE } from '../models/cliente-dependente';
+import { DataUtils } from './data.service';
 
 @Injectable({ providedIn: 'root' })
 export class ClienteDependenteService {
@@ -18,10 +19,12 @@ export class ClienteDependenteService {
           nome: entity.nome,
           sexo: entity.sexo,
           docCPF: entity.docCPF,
-          dataNascimento: entity.dataNascimento,
-          parentesco: entity.parentesco,          
-        }
-      },
+          dataNascimento: DataUtils.formatDateToYYYYMMDD(entity.dataNascimento),
+          parentesco: entity.parentesco,
+        },
+      }, context: {
+        uri: '/clients/graphql'
+      }
     }).pipe(
       map(result => result.data.saveClienteDependente as ClienteDependente),
       // tap(value => {
@@ -35,6 +38,8 @@ export class ClienteDependenteService {
       mutation: DELETE_DEPENDENTE_BY_ID,
       variables: {
         id: id
+      }, context: {
+        uri: '/clients/graphql'
       },
     }).pipe(
       map(result => result.data.deleteDependenteById as Boolean),
@@ -49,6 +54,8 @@ export class ClienteDependenteService {
       query: FETCH_ALL_DEPENDENTES_BY_CLIENTE,
       variables: {
         id: idCliente
+      }, context: {
+        uri: '/clients/graphql'
       },
       fetchPolicy: 'network-only', // Or 'no-cache'      
     }).pipe(
@@ -65,6 +72,8 @@ export class ClienteDependenteService {
       query: FETCH_DEPENDENTE_BY_ID,
       variables: {
         id: id // Pass the ID directly
+      }, context: {
+        uri: '/clients/graphql'
       },
       fetchPolicy: 'network-only' // Use network-only or no-cache for individual fetches to ensure fresh data
     }).pipe(

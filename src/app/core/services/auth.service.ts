@@ -94,6 +94,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(KEY_LOCAL_TOKEN);
+    localStorage.removeItem(KEY_LOCAL_STORE_USUARIO);
     this._token.set(null);
     this.setLoggedUser(undefined);
   }
