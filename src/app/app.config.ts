@@ -1,7 +1,7 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig, inject, provideAppInitializer } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { InMemoryCache } from '@apollo/client/core';
+import { InMemoryCache, Operation } from '@apollo/client/core';
 import { APOLLO_OPTIONS, Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { routes } from './app.routes';
@@ -20,6 +20,19 @@ const maskConfigFunction: () => Partial<NgxMaskConfig> = () => {
   };
 };
 
+
+const createApollo = (httpLink: HttpLink) => {  
+  return {
+    cache: new InMemoryCache(),
+    link: httpLink.create({
+      uri: (operation: Operation) => {
+        const context = operation.getContext();
+        // Usa a URI do contexto se ela existir, senão, usa a padrão.
+        return context['uri'] || '/graphql';
+      },
+    }),
+  };
+};
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes), // <-- Use suas rotas aqui!
@@ -36,14 +49,7 @@ export const appConfig: ApplicationConfig = {
     // Configuração do Apollo Client
     {
       provide: APOLLO_OPTIONS,
-      useFactory: (httpLink: HttpLink) => {
-        return {
-          cache: new InMemoryCache(),
-          link: httpLink.create({
-            uri: '/graphql', // URL relativa para usar o proxy
-          }),
-        };
-      },
+      useFactory: createApollo,
       deps: [HttpLink],
     },
     Apollo,

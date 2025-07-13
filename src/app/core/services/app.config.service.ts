@@ -4,8 +4,8 @@ import { map, Observable, tap } from 'rxjs';
 import { AppConfig, BuildInfo } from '../models';
 
 const GET_APP_CONFIG = gql`
-  query getAppConfigAuth{
-    getAppConfigAuth{
+  query getAppConfig{
+    getAppConfig{
       description
       name
       time
@@ -23,11 +23,11 @@ export class AppConfigService {
   readonly config = this._config.asReadonly();
 
   getAppConfig(): Observable<AppConfig> {
-    return this.apollo.query<{ getAppConfigAuth: BuildInfo }>({
+    return this.apollo.query<{ getAppConfig: BuildInfo }>({
       query: GET_APP_CONFIG,
     }).pipe(
       map(result => ({
-        buildInfo: result.data.getAppConfigAuth
+        buildInfo: result.data.getAppConfig
       })),
       tap(config => {
         this._config.set(config);

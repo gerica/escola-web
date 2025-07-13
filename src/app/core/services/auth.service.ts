@@ -77,6 +77,9 @@ export class AuthService {
         username,
         password
       },
+      context: {
+        uri: '/auth/graphql'
+      },
     }).pipe(
       map(result => result.data.authenticate as User),
       tap(user => {
