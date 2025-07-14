@@ -16,5 +16,18 @@
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
+  },
+    "/utils/graphql": {
+    "target": "http://gateway:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+    "/admin/graphql": {
+    "target": "http://gateway:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
+  
 }

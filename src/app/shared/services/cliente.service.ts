@@ -5,13 +5,13 @@ import Cliente, { FETCH_ALL_CLIENTES, FETCH_CLIENTE_BY_ID, SAVE_CLIENTE } from '
 import { DataUtils } from './data.service';
 import { Page, PageRequest } from 'src/app/core/models';
 
+const URL = '/clients/graphql';
 @Injectable({ providedIn: 'root' })
 export class ClienteService {
 
   private apollo = inject(Apollo);
 
   salvar(id: number | undefined, cliente: Partial<Cliente>): Observable<Cliente> {
-    console.log(cliente);
     return this.apollo.mutate<any>({
       mutation: SAVE_CLIENTE,
       variables: {
@@ -31,9 +31,9 @@ export class ClienteService {
           profissao: cliente.profissao,
           localTrabalho: cliente.localTrabalho,
         },
-        context: {
-          uri: '/clients/graphql'
-        },
+      },
+      context: {
+        uri: URL
       },
     }).pipe(
       map(result => result.data.saveCliente as Cliente),
@@ -53,7 +53,7 @@ export class ClienteService {
         sort: pageRequest.sorts || [],
       },
       context: {
-        uri: '/clients/graphql'
+        uri: URL
       },
       fetchPolicy: 'network-only', // Or 'no-cache'      
     }).pipe(
@@ -72,7 +72,7 @@ export class ClienteService {
         id: id // Pass the ID directly
       },
       context: {
-        uri: '/clients/graphql'
+        uri: URL
       },
       fetchPolicy: 'network-only' // Use network-only or no-cache for individual fetches to ensure fresh data
     }).pipe(

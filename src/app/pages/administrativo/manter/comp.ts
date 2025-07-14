@@ -7,22 +7,22 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDivider } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { map, Observable, startWith } from 'rxjs';
+import { provideNgxMask } from 'ngx-mask';
+import { forkJoin, map, Observable, startWith } from 'rxjs';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
+import { EditorComponent } from 'src/app/shared/components/editor/editor.component';
 import { Cidade } from 'src/app/shared/models/cidade';
-import Cliente from 'src/app/shared/models/cliente';
 import { Estado } from 'src/app/shared/models/estado';
-import { ClienteService } from 'src/app/shared/services/cliente.service';
+import { CHAVE_CONTRATO_CIDADE_PADRAO, CHAVE_CONTRATO_MODELO_PADRAO, Parametro } from 'src/app/shared/models/parametro';
+import { AdministrativoService } from 'src/app/shared/services/admin.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
-import { ContatoComp } from '../contato/comp';
-import { DependenteComp } from '../depentente/comp';
 
 // Register the locale data for pt-BR
 registerLocaleData(localePt, 'pt-BR');
@@ -56,10 +56,8 @@ export const MY_DATE_FORMATS = {
     MatInputModule,
     MatDatepickerModule,
     MatAutocompleteModule,
-    NgxMaskDirective,
-    ContatoComp,
-    DependenteComp,
-
+    MatDivider,
+    EditorComponent
   ],
   providers: [
     provideNativeDateAdapter(),
@@ -75,82 +73,95 @@ export class ManterComp implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly notification = inject(NotificationService);
   private readonly spinner = inject(LoadingSpinnerService);
-  private readonly clienteService = inject(ClienteService);
+  private readonly admService = inject(AdministrativoService);
   private readonly utilService = inject(UtilsService);
 
-  form!: UntypedFormGroup;
+  formCidadePadrao!: UntypedFormGroup;
+  formModeloContrato!: UntypedFormGroup;
 
   optionsEstados = signal<Estado[]>([]);
   filteredEstadosOptions: Observable<Estado[]>;
   optionsCidades = signal<Cidade[]>([]);
   filteredCidadesOptions!: Observable<Cidade[]>;
-  cliente = signal<Cliente | null>(null);
+  parametroCidadePadrao = signal<Parametro | null>(null);
+  parametroModeloContrato = signal<Parametro | null>(null);
 
   constructor() {
     this.filteredEstadosOptions = toObservable(this.optionsEstados);
   }
 
   ngOnInit(): void {
+    this.recuperarConfiguracoes();
     this.recuperarEstados();
     this.createForm();
-    this.initForm();
+    // this.initForm();
   }
 
   private createForm() {
-    this.form = new UntypedFormGroup({
-      nome: new UntypedFormControl('', [Validators.required]),
-      dataNascimento: new UntypedFormControl('', [Validators.required]),
+    this.formCidadePadrao = new UntypedFormGroup({
       estado: new UntypedFormControl('', [Validators.required]),
       cidade: new UntypedFormControl('', [Validators.required]),
-      docCPF: new UntypedFormControl('', Validators.required),
-      docRG: new UntypedFormControl('', [Validators.required]),
-      endereco: new UntypedFormControl('', [Validators.required]),
-      email: new UntypedFormControl('', [Validators.email, Validators.required]),
-      profissao: new UntypedFormControl(''),
-      localTrabalho: new UntypedFormControl(''),
-      // telResidencial: new UntypedFormControl(''),
-      // telCelular: new UntypedFormControl('',),
+    });
+
+    this.formModeloContrato = new UntypedFormGroup({
+      modeloContrato: new UntypedFormControl('', [Validators.required]),
     });
   }
 
-  private initForm() {
-    const tempEntity = this.route.snapshot.data['entity'] as Cliente;
+  private initForms() {
+    // iniciar form da cidade padrão
+    this.spinner
+      .showUntilCompleted(this.utilService.recuperarMunicipioPorId(this.parametroCidadePadrao()?.codigoMunicipio))
+      .subscribe(
+        result => {
+          const estadoEncontrado = this.optionsEstados().find(e => e.sigla === result.uf)
+          const cidadeEncontrada = this.optionsCidades().find(c => c.codigo === result.codigo) || result;
+          this.formCidadePadrao.patchValue({
+            ...this.parametroCidadePadrao(),
+            estado: estadoEncontrado,
+            cidade: cidadeEncontrada
+          }, { emitEvent: true });
+        });
 
-    if (tempEntity) {
-      this.cliente.set(tempEntity);
-      this.spinner
-        .showUntilCompleted(this.utilService.recuperarMunicipioPorId(this.cliente()?.cidade.codigo))
-        .subscribe(
-          result => {
-            const estadoEncontrado = this.optionsEstados().find(e => e.sigla === result.uf)
-            // const cidadeEncontrada = this.optionsCidades().find(c => c.codigo === result.codigo) || result;
-            this.form.patchValue({
-              ...this.cliente(),
-              estado: estadoEncontrado,
-            }, { emitEvent: true });
-          });
-    }
+    // iniciar form do modelo de contrato
+    this.formModeloContrato.patchValue({ ...this.parametroModeloContrato() });
   }
 
-  onSubmit() {
-    if (!this.form.valid) {
+  onSubmitCidade() {
+    if (!this.formCidadePadrao.valid) {
       this.notification.showError('Informe todos os campos obrigatórios.');
-      this.form.markAllAsTouched();
-      this.form.markAsDirty();
+      this.formCidadePadrao.markAllAsTouched();
+      this.formCidadePadrao.markAsDirty();
       return;
     }
 
     this.spinner.showUntilCompleted(
-      this.clienteService.salvar(this.cliente()?.id, this.form.value as Partial<Cliente>)).subscribe({
+      this.admService.salvarCidadePadrao(this.formCidadePadrao.value as Partial<Parametro>)).subscribe({
         next: (result) => {
-          this.cliente.set(result);
+          this.parametroCidadePadrao.set(result);
+          this.notification.showSuccess('Operação realizada com sucesso.');
+        }
+      });
+  }
+
+  onSubmitModeloConrato() {
+    if (!this.formCidadePadrao.valid) {
+      this.notification.showError('Informe todos os campos obrigatórios.');
+      this.formCidadePadrao.markAllAsTouched();
+      this.formCidadePadrao.markAsDirty();
+      return;
+    }
+    this.spinner.showUntilCompleted(
+      this.admService.salvarModeloContrato(this.formModeloContrato.value as Partial<Parametro>)).subscribe({
+        next: (result) => {
+          this.parametroCidadePadrao.set(result);
           this.notification.showSuccess('Operação realizada com sucesso.');
         }
       });
   }
 
   observarEstado() {
-    const controlEstado = this.form.get('estado');
+    const controlEstado = this.formCidadePadrao.get('estado');
     if (controlEstado) {
       this.filteredEstadosOptions = controlEstado.valueChanges.pipe(
         startWith(''),
@@ -180,6 +191,32 @@ export class ManterComp implements OnInit {
     }
   }
 
+  recuperarConfiguracoes() {
+    this.spinner.loadingOn();
+    (this.spinner as any).loadingCount++; // Accessing private property, see note below
+
+    forkJoin({
+      cidadePadrao: this.admService.findByChave(CHAVE_CONTRATO_CIDADE_PADRAO),
+      modeloContrato: this.admService.findByChave(CHAVE_CONTRATO_MODELO_PADRAO),
+    }).subscribe({
+      next: (results) => {
+        const { cidadePadrao, modeloContrato } = results;
+        this.parametroCidadePadrao.set(cidadePadrao);
+        this.parametroModeloContrato.set(modeloContrato);
+        this.initForms();
+      },
+      error: (error) => {
+        console.error('Error fetching admin parameters:', error);
+      },
+      complete: () => {
+        (this.spinner as any).loadingCount--;
+        if ((this.spinner as any).loadingCount === 0) {
+          this.spinner.loadingOff();
+        }
+      }
+    });
+  }
+
   recuperarEstados() {
     this.spinner
       .showUntilCompleted(this.utilService.recuperarEstados())
@@ -201,7 +238,7 @@ export class ManterComp implements OnInit {
   }
 
   observarCidade() {
-    const controlCidade = this.form.get('cidade');
+    const controlCidade = this.formCidadePadrao.get('cidade');
     if (controlCidade) {
       this.filteredCidadesOptions = controlCidade.valueChanges.pipe(
         startWith(''),

@@ -1,6 +1,10 @@
 @use './scss/settings/palette'; 
 @use './scss/settings/theme'; 
 
+@use 'quill/dist/quill.snow.css';
+@use 'quill-table-up/index.css';
+@use 'quill-table-up/table-creator.css';
+
 @use '@angular/material' as mat;
 @include mat.core();
 

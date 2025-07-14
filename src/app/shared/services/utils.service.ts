@@ -110,7 +110,7 @@ export class UtilsService {
         return this.apollo.query<{ getMunicipios: Cidade[] }>({
             query: GET_MUNICIPIOS,
             context: {
-                uri: '/clients/graphql'
+                uri: '/utils/graphql'
             }
         }).pipe(
             map(result => result.data.getMunicipios),

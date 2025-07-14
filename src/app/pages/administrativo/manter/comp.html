@@ -1,0 +1,71 @@
+<app-innercard titulo="Administrativo" [estiloCardTitulo]="{'padding': '1em',}">
+
+
+  <mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>description</mat-icon>
+        Contrato
+      </ng-template>
+      <form [formGroup]="formCidadePadrao" (submit)="onSubmitCidade()">
+        <app-innercard class="cardInner" titulo="Cidade padrão">
+          <section>
+            <div class="containerInfo">
+              Para definir uma cidade padrão para os novos contratos, selecione o estado e a cidade desejada abaixo.
+            </div>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Estado</mat-label>
+              <input type="text" matInput formControlName="estado" [matAutocomplete]="autoEstado">
+              <mat-autocomplete #autoEstado="matAutocomplete" [displayWith]="displayFnEstado"
+                (optionSelected)="onEstadoChange($event.option.value)">
+                @for (option of filteredEstadosOptions | async ; track option) {
+                <mat-option [value]="option">{{option.descricao}}</mat-option>
+                }
+              </mat-autocomplete>
+              @if (formCidadePadrao.get('estado')?.hasError('required')) {
+              <mat-error>Estado é <strong>obrigatório</strong></mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Cidade</mat-label>
+              <input type="text" matInput formControlName="cidade" [matAutocomplete]="autoCidade">
+              <mat-autocomplete #autoCidade="matAutocomplete" [displayWith]="displayFnCidade">
+                @for (option of filteredCidadesOptions | async ; track option) {
+                <mat-option [value]="option">{{option.descricao}}</mat-option>
+                }
+              </mat-autocomplete>
+              @if (formCidadePadrao.get('cidade')?.hasError('required')) {
+              <mat-error>Cidade é <strong>obrigatório</strong></mat-error>
+              }
+            </mat-form-field>
+
+          </section>
+
+          <section class="container">
+            <!-- <button mat-raised-button color="secondary" type="button" routerLink="/cliente">Voltar</button> -->
+            <button mat-raised-button color="primary" type="submit">Salvar</button>
+          </section>
+        </app-innercard>
+      </form>
+      <mat-divider></mat-divider>
+
+      <form [formGroup]="formModeloContrato" (submit)="onSubmitModeloConrato()">
+        <app-innercard class="cardInner" titulo="Modelo Contrato">
+          <section>
+            <editor-component formControlName="modeloContrato" placeholder="Informe o modelo" height="300px"></editor-component>
+          </section>
+
+          <section class="container">
+
+            <button mat-raised-button color="primary" type="submit">Salvar</button>
+          </section>
+        </app-innercard>
+      </form>
+    </mat-tab>
+
+  </mat-tab-group>
+
+
+</app-innercard>
