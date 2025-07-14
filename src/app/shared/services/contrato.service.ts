@@ -20,7 +20,8 @@ export class ContratoService {
     );
   }
 
-  salvar(contato: Partial<Contrato>): Observable<any> {
+  salvar(id: number | undefined, contrato: Partial<Contrato>): Observable<any> {
+    console.log(contrato);
     throw new Error('Method not implemented.');
   }
 }

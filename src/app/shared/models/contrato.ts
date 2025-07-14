@@ -1,18 +1,14 @@
 import { gql } from "apollo-angular";
+import Cliente from "./cliente";
+import { Cidade } from "./cidade";
+import { Estado } from "./estado";
 
 export default interface Contrato {
-    nome: string,
-    dataNascimento: Date,
-    estado: string,
-    cidade: string,
-    docCPF: string,
-    docRG: string,
-    telResidencial: string,
-    telCelular: string,
-    endereco: string,
-    email: string,
-    profissao: string,
-    localTrabalho: string,
+  id: number,
+  cliente: Cliente,
+  dataContrato: Date,
+  estado: Estado,
+  cidade: Cidade,
 }
 
 
@@ -35,6 +31,6 @@ const SAVE_CONTRATO = gql`
 `;
 
 export {
-    GET_OUTRO_CONTRATO,
-    SAVE_CONTRATO
+  GET_OUTRO_CONTRATO,
+  SAVE_CONTRATO
 };

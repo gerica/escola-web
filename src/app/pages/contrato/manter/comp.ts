@@ -10,10 +10,13 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { map, Observable, startWith } from 'rxjs';
+import { provideNgxMask } from 'ngx-mask';
+import { BehaviorSubject, finalize, map, Observable, startWith, switchMap, tap } from 'rxjs';
+import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
+import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operators';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { Cidade } from 'src/app/shared/models/cidade';
 import Cliente from 'src/app/shared/models/cliente';
@@ -21,6 +24,8 @@ import { Estado } from 'src/app/shared/models/estado';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
+import { ContratoService } from 'src/app/shared/services/contrato.service';
+import Contrato from 'src/app/shared/models/contrato';
 
 // Register the locale data for pt-BR
 registerLocaleData(localePt, 'pt-BR');
@@ -54,7 +59,8 @@ export const MY_DATE_FORMATS = {
     MatInputModule,
     MatDatepickerModule,
     MatAutocompleteModule,
-    // NgxMaskDirective
+    MatAutocompleteModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     provideNativeDateAdapter(),
@@ -71,6 +77,7 @@ export class ManterComp implements OnInit {
   private readonly notification = inject(NotificationService);
   private readonly spinner = inject(LoadingSpinnerService);
   private readonly clienteService = inject(ClienteService);
+  private readonly contratoService = inject(ContratoService);
   private readonly utilService = inject(UtilsService);
 
   form!: UntypedFormGroup;
@@ -79,7 +86,13 @@ export class ManterComp implements OnInit {
   filteredEstadosOptions: Observable<Estado[]>;
   optionsCidades = signal<Cidade[]>([]);
   filteredCidadesOptions!: Observable<Cidade[]>;
-  cliente = signal<Cliente | null>(null);
+  contrato = signal<Contrato | null>(null);
+
+  srvTextSubject = new BehaviorSubject<string>('');
+  clientes = signal(emptyPage<Cliente>());
+  srvLoading = signal(false);
+  pageSize = 10;
+  page = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'nome', direction: 'asc' }));
 
   constructor() {
     this.filteredEstadosOptions = toObservable(this.optionsEstados);
@@ -89,38 +102,31 @@ export class ManterComp implements OnInit {
     this.recuperarEstados();
     this.createForm();
     this.initForm();
+    this.observarClientes();
   }
 
   private createForm() {
     this.form = new UntypedFormGroup({
-      nome: new UntypedFormControl('', [Validators.required]),
-      dataNascimento: new UntypedFormControl('', [Validators.required]),
+      cliente: new UntypedFormControl('', [Validators.required]),
+      dataContrato: new UntypedFormControl('', [Validators.required]),
       estado: new UntypedFormControl('', [Validators.required]),
-      cidade: new UntypedFormControl('', [Validators.required]),
-      docCPF: new UntypedFormControl('', Validators.required),
-      docRG: new UntypedFormControl('', [Validators.required]),
-      endereco: new UntypedFormControl('', [Validators.required]),
-      email: new UntypedFormControl('', [Validators.email, Validators.required]),
-      profissao: new UntypedFormControl(''),
-      localTrabalho: new UntypedFormControl(''),
-      // telResidencial: new UntypedFormControl(''),
-      // telCelular: new UntypedFormControl('',),
+      cidade: new UntypedFormControl('', [Validators.required]),     
     });
   }
 
   private initForm() {
-    const tempEntity = this.route.snapshot.data['entity'] as Cliente;
+    const tempEntity = this.route.snapshot.data['entity'] as Contrato;
 
     if (tempEntity) {
-      this.cliente.set(tempEntity);
+      this.contrato.set(tempEntity);
       this.spinner
-        .showUntilCompleted(this.utilService.recuperarMunicipioPorId(this.cliente()?.cidade.codigo))
+        .showUntilCompleted(this.utilService.recuperarMunicipioPorId(this.contrato()?.cidade.codigo))
         .subscribe(
           result => {
             const estadoEncontrado = this.optionsEstados().find(e => e.sigla === result.uf)
             const cidadeEncontrada = this.optionsCidades().find(c => c.codigo === result.codigo) || result;
             this.form.patchValue({
-              ...this.cliente(),
+              ...this.contrato(),
               estado: estadoEncontrado,
             }, { emitEvent: true });
           });
@@ -136,9 +142,9 @@ export class ManterComp implements OnInit {
     }
 
     this.spinner.showUntilCompleted(
-      this.clienteService.salvar(this.cliente()?.id, this.form.value as Partial<Cliente>)).subscribe({
+      this.contratoService.salvar(this.contrato()?.id, this.form.value as Partial<Contrato>)).subscribe({
         next: (result) => {
-          this.cliente.set(result);
+          this.contrato.set(result);
           this.notification.showSuccess('Operação realizada com sucesso.');
         }
       });
@@ -215,5 +221,27 @@ export class ManterComp implements OnInit {
   displayFnCidade(cidade: Cidade): string {
     return cidade && cidade.descricao;
   }
+
+  private observarClientes() {
+    this.srvTextSubject.asObservable()
+      .pipe(
+        debounceDistinctUntilChanged(400),
+        tap(() => this.srvLoading.set(true)),
+        switchMap((text) => {
+          const clientes$ = this.clienteService.buscar(text, this.page());
+
+          return clientes$.pipe(
+            minTime(700),
+            finalize(() => this.srvLoading.set(false))
+          );
+        })
+      ).subscribe({
+        next: (result) => {
+          this.clientes.set(result);
+        }
+      });
+  }
+
+  displayCliente = (item: Cliente) => (!!item && `${item.nome}`) || '';
 
 }
