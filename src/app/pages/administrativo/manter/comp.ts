@@ -91,10 +91,8 @@ export class ManterComp implements OnInit {
   }
 
   ngOnInit(): void {
-    this.recuperarConfiguracoes();
-    this.recuperarEstados();
+    this.recuperarConfiguracoes();    
     this.createForm();
-    // this.initForm();
   }
 
   private createForm() {
@@ -198,11 +196,14 @@ export class ManterComp implements OnInit {
     forkJoin({
       cidadePadrao: this.admService.findByChave(CHAVE_CONTRATO_CIDADE_PADRAO),
       modeloContrato: this.admService.findByChave(CHAVE_CONTRATO_MODELO_PADRAO),
+      estado: this.utilService.recuperarEstados(),
     }).subscribe({
       next: (results) => {
-        const { cidadePadrao, modeloContrato } = results;
+        const { cidadePadrao, modeloContrato, estado } = results;
         this.parametroCidadePadrao.set(cidadePadrao);
         this.parametroModeloContrato.set(modeloContrato);
+        this.optionsEstados.set(estado);
+          this.observarEstado();
         this.initForms();
       },
       error: (error) => {
@@ -210,9 +211,9 @@ export class ManterComp implements OnInit {
       },
       complete: () => {
         (this.spinner as any).loadingCount--;
-        if ((this.spinner as any).loadingCount === 0) {
-          this.spinner.loadingOff();
-        }
+        // if ((this.spinner as any).loadingCount === 0) {
+        //   this.spinner.loadingOff();
+        // }
       }
     });
   }
