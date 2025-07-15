@@ -94,7 +94,16 @@ export class ListComp implements OnInit, OnDestroy {
   }
 
   visualizar(entity: Cliente) {
-    this.dialog.open(ClienteDetalheDialog, { width: '550px', data: entity });
+    this.dialog.open(ClienteDetalheDialog, {
+      width: '550px', data: {
+        ...entity,
+        cidade: {
+          descricao: entity.cidadeDesc,
+          uf: entity.uf,
+          codigoCidade: entity.codigoCidade
+        }
+      }
+    });
   }
 
 }

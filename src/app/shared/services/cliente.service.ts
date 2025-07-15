@@ -12,6 +12,7 @@ export class ClienteService {
   private apollo = inject(Apollo);
 
   salvar(id: number | undefined, cliente: Partial<Cliente>): Observable<Cliente> {
+    console.log(cliente);
     return this.apollo.mutate<any>({
       mutation: SAVE_CLIENTE,
       variables: {
@@ -21,9 +22,9 @@ export class ClienteService {
           docCPF: cliente.docCPF,
           docRG: cliente.docRG,
           dataNascimento: DataUtils.formatDateToYYYYMMDD(cliente.dataNascimento),
-          cidade: cliente.cidade,
-          codigoCidade: cliente.codigoCidade,
-          uf: cliente.uf,
+          cidade: cliente.cidade?.descricao,
+          codigoCidade: cliente.cidade?.codigo,
+          uf: cliente.cidade?.uf,
           endereco: cliente.endereco,
           email: cliente.email,
           profissao: cliente.profissao,
@@ -63,7 +64,6 @@ export class ClienteService {
   }
 
   recuperarPorId(id: number): Observable<Cliente> {
-    // console.log("Sending GraphQL variables (fetchByIdCliente):", { id: id });
     return this.apollo.query<any>({
       query: FETCH_CLIENTE_BY_ID,
       variables: {
@@ -74,10 +74,23 @@ export class ClienteService {
       },
       fetchPolicy: 'network-only' // Use network-only or no-cache for individual fetches to ensure fresh data
     }).pipe(
-      map(result => result.data.fetchByIdCliente as Cliente),
-      // tap(value => {
-      //   console.log("Received GraphQL data (fetchByIdCliente):", value);
-      // })
+      map(result => {
+        const entity = result.data.fetchByIdCliente as Cliente
+        console.log(entity);
+        return {
+          ...entity,
+          cidade: {
+            codigo: entity.codigoCidade,
+            descricao: entity.cidadeDesc,
+            uf: entity.uf,
+            estado: entity.uf
+          }
+        }
+      }),
+      tap(value => {
+        console.log("Received GraphQL data (fetchByIdCliente):", value);
+      }),
+      // map(result => result)
     );
   }
 }

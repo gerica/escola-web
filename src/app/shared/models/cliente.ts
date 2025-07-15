@@ -5,7 +5,8 @@ export default interface Cliente {
   id: number,
   nome: string,
   dataNascimento: Date,
-  cidade: string,
+  cidade: Cidade;
+  cidadeDesc: string,
   uf: string,
   codigoCidade: string,
   docCPF: string,
@@ -14,8 +15,6 @@ export default interface Cliente {
   email: string,
   profissao: string,
   localTrabalho: string,
-  // telResidencial: string,
-  // telCelular: string,
 }
 
 
@@ -28,7 +27,7 @@ const SAVE_CLIENTE = gql`
       docCPF
       email
       docRG
-      cidade 
+      cidadeDesc 
       uf
       codigoCidade
       endereco
@@ -49,7 +48,7 @@ const FETCH_ALL_CLIENTES = gql`
       last
       empty
       content {
-        cidade 
+        cidadeDesc 
         uf
         codigoCidade
         dataNascimento
@@ -72,7 +71,7 @@ const FETCH_CLIENTE_BY_ID = gql`
       id
       nome
       dataNascimento
-      cidade 
+      cidadeDesc 
       uf
       codigoCidade
       docCPF

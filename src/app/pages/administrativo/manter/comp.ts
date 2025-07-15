@@ -93,12 +93,12 @@ export class ManterComp implements OnInit {
 
 
   ngOnInit(): void {
-    this.recuperarConfiguracoes();
-    this.createForm();
-    this.observarCidades();
+    this._recuperarConfiguracoes();
+    this._createForm();
+    this._observarCidades();
   }
 
-  private createForm() {
+  private _createForm() {
     this.formCidadePadrao = new UntypedFormGroup({
       cidade: new UntypedFormControl('', [Validators.required]),
     });
@@ -108,40 +108,7 @@ export class ManterComp implements OnInit {
     });
   }
 
-  onSubmitCidade() {
-    if (!this.formCidadePadrao.valid) {
-      this.notification.showError('Informe todos os campos obrigatórios.');
-      this.formCidadePadrao.markAllAsTouched();
-      this.formCidadePadrao.markAsDirty();
-      return;
-    }
-
-    this.spinner.showUntilCompleted(
-      this.admService.salvarCidadePadrao(this.formCidadePadrao.value as Partial<Parametro>)).subscribe({
-        next: (result) => {
-          this.parametroCidadePadrao.set(result);
-          this.notification.showSuccess('Operação realizada com sucesso.');
-        }
-      });
-  }
-
-  onSubmitModeloConrato() {
-    if (!this.formCidadePadrao.valid) {
-      this.notification.showError('Informe todos os campos obrigatórios.');
-      this.formCidadePadrao.markAllAsTouched();
-      this.formCidadePadrao.markAsDirty();
-      return;
-    }
-    this.spinner.showUntilCompleted(
-      this.admService.salvarModeloContrato(this.formModeloContrato.value as Partial<Parametro>)).subscribe({
-        next: (result) => {
-          this.parametroCidadePadrao.set(result);
-          this.notification.showSuccess('Operação realizada com sucesso.');
-        }
-      });
-  }
-
-  recuperarConfiguracoes() {
+  private _recuperarConfiguracoes() {
     this.spinner.loadingOn();
     (this.spinner as any).loadingCount++; // Accessing private property, see note below
 
@@ -179,11 +146,11 @@ export class ManterComp implements OnInit {
     }
   }
 
-  private _initFormsModelo() {    
+  private _initFormsModelo() {
     this.formModeloContrato.patchValue({ ...this.parametroModeloContrato() });
   }
 
-  private observarCidades() {
+  private _observarCidades() {
     this.srvTextSubject.asObservable()
       .pipe(
         debounceDistinctUntilChanged(400),
@@ -197,6 +164,39 @@ export class ManterComp implements OnInit {
       ).subscribe({
         next: (result) => this.cidades.set(result),
         error: (err) => console.log(err),
+      });
+  }
+
+  onSubmitCidade() {
+    if (!this.formCidadePadrao.valid) {
+      this.notification.showError('Informe todos os campos obrigatórios.');
+      this.formCidadePadrao.markAllAsTouched();
+      this.formCidadePadrao.markAsDirty();
+      return;
+    }
+
+    this.spinner.showUntilCompleted(
+      this.admService.salvarCidadePadrao(this.formCidadePadrao.value as Partial<Parametro>)).subscribe({
+        next: (result) => {
+          this.parametroCidadePadrao.set(result);
+          this.notification.showSuccess('Operação realizada com sucesso.');
+        }
+      });
+  }
+
+  onSubmitModeloConrato() {
+    if (!this.formCidadePadrao.valid) {
+      this.notification.showError('Informe todos os campos obrigatórios.');
+      this.formCidadePadrao.markAllAsTouched();
+      this.formCidadePadrao.markAsDirty();
+      return;
+    }
+    this.spinner.showUntilCompleted(
+      this.admService.salvarModeloContrato(this.formModeloContrato.value as Partial<Parametro>)).subscribe({
+        next: (result) => {
+          this.parametroCidadePadrao.set(result);
+          this.notification.showSuccess('Operação realizada com sucesso.');
+        }
       });
   }
 

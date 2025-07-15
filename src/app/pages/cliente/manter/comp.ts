@@ -1,7 +1,6 @@
 import { CommonModule, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt'; // This provides the locale data
 import { Component, inject, LOCALE_ID, OnInit, signal } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,16 +12,18 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { map, Observable, startWith } from 'rxjs';
+import { BehaviorSubject, finalize, switchMap, tap } from 'rxjs';
+import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
+import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operators';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { Cidade } from 'src/app/shared/models/cidade';
 import Cliente from 'src/app/shared/models/cliente';
-import { Estado } from 'src/app/shared/models/estado';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
 import { ContatoComp } from '../contato/comp';
 import { DependenteComp } from '../depentente/comp';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Register the locale data for pt-BR
 registerLocaleData(localePt, 'pt-BR');
@@ -57,6 +58,7 @@ export const MY_DATE_FORMATS = {
     MatDatepickerModule,
     MatAutocompleteModule,
     NgxMaskDirective,
+    MatProgressSpinnerModule,
     ContatoComp,
     DependenteComp,
 
@@ -79,28 +81,24 @@ export class ManterComp implements OnInit {
   private readonly utilService = inject(UtilsService);
 
   form!: UntypedFormGroup;
-
-  optionsEstados = signal<Estado[]>([]);
-  filteredEstadosOptions: Observable<Estado[]>;
-  optionsCidades = signal<Cidade[]>([]);
-  filteredCidadesOptions!: Observable<Cidade[]>;
   cliente = signal<Cliente | null>(null);
 
-  constructor() {
-    this.filteredEstadosOptions = toObservable(this.optionsEstados);
-  }
+  srvTextSubject = new BehaviorSubject<string>('');
+  cidades = signal(emptyPage<Cidade>());
+  srvLoading = signal(false);
+  pageSize = 10;
+  page = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'descricao', direction: 'asc' }));
 
   ngOnInit(): void {
-    this.recuperarEstados();
-    this.createForm();
-    this.initForm();
+    this._createForm();
+    this._initForm();
+    this._observarCidades();
   }
 
-  private createForm() {
+  private _createForm() {
     this.form = new UntypedFormGroup({
       nome: new UntypedFormControl('', [Validators.required]),
       dataNascimento: new UntypedFormControl('', [Validators.required]),
-      estado: new UntypedFormControl('', [Validators.required]),
       cidade: new UntypedFormControl('', [Validators.required]),
       docCPF: new UntypedFormControl('', Validators.required),
       docRG: new UntypedFormControl('', [Validators.required]),
@@ -108,28 +106,38 @@ export class ManterComp implements OnInit {
       email: new UntypedFormControl('', [Validators.email, Validators.required]),
       profissao: new UntypedFormControl(''),
       localTrabalho: new UntypedFormControl(''),
-      // telResidencial: new UntypedFormControl(''),
-      // telCelular: new UntypedFormControl('',),
     });
   }
 
-  private initForm() {
+  private _initForm() {
     const tempEntity = this.route.snapshot.data['entity'] as Cliente;
 
-    // if (tempEntity) {
-    //   this.cliente.set(tempEntity);
-    //   this.spinner
-    //     .showUntilCompleted(this.utilService.recuperarMunicipioPorId(this.cliente()?.cidade.codigo))
-    //     .subscribe(
-    //       result => {
-    //         const estadoEncontrado = this.optionsEstados().find(e => e.sigla === result.uf)
-    //         // const cidadeEncontrada = this.optionsCidades().find(c => c.codigo === result.codigo) || result;
-    //         this.form.patchValue({
-    //           ...this.cliente(),
-    //           estado: estadoEncontrado,
-    //         }, { emitEvent: true });
-    //       });
-    // }
+    if (tempEntity) {
+      this.cliente.set(tempEntity);      
+      this.form.patchValue({
+        ...this.cliente(),
+        // cidade: { descricao: this.cliente()?.cidadeDesc, uf: this.cliente()?.uf, codigoCidade: this.cliente()?.codigoCidade }
+      }, { emitEvent: true });
+    }
+    console.log(this.form.value);
+  }
+
+
+  private _observarCidades() {
+    this.srvTextSubject.asObservable()
+      .pipe(
+        debounceDistinctUntilChanged(400),
+        tap(() => this.srvLoading.set(true)),
+        switchMap((text) => {
+          return this.utilService.recuperarPorFiltro(text, this.page()).pipe(
+            minTime(700),
+            finalize(() => this.srvLoading.set(false))
+          );
+        })
+      ).subscribe({
+        next: (result) => this.cidades.set(result),
+        error: (err) => console.log(err),
+      });
   }
 
   onSubmit() {
@@ -149,76 +157,8 @@ export class ManterComp implements OnInit {
       });
   }
 
-  observarEstado() {
-    const controlEstado = this.form.get('estado');
-    if (controlEstado) {
-      this.filteredEstadosOptions = controlEstado.valueChanges.pipe(
-        startWith(''),
-        map(value => {
-          const name = typeof value === 'string' ? value : value?.descricao;
-          return name ? this._filterEstado(name as string) : this.optionsEstados().slice();
-        }),
-      );
-    }
-  }
-
-  private _filterEstado(name: string): Estado[] {
-    const filterValue = name.toLowerCase();
-
-    return this.optionsEstados().filter(option => option.descricao.toLowerCase().includes(filterValue));
-  }
-
-  private _filterCidade(name: string): Cidade[] {
-    const filterValue = name.toLowerCase();
-
-    return this.optionsCidades().filter(option => option.descricao.toLowerCase().includes(filterValue));
-  }
-
-  onEstadoChange(estado: Estado) {
-    if (estado) {
-      this.recuperarCidades(estado);
-    }
-  }
-
-  recuperarEstados() {
-    // this.spinner
-    //   .showUntilCompleted(this.utilService.recuperarEstados())
-    //   .subscribe(
-    //     result => {
-    //       this.optionsEstados.set(result);
-    //       this.observarEstado();
-    //     });
-  }
-
-  recuperarCidades(estado: Estado) {
-    // this.spinner
-    //   .showUntilCompleted(this.utilService.recuperarMunicipiosPorEstado(estado))
-    //   .subscribe(
-    //     result => {
-    //       this.optionsCidades.set(result);
-    //       this.observarCidade();
-    //     });
-  }
-
-  observarCidade() {
-    const controlCidade = this.form.get('cidade');
-    if (controlCidade) {
-      this.filteredCidadesOptions = controlCidade.valueChanges.pipe(
-        startWith(''),
-        map(value => {
-          const name = typeof value === 'string' ? value : value?.descricao;
-          return name ? this._filterCidade(name as string) : this.optionsCidades().slice();
-        }),
-      );
-    }
-  }
-
-  displayFnEstado(estado: Estado): string {
-    return estado && estado.descricao;
-  }
-
   displayFnCidade(cidade: Cidade): string {
-    return cidade && cidade.descricao;
+    return cidade && `${cidade.descricao} - ${cidade.uf}`;
   }
 
 }
