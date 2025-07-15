@@ -14,7 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { provideNgxMask } from 'ngx-mask';
-import { forkJoin, map, Observable, startWith } from 'rxjs';
+import { BehaviorSubject, finalize, forkJoin, map, Observable, startWith, switchMap, tap } from 'rxjs';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { EditorComponent } from 'src/app/shared/components/editor/editor.component';
 import { Cidade } from 'src/app/shared/models/cidade';
@@ -23,6 +23,9 @@ import { CHAVE_CONTRATO_CIDADE_PADRAO, CHAVE_CONTRATO_MODELO_PADRAO, Parametro }
 import { AdministrativoService } from 'src/app/shared/services/admin.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
+import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operators';
 
 // Register the locale data for pt-BR
 registerLocaleData(localePt, 'pt-BR');
@@ -57,6 +60,7 @@ export const MY_DATE_FORMATS = {
     MatDatepickerModule,
     MatAutocompleteModule,
     MatDivider,
+    MatProgressSpinner,
     EditorComponent
   ],
   providers: [
@@ -78,51 +82,30 @@ export class ManterComp implements OnInit {
 
   formCidadePadrao!: UntypedFormGroup;
   formModeloContrato!: UntypedFormGroup;
-
-  optionsEstados = signal<Estado[]>([]);
-  filteredEstadosOptions: Observable<Estado[]>;
-  optionsCidades = signal<Cidade[]>([]);
-  filteredCidadesOptions!: Observable<Cidade[]>;
   parametroCidadePadrao = signal<Parametro | null>(null);
   parametroModeloContrato = signal<Parametro | null>(null);
 
-  constructor() {
-    this.filteredEstadosOptions = toObservable(this.optionsEstados);
-  }
+  srvTextSubject = new BehaviorSubject<string>('');
+  cidades = signal(emptyPage<Cidade>());
+  srvLoading = signal(false);
+  pageSize = 10;
+  page = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'descricao', direction: 'asc' }));
+
 
   ngOnInit(): void {
-    this.recuperarConfiguracoes();    
+    this.recuperarConfiguracoes();
     this.createForm();
+    this.observarCidades();
   }
 
   private createForm() {
     this.formCidadePadrao = new UntypedFormGroup({
-      estado: new UntypedFormControl('', [Validators.required]),
       cidade: new UntypedFormControl('', [Validators.required]),
     });
 
     this.formModeloContrato = new UntypedFormGroup({
       modeloContrato: new UntypedFormControl('', [Validators.required]),
     });
-  }
-
-  private initForms() {
-    // iniciar form da cidade padrão
-    this.spinner
-      .showUntilCompleted(this.utilService.recuperarMunicipioPorId(this.parametroCidadePadrao()?.codigoMunicipio))
-      .subscribe(
-        result => {
-          const estadoEncontrado = this.optionsEstados().find(e => e.sigla === result.uf)
-          const cidadeEncontrada = this.optionsCidades().find(c => c.codigo === result.codigo) || result;
-          this.formCidadePadrao.patchValue({
-            ...this.parametroCidadePadrao(),
-            estado: estadoEncontrado,
-            cidade: cidadeEncontrada
-          }, { emitEvent: true });
-        });
-
-    // iniciar form do modelo de contrato
-    this.formModeloContrato.patchValue({ ...this.parametroModeloContrato() });
   }
 
   onSubmitCidade() {
@@ -158,37 +141,6 @@ export class ManterComp implements OnInit {
       });
   }
 
-  observarEstado() {
-    const controlEstado = this.formCidadePadrao.get('estado');
-    if (controlEstado) {
-      this.filteredEstadosOptions = controlEstado.valueChanges.pipe(
-        startWith(''),
-        map(value => {
-          const name = typeof value === 'string' ? value : value?.descricao;
-          return name ? this._filterEstado(name as string) : this.optionsEstados().slice();
-        }),
-      );
-    }
-  }
-
-  private _filterEstado(name: string): Estado[] {
-    const filterValue = name.toLowerCase();
-
-    return this.optionsEstados().filter(option => option.descricao.toLowerCase().includes(filterValue));
-  }
-
-  private _filterCidade(name: string): Cidade[] {
-    const filterValue = name.toLowerCase();
-
-    return this.optionsCidades().filter(option => option.descricao.toLowerCase().includes(filterValue));
-  }
-
-  onEstadoChange(estado: Estado) {
-    if (estado) {
-      this.recuperarCidades(estado);
-    }
-  }
-
   recuperarConfiguracoes() {
     this.spinner.loadingOn();
     (this.spinner as any).loadingCount++; // Accessing private property, see note below
@@ -196,67 +148,60 @@ export class ManterComp implements OnInit {
     forkJoin({
       cidadePadrao: this.admService.findByChave(CHAVE_CONTRATO_CIDADE_PADRAO),
       modeloContrato: this.admService.findByChave(CHAVE_CONTRATO_MODELO_PADRAO),
-      estado: this.utilService.recuperarEstados(),
     }).subscribe({
       next: (results) => {
-        const { cidadePadrao, modeloContrato, estado } = results;
+        const { cidadePadrao, modeloContrato } = results;
         this.parametroCidadePadrao.set(cidadePadrao);
         this.parametroModeloContrato.set(modeloContrato);
-        this.optionsEstados.set(estado);
-          this.observarEstado();
-        this.initForms();
+        this._initFormsModelo();
+        this._initFormCidadePadrao();
       },
       error: (error) => {
         console.error('Error fetching admin parameters:', error);
       },
       complete: () => {
         (this.spinner as any).loadingCount--;
-        // if ((this.spinner as any).loadingCount === 0) {
-        //   this.spinner.loadingOff();
-        // }
+        if ((this.spinner as any).loadingCount === 0) {
+          this.spinner.loadingOff();
+        }
       }
     });
   }
 
-  recuperarEstados() {
-    this.spinner
-      .showUntilCompleted(this.utilService.recuperarEstados())
-      .subscribe(
-        result => {
-          this.optionsEstados.set(result);
-          this.observarEstado();
-        });
-  }
-
-  recuperarCidades(estado: Estado) {
-    this.spinner
-      .showUntilCompleted(this.utilService.recuperarMunicipiosPorEstado(estado))
-      .subscribe(
-        result => {
-          this.optionsCidades.set(result);
-          this.observarCidade();
-        });
-  }
-
-  observarCidade() {
-    const controlCidade = this.formCidadePadrao.get('cidade');
-    if (controlCidade) {
-      this.filteredCidadesOptions = controlCidade.valueChanges.pipe(
-        startWith(''),
-        map(value => {
-          const name = typeof value === 'string' ? value : value?.descricao;
-          return name ? this._filterCidade(name as string) : this.optionsCidades().slice();
-        }),
-      );
+  private _initFormCidadePadrao(): void {
+    const codigoMunicipio = this.parametroCidadePadrao()?.codigoMunicipio;
+    if (codigoMunicipio) {
+      this.utilService.recuperarPorCodigo(codigoMunicipio).subscribe({
+        next: (result) => {
+          this.formCidadePadrao.patchValue({ cidade: result });
+        }
+      });
     }
   }
 
-  displayFnEstado(estado: Estado): string {
-    return estado && estado.descricao;
+  private _initFormsModelo() {    
+    this.formModeloContrato.patchValue({ ...this.parametroModeloContrato() });
+  }
+
+  private observarCidades() {
+    this.srvTextSubject.asObservable()
+      .pipe(
+        debounceDistinctUntilChanged(400),
+        tap(() => this.srvLoading.set(true)),
+        switchMap((text) => {
+          return this.utilService.recuperarPorFiltro(text, this.page()).pipe(
+            minTime(700),
+            finalize(() => this.srvLoading.set(false))
+          );
+        })
+      ).subscribe({
+        next: (result) => this.cidades.set(result),
+        error: (err) => console.log(err),
+      });
   }
 
   displayFnCidade(cidade: Cidade): string {
-    return cidade && cidade.descricao;
+    return cidade && `${cidade.descricao} - ${cidade.uf}`;
   }
 
 }

@@ -117,20 +117,20 @@ export class ManterComp implements OnInit {
   private initForm() {
     const tempEntity = this.route.snapshot.data['entity'] as Contrato;
 
-    if (tempEntity) {
-      this.contrato.set(tempEntity);
-      this.spinner
-        .showUntilCompleted(this.utilService.recuperarMunicipioPorId(this.contrato()?.cidade.codigo))
-        .subscribe(
-          result => {
-            const estadoEncontrado = this.optionsEstados().find(e => e.sigla === result.uf)
-            const cidadeEncontrada = this.optionsCidades().find(c => c.codigo === result.codigo) || result;
-            this.form.patchValue({
-              ...this.contrato(),
-              estado: estadoEncontrado,
-            }, { emitEvent: true });
-          });
-    }
+    // if (tempEntity) {
+    //   this.contrato.set(tempEntity);
+    //   this.spinner
+    //     .showUntilCompleted(this.utilService.recuperarMunicipioPorId(this.contrato()?.cidade.codigo))
+    //     .subscribe(
+    //       result => {
+    //         const estadoEncontrado = this.optionsEstados().find(e => e.sigla === result.uf)
+    //         const cidadeEncontrada = this.optionsCidades().find(c => c.codigo === result.codigo) || result;
+    //         this.form.patchValue({
+    //           ...this.contrato(),
+    //           estado: estadoEncontrado,
+    //         }, { emitEvent: true });
+    //       });
+    // }
   }
 
   onSubmit() {
@@ -182,23 +182,23 @@ export class ManterComp implements OnInit {
   }
 
   recuperarEstados() {
-    this.spinner
-      .showUntilCompleted(this.utilService.recuperarEstados())
-      .subscribe(
-        result => {
-          this.optionsEstados.set(result);
-          this.observarEstado();
-        });
+    // this.spinner
+    //   .showUntilCompleted(this.utilService.recuperarEstados())
+    //   .subscribe(
+    //     result => {
+    //       this.optionsEstados.set(result);
+    //       this.observarEstado();
+    //     });
   }
 
   recuperarCidades(estado: Estado) {
-    this.spinner
-      .showUntilCompleted(this.utilService.recuperarMunicipiosPorEstado(estado))
-      .subscribe(
-        result => {
-          this.optionsCidades.set(result);
-          this.observarCidade();
-        });
+    // this.spinner
+    //   .showUntilCompleted(this.utilService.recuperarMunicipiosPorEstado(estado))
+    //   .subscribe(
+    //     result => {
+    //       this.optionsCidades.set(result);
+    //       this.observarCidade();
+    //     });
   }
 
   observarCidade() {
