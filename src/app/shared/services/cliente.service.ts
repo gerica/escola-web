@@ -11,8 +11,7 @@ export class ClienteService {
 
   private apollo = inject(Apollo);
 
-  salvar(id: number | undefined, cliente: Partial<Cliente>): Observable<Cliente> {
-    console.log(cliente);
+  salvar(id: number | undefined, cliente: Partial<Cliente>): Observable<Cliente> {    
     return this.apollo.mutate<any>({
       mutation: SAVE_CLIENTE,
       variables: {
@@ -75,8 +74,7 @@ export class ClienteService {
       fetchPolicy: 'network-only' // Use network-only or no-cache for individual fetches to ensure fresh data
     }).pipe(
       map(result => {
-        const entity = result.data.fetchByIdCliente as Cliente
-        console.log(entity);
+        const entity = result.data.fetchByIdCliente as Cliente        
         return {
           ...entity,
           cidade: {
@@ -87,9 +85,9 @@ export class ClienteService {
           }
         }
       }),
-      tap(value => {
-        console.log("Received GraphQL data (fetchByIdCliente):", value);
-      }),
+      // tap(value => {
+      //   console.log("Received GraphQL data (fetchByIdCliente):", value);
+      // }),
       // map(result => result)
     );
   }

@@ -119,7 +119,6 @@ export class ManterComp implements OnInit {
         // cidade: { descricao: this.cliente()?.cidadeDesc, uf: this.cliente()?.uf, codigoCidade: this.cliente()?.codigoCidade }
       }, { emitEvent: true });
     }
-    console.log(this.form.value);
   }
 
 
