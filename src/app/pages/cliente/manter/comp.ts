@@ -139,7 +139,7 @@ export class ManterComp implements OnInit {
       });
   }
 
-  onSubmit() {
+  onSubmit() {    
     if (!this.form.valid) {
       this.notification.showError('Informe todos os campos obrigatórios.');
       this.form.markAllAsTouched();

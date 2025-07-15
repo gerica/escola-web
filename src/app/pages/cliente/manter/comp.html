@@ -93,6 +93,15 @@
             </mat-form-field>
 
           </section>
+          <section>
+            <mat-form-field appearance="outline" class="mat-form-field-custom">
+              <mat-label>Endereço</mat-label>
+              <input id="emailInput" matInput formControlName="endereco">
+               @if(form.controls['endereco'].hasError('endereco')){
+              <mat-error> Endereço é <strong>obrigatório</strong> </mat-error>
+              }
+            </mat-form-field>
+          </section>
 
 
           <section class="container">
