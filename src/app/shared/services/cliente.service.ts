@@ -21,11 +21,9 @@ export class ClienteService {
           docCPF: cliente.docCPF,
           docRG: cliente.docRG,
           dataNascimento: DataUtils.formatDateToYYYYMMDD(cliente.dataNascimento),
-          cidade: {
-            codigo: cliente.cidade?.codigo,
-            descricao: cliente.cidade?.descricao,
-            uf: cliente.cidade?.uf
-          },
+          cidade: cliente.cidade,
+          codigoCidade: cliente.codigoCidade,
+          uf: cliente.uf,
           endereco: cliente.endereco,
           email: cliente.email,
           profissao: cliente.profissao,
