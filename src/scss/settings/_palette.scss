@@ -167,6 +167,41 @@ $info: (
   500: #2196f3, // Blue
 );
 
+$warningPlus: (
+  50: #FEF6F0,   // Mais claro
+  100: #FCDDC7,
+  200: #F9C39B,
+  300: #F5A971,
+  400: #F0904B,
+  500: #EB9753,   // Sua cor base
+  600: #E68B4D,
+  700: #E07E44,
+  800: #D96F3D,
+  900: #D05A32,   // Mais escuro
+  // Tons acentuados (se precisar, geralmente não são necessários para uma paleta principal)
+  A100: #FFFFFF, // Branco para contraste em fundos escuros
+  A200: #FFF5F2,
+  A400: #FFDFD9,
+  A700: #FFC0B3,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: rgba(black, 0.87), // Provavelmente preto para contraste em #EB9753
+    600: rgba(white, 0.87), // Começando a usar branco para contraste
+    700: rgba(white, 0.87),
+    800: rgba(white, 0.87),
+    900: rgba(white, 0.87),
+    A100: rgba(black, 0.87),
+    A200: rgba(black, 0.87),
+    A400: rgba(black, 0.87),
+    A700: rgba(black, 0.87),
+  ),
+);
+
+
 
 $toolbar-text: #ffffff;
 $toolbar-background: mat.m2-get-color-from-palette($primarias, 500); // Now a darker red

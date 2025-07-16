@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { ButtonsRowComponent, InnercardComponent } from 'src/app/shared/components';
 import Cliente from 'src/app/shared/models/cliente';
+import { StatusClienteLabelMapping } from 'src/app/shared/models/status-cliente.enum';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
 
 
@@ -25,4 +26,5 @@ import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pi
 })
 export class ClienteDetalheDialog {
   public readonly data: Cliente = inject(MAT_DIALOG_DATA);
+  statusClienteLabelMapping = StatusClienteLabelMapping;
 }

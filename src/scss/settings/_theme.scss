@@ -1,11 +1,14 @@
+// seu_tema.scss
 @use 'sass:map';
-@use 'palette';
+@use 'palette'; // Assumindo que 'palette.scss' está no mesmo diretório ou acessível
 @use '@angular/material' as mat;
 
 @include mat.core();
+
+// Suas definições de paleta e temas já existentes
 $web-primary: mat.m2-define-palette(palette.$primarias, A200, A100, A400);
 $web-accent: mat.m2-define-palette(palette.$secundarias);
-$web-warn: mat.m2-define-palette(mat.$m2-red-palette);
+$web-warn: mat.m2-define-palette(mat.$m2-red-palette); // Usando a paleta de vermelho padrão do Material para 'warn'
 
 // Define a light theme
 $web-theme: mat.m2-define-light-theme((color: (primary: $web-primary,
@@ -20,14 +23,60 @@ $web-dark-theme: mat.m2-define-dark-theme((color: (primary: $web-accent,
         accent: $web-primary,
         warn: $web-warn,
       ),
-      // Only include `typography` and `density` in the default dark theme.
       typography: mat.m2-define-typography-config(),
       density: 0,
     ));
 
 @include mat.all-component-themes($web-theme);
+// Se você estiver usando um dark theme condicionalmente, inclua-o aqui também:
+// @include mat.all-component-themes($web-dark-theme);
 
-// --- Custom Tab Theme Overrides ---
+
+// --- Adicionar Mixin para Cores Customizadas (info, success, warning, error) ---
+@mixin custom-status-colors($palette-info, $palette-success, $palette-warning, $palette-error, $palette-warningPlus) {
+  // Cores para Ícones e Textos
+  .mat-icon.color-info, .mat-text-color-info {
+    color: mat.m2-get-color-from-palette($palette-warningPlus, 500); // Tom 500 da sua paleta $info
+  }
+
+  .mat-icon.color-success, .mat-text-color-success {
+    color: mat.m2-get-color-from-palette($palette-success, 500); // Tom 500 da sua paleta $success
+  }
+
+  .mat-icon.color-warning, .mat-text-color-warning {
+    color: mat.m2-get-color-from-palette($palette-warning, 500); // Tom 500 da sua paleta $warning
+  }
+
+  // Você pode ter uma classe `color-error` separada da `warn` do tema se precisar.
+  .mat-icon.color-error, .mat-text-color-error {
+    color: mat.m2-get-color-from-palette($palette-error, 500); // Tom 500 da sua paleta $error
+  }
+
+  // Cores de Fundo (se precisar para tags, por exemplo)
+  .background-info {
+    background-color: mat.m2-get-color-from-palette($palette-info, 50); // Tom 50 para fundo claro
+  }
+  .background-success {
+    background-color: mat.m2-get-color-from-palette($palette-success, 50);
+  }
+  .background-warning {
+    background-color: mat.m2-get-color-from-palette($palette-warning, 50);
+  }
+  .background-error {
+    background-color: mat.m2-get-color-from-palette($palette-error, 50);
+  }
+}
+
+// Incluir o mixin customizado, passando suas paletas definidas em `palette.scss`
+@include custom-status-colors(
+  palette.$info,
+  palette.$success,
+  palette.$warning,
+  palette.$error,
+  palette.$warningPlus,
+);
+
+// --- Custom Tab Theme Overrides (Seu código existente, mantido aqui para contexto) ---
 $selected-tab-indicator-color: mat.m2-get-color-from-palette(palette.$primarias, 500); // #ffd872
 $selected-tab-label-color: mat.m2-get-color-from-palette(palette.$primarias, 500);
 
@@ -41,29 +90,6 @@ $selected-tab-label-color: mat.m2-get-color-from-palette(palette.$primarias, 500
   --mat-tab-header-active-focus-label-text-color: #{$selected-tab-indicator-color};
   --mat-tab-header-active-hover-indicator-color: #{$selected-tab-indicator-color};
   --mat-tab-header-active-focus-indicator-color: #{$selected-tab-indicator-color};
-
-
-  // Aba Inativa (Inactive Tab)
-  // --mdc-tab-label-text-color: #{$selected-tab-indicator-color};
-  // --mat-tab-header-inactive-ripple-color: #{$selected-tab-indicator-color};
-  // --mat-tab-header-inactive-hover-label-text-color: #{$selected-tab-indicator-color};
-  // --mat-tab-header-inactive-focus-label-text-color: #{$selected-tab-indicator-color};
-
-  // Tipografia e Dimensões
-
-  // --mdc-secondary-navigation-tab-container-height	Altura total do cabeçalho das abas (padrão: 48px).
-  // --mat-tab-header-label-text-font	Família da fonte para o texto das abas.
-  // --mat-tab-header-label-text-size	Tamanho da fonte do texto das abas.
-  // --mat-tab-header-label-text-weight	Peso (espessura) da fonte do texto das abas.
-  // --mat-tab-header-label-text-tracking	Espaçamento entre as letras (letter-spacing).
-  // --mdc-tab-indicator-active-indicator-height	Espessura da linha indicadora (padrão: 2px).
-  // --mdc-tab-indicator-active-indicator-shape	border-radius da linha indicadora (ex: 2px 2px 0 0).
-  // Estilos Gerais do Cabeçalho
-
-  // --mat-tab-header-divider-color:#{$selected-tab-indicator-color};
-  // // --mat-tab-header-divider-height	Espessura da linha de base do cabeçalho (padrão: 1px).
-  // --mat-tab-header-pagination-icon-color:#{$selected-tab-indicator-color};
-  // --mat-tab-header-background-color:#{$selected-tab-indicator-color};
 }
 
 //Novos estilos dos componentes
@@ -78,7 +104,6 @@ $selected-tab-label-color: mat.m2-get-color-from-palette(palette.$primarias, 500
   }
 
   .mat-mdc-tab:not(.mdc-tab--active) .mat-icon {
-    // Exemplo: Usa a cor padrão do Material Design para ícones inativos em temas claros.
     color: rgba(0, 0, 0, 0.54);
   }
 }

@@ -91,26 +91,55 @@ export class ManterComp implements OnInit {
   srvTextSubject = new BehaviorSubject<string>('');
   clientes = signal(emptyPage<Cliente>());
   srvLoading = signal(false);
+
+  srvCidadeSubject = new BehaviorSubject<string>('');
+  cidades = signal(emptyPage<Cidade>());
+  srvCidadeLoading = signal(false);
+
   pageSize = 10;
   page = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'nome', direction: 'asc' }));
+  pageCidade = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'descricao', direction: 'asc' }));
 
   constructor() {
     this.filteredEstadosOptions = toObservable(this.optionsEstados);
   }
 
   ngOnInit(): void {
-    this.recuperarEstados();
     this.createForm();
     this.initForm();
-    this.observarClientes();
+    this._observarClientes();
+    this._observarCidades();
+
+  }
+
+  displayCliente = (item: Cliente) => (!!item && `${item.nome}`) || '';
+
+  displayFnCidade(cidade: Cidade): string {
+    return cidade && `${cidade.descricao} - ${cidade.uf}`;
+  }
+
+  onSubmit() {
+    if (!this.form.valid) {
+      this.notification.showError('Informe todos os campos obrigatórios.');
+      this.form.markAllAsTouched();
+      this.form.markAsDirty();
+      return;
+    }
+
+    this.spinner.showUntilCompleted(
+      this.contratoService.salvar(this.contrato()?.id, this.form.value as Partial<Contrato>)).subscribe({
+        next: (result) => {
+          this.contrato.set(result);
+          this.notification.showSuccess('Operação realizada com sucesso.');
+        }
+      });
   }
 
   private createForm() {
     this.form = new UntypedFormGroup({
       cliente: new UntypedFormControl('', [Validators.required]),
-      dataContrato: new UntypedFormControl('', [Validators.required]),
-      estado: new UntypedFormControl('', [Validators.required]),
-      cidade: new UntypedFormControl('', [Validators.required]),     
+      dataContrato: new UntypedFormControl('', [Validators.required]),      
+      cidade: new UntypedFormControl('', [Validators.required]),
     });
   }
 
@@ -133,96 +162,7 @@ export class ManterComp implements OnInit {
     // }
   }
 
-  onSubmit() {
-    if (!this.form.valid) {
-      this.notification.showError('Informe todos os campos obrigatórios.');
-      this.form.markAllAsTouched();
-      this.form.markAsDirty();
-      return;
-    }
-
-    this.spinner.showUntilCompleted(
-      this.contratoService.salvar(this.contrato()?.id, this.form.value as Partial<Contrato>)).subscribe({
-        next: (result) => {
-          this.contrato.set(result);
-          this.notification.showSuccess('Operação realizada com sucesso.');
-        }
-      });
-  }
-
-  observarEstado() {
-    const controlEstado = this.form.get('estado');
-    if (controlEstado) {
-      this.filteredEstadosOptions = controlEstado.valueChanges.pipe(
-        startWith(''),
-        map(value => {
-          const name = typeof value === 'string' ? value : value?.descricao;
-          return name ? this._filterEstado(name as string) : this.optionsEstados().slice();
-        }),
-      );
-    }
-  }
-
-  private _filterEstado(name: string): Estado[] {
-    const filterValue = name.toLowerCase();
-
-    return this.optionsEstados().filter(option => option.descricao.toLowerCase().includes(filterValue));
-  }
-
-  private _filterCidade(name: string): Cidade[] {
-    const filterValue = name.toLowerCase();
-
-    return this.optionsCidades().filter(option => option.descricao.toLowerCase().includes(filterValue));
-  }
-
-  onEstadoChange(estado: Estado) {
-    if (estado) {
-      this.recuperarCidades(estado);
-    }
-  }
-
-  recuperarEstados() {
-    // this.spinner
-    //   .showUntilCompleted(this.utilService.recuperarEstados())
-    //   .subscribe(
-    //     result => {
-    //       this.optionsEstados.set(result);
-    //       this.observarEstado();
-    //     });
-  }
-
-  recuperarCidades(estado: Estado) {
-    // this.spinner
-    //   .showUntilCompleted(this.utilService.recuperarMunicipiosPorEstado(estado))
-    //   .subscribe(
-    //     result => {
-    //       this.optionsCidades.set(result);
-    //       this.observarCidade();
-    //     });
-  }
-
-  observarCidade() {
-    const controlCidade = this.form.get('cidade');
-    if (controlCidade) {
-      this.filteredCidadesOptions = controlCidade.valueChanges.pipe(
-        startWith(''),
-        map(value => {
-          const name = typeof value === 'string' ? value : value?.descricao;
-          return name ? this._filterCidade(name as string) : this.optionsCidades().slice();
-        }),
-      );
-    }
-  }
-
-  displayFnEstado(estado: Estado): string {
-    return estado && estado.descricao;
-  }
-
-  displayFnCidade(cidade: Cidade): string {
-    return cidade && cidade.descricao;
-  }
-
-  private observarClientes() {
+  private _observarClientes() {
     this.srvTextSubject.asObservable()
       .pipe(
         debounceDistinctUntilChanged(400),
@@ -242,6 +182,24 @@ export class ManterComp implements OnInit {
       });
   }
 
-  displayCliente = (item: Cliente) => (!!item && `${item.nome}`) || '';
+  private _observarCidades() {
+    this.srvTextSubject.asObservable()
+      .pipe(
+        debounceDistinctUntilChanged(400),
+        tap(() => this.srvLoading.set(true)),
+        switchMap((text) => {
+          const observer$ = this.utilService.recuperarPorFiltro(text, this.pageCidade());
+
+          return observer$.pipe(
+            minTime(700),
+            finalize(() => this.srvLoading.set(false))
+          );
+        })
+      ).subscribe({
+        next: (result) => {
+          this.cidades.set(result);
+        }
+      });
+  }
 
 }

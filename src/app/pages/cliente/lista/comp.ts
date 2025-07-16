@@ -19,6 +19,7 @@ import { ClienteDetalheDialog } from './detalhe';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { StatusCliente, StatusClienteLabelMapping } from 'src/app/shared/models/status-cliente.enum';
 
 @Component({
   selector: 'app-cliente-list',
@@ -56,6 +57,7 @@ export class ListComp implements OnInit, OnDestroy {
   displayedColumns: string[] = ['nome', 'dataNascimento', 'docCPF', 'email', 'acoes'];
   // Subject to emit a signal when the component is destroyed, for RxJS cleanup
   private destroy$ = new Subject<void>();
+  statusClienteLabelMapping = StatusClienteLabelMapping;
 
   ngOnInit(): void {
     this.buscarClientes();
@@ -104,6 +106,42 @@ export class ListComp implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  // Novo método para obter a classe CSS da linha
+  getIconePorStatus(status: StatusCliente): string {
+    switch (status) {
+      case StatusCliente.ATIVO:
+        return 'status-ativo';
+      case StatusCliente.INATIVO:
+        return 'status-inativo';
+      case StatusCliente.BLOQUEADO:
+        return 'block';
+      case StatusCliente.PENDENTE_APROVACAO:
+        return 'status-pendente';
+      default:
+        return ''; // Retorna vazio se não houver um status correspondente
+    }
+  }
+
+  getStatusClienteDesc(status: StatusCliente){
+    return this.statusClienteLabelMapping[status];
+  }
+
+  isStatusAtivo(status: StatusCliente): boolean {
+    return status === StatusCliente.ATIVO;
+  }
+
+  isStatusInativo(status: StatusCliente): boolean {
+    return status === StatusCliente.INATIVO;
+  }
+
+  isStatusBloqueado(status: StatusCliente): boolean {
+    return status === StatusCliente.BLOQUEADO;
+  }
+
+  isStatusPendente(status: StatusCliente): boolean {
+    return status === StatusCliente.PENDENTE_APROVACAO;
   }
 
 }

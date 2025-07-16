@@ -1,5 +1,6 @@
 import { gql } from "apollo-angular";
 import { Cidade } from "./cidade";
+import { StatusCliente } from "./status-cliente.enum";
 
 export default interface Cliente {
   id: number,
@@ -15,6 +16,7 @@ export default interface Cliente {
   email: string,
   profissao: string,
   localTrabalho: string,
+  statusCliente: StatusCliente
 }
 
 
@@ -33,6 +35,7 @@ const SAVE_CLIENTE = gql`
       endereco
       profissao
       localTrabalho
+      statusCliente
     }
   }
 `;
@@ -60,6 +63,7 @@ const FETCH_ALL_CLIENTES = gql`
         localTrabalho
         nome
         profissao
+        statusCliente
       }
     }
   }
@@ -80,6 +84,7 @@ const FETCH_CLIENTE_BY_ID = gql`
       email
       profissao
       localTrabalho
+      statusCliente
     }
   }
 `;

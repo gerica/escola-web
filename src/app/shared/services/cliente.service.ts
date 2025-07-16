@@ -28,6 +28,7 @@ export class ClienteService {
           email: cliente.email,
           profissao: cliente.profissao,
           localTrabalho: cliente.localTrabalho,
+          statusCliente: cliente.statusCliente
         },
       },
       context: {
