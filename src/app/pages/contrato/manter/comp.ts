@@ -2,7 +2,7 @@ import { CommonModule, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt'; // This provides the locale data
 import { Component, inject, LOCALE_ID, OnInit, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { ReactiveFormsModule, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
@@ -26,6 +26,9 @@ import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
 import { ContratoService } from 'src/app/shared/services/contrato.service';
 import Contrato from 'src/app/shared/models/contrato';
+import { StatusContrato, StatusContratoLabelMapping } from 'src/app/shared/models/status-contrato.enum';
+import { PeriodoPagamento, PeriodoPagamentoLabelMapping } from 'src/app/shared/models/periodos-pagamento.enum';
+import { MatSelectModule } from '@angular/material/select';
 
 // Register the locale data for pt-BR
 registerLocaleData(localePt, 'pt-BR');
@@ -60,6 +63,7 @@ export const MY_DATE_FORMATS = {
     MatDatepickerModule,
     MatAutocompleteModule,
     MatAutocompleteModule,
+    MatSelectModule,
     MatProgressSpinnerModule
   ],
   providers: [
@@ -79,6 +83,7 @@ export class ManterComp implements OnInit {
   private readonly clienteService = inject(ClienteService);
   private readonly contratoService = inject(ContratoService);
   private readonly utilService = inject(UtilsService);
+  private readonly fb = inject(FormBuilder);
 
   form!: UntypedFormGroup;
 
@@ -96,6 +101,11 @@ export class ManterComp implements OnInit {
   cidades = signal(emptyPage<Cidade>());
   srvCidadeLoading = signal(false);
 
+  statusContrato = Object.values(StatusContrato);
+  statusContratoLabelMapping = StatusContratoLabelMapping;
+  periodosPagamento = Object.values(PeriodoPagamento);
+  periodosPagamentoLabelMapping = PeriodoPagamentoLabelMapping;
+
   pageSize = 10;
   page = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'nome', direction: 'asc' }));
   pageCidade = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'descricao', direction: 'asc' }));
@@ -105,7 +115,7 @@ export class ManterComp implements OnInit {
   }
 
   ngOnInit(): void {
-    this.createForm();
+    this._createForm();
     this.initForm();
     this._observarClientes();
     this._observarCidades();
@@ -135,11 +145,18 @@ export class ManterComp implements OnInit {
       });
   }
 
-  private createForm() {
-    this.form = new UntypedFormGroup({
-      cliente: new UntypedFormControl('', [Validators.required]),
-      dataContrato: new UntypedFormControl('', [Validators.required]),      
-      cidade: new UntypedFormControl('', [Validators.required]),
+  private _createForm() {
+    this.form = this.fb.group({
+      numeroContrato: new FormControl('', [Validators.required]),
+      cliente: new FormControl('', [Validators.required]),      
+      dataInicio: new FormControl('', [Validators.required]),
+      dataFim: new FormControl('', [Validators.required]),
+      valorTotal: new FormControl('', [Validators.required]),
+      descricao: new FormControl('', []),
+      statusContrato: new FormControl('', [Validators.required]),
+      termosCondicoes: new FormControl('', [Validators.required]),
+      periodoPagamento: new FormControl('', [Validators.required]),
+      observacoes: new FormControl('', []),
     });
   }
 

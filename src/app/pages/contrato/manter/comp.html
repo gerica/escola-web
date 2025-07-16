@@ -8,52 +8,84 @@
           Dados
         </ng-template>
 
+        <!--
+        String ,
+        String contratoDoc -->
+
         <app-innercard class="cardInner">
           <section class="containerLinha">
-              <mat-form-field appearance="outline">
-                <mat-label>Contratante...</mat-label>
-                <input #srvInput matInput type="text" formControlName="cliente" [matAutocomplete]="clienteAutoComplete"
-                  (input)="srvTextSubject.next(srvInput.value)" />
-              </mat-form-field>
-
-              <!-- Autocomplete -->
-              <mat-autocomplete #clienteAutoComplete="matAutocomplete" requireSelection autoActiveFirstOption
-                [displayWith]="displayCliente">
-                <mat-option *ngIf="srvLoading()">
-                  <mat-spinner diameter="30" />
-                </mat-option>
-
-                <mat-option *ngIf="!clientes().content && !srvLoading()">
-                  Nenhum registro encontrado
-                </mat-option>
-
-                <ng-container *ngIf="!srvLoading()">
-                  <mat-option *ngFor="let item of clientes().content" [value]="item">
-                    {{ item?.nome }}
-                  </mat-option>
-                </ng-container>
-              </mat-autocomplete>
 
             <mat-form-field appearance="outline">
-              <mat-label>Data do contrato</mat-label>
-              <input matInput [matDatepicker]="picker" formControlName="dataContrato">
-              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-              @if(form.controls['dataContrato'].hasError('required')){
+              <mat-label>Número do processo</mat-label>
+              <input matInput formControlName="numeroContrato">
+              @if(form.controls['numeroContrato'].hasError('required') && (form.controls['numeroContrato'].touched ||
+              form.controls['numeroContrato'].dirty)){
+              <mat-error> Número do contrato é <strong>obrigatório</strong> </mat-error>
+              }
+            </mat-form-field>
+
+            <!-- contratante -->
+            <mat-form-field appearance="outline">
+              <mat-label>Contratante...</mat-label>
+              <input #srvInput matInput type="text" formControlName="cliente" [matAutocomplete]="clienteAutoComplete"
+                (input)="srvTextSubject.next(srvInput.value)" />
+              @if(form.controls['cliente'].hasError('required') && (form.controls['cliente'].touched ||
+              form.controls['cliente'].dirty)){
+              <mat-error> Cliente é <strong>obrigatório</strong> </mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Autocomplete -->
+            <mat-autocomplete #clienteAutoComplete="matAutocomplete" requireSelection autoActiveFirstOption
+              [displayWith]="displayCliente">
+              <mat-option *ngIf="srvLoading()">
+                <mat-spinner diameter="30" />
+              </mat-option>
+
+              <mat-option *ngIf="!clientes().content && !srvLoading()">
+                Nenhum registro encontrado
+              </mat-option>
+
+              <ng-container *ngIf="!srvLoading()">
+                <mat-option *ngFor="let item of clientes().content" [value]="item">
+                  {{ item?.nome }}
+                </mat-option>
+              </ng-container>
+            </mat-autocomplete>
+            <!-- final contratante -->
+
+            <mat-form-field appearance="outline">
+              <mat-label>Data incio</mat-label>
+              <input matInput [matDatepicker]="pickerDtInicio" formControlName="dataInicio">
+              <mat-datepicker-toggle matIconSuffix [for]="pickerDtInicio"></mat-datepicker-toggle>
+              <mat-datepicker #pickerDtInicio></mat-datepicker>
+              @if(form.controls['dataInicio'].hasError('required')){
               <mat-error>
-                A data de nascimento é <strong>obrigatório</strong>
+                A data início é <strong>obrigatório</strong>
               </mat-error>
               }
             </mat-form-field>
 
             <mat-form-field appearance="outline">
+              <mat-label>Data Final</mat-label>
+              <input matInput [matDatepicker]="pickerDtFinal" formControlName="dataFim">
+              <mat-datepicker-toggle matIconSuffix [for]="pickerDtFinal"></mat-datepicker-toggle>
+              <mat-datepicker #pickerDtFinal></mat-datepicker>
+              @if(form.controls['dataFim'].hasError('required')){
+              <mat-error>
+                A data final é <strong>obrigatório</strong>
+              </mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Cidade -->
+            <!-- <mat-form-field appearance="outline">
               <mat-label>Cidade</mat-label>
               <input #srvInput matInput type="text" formControlName="cidade" [matAutocomplete]="cidadeAutoComplete"
                 (input)="srvCidadeSubject.next(srvInput.value)" />
-            </mat-form-field>
+            </mat-form-field> -->
 
-            <!-- Autocomplete -->
-            <mat-autocomplete #cidadeAutoComplete="matAutocomplete" requireSelection autoActiveFirstOption
+            <!-- <mat-autocomplete #cidadeAutoComplete="matAutocomplete" requireSelection autoActiveFirstOption
               [displayWith]="displayFnCidade">
               <mat-option *ngIf="srvCidadeLoading()">
                 <mat-spinner diameter="30" />
@@ -68,7 +100,80 @@
                   {{ item?.descricao }} - {{ item?.estado }}
                 </mat-option>
               </ng-container>
-            </mat-autocomplete>
+            </mat-autocomplete> -->
+            <!-- final Cidade -->
+          </section>
+
+          <section>
+            <mat-form-field appearance="outline">
+              <mat-label>Valor do contrato</mat-label>
+              <input matInput formControlName="valorTotal" mask="separator.2" thousandSeparator="." decimalMarker=","
+                prefix="R$ ">
+              @if(form.controls['valorTotal'].hasError('required') && (form.controls['valorTotal'].touched ||
+              form.controls['valorTotal'].dirty)){
+              <mat-error> Valor do contrato é <strong>obrigatório</strong> </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Status cliente</mat-label>
+              <mat-select formControlName="statusContrato">
+                @for (item of statusContrato; track item) {
+                <mat-option [value]="item">{{statusContratoLabelMapping[item]}}</mat-option>
+                }
+              </mat-select>
+              @if(form.controls['statusContrato'].hasError('required') && (form.controls['statusContrato'].touched ||
+              form.controls['statusContrato'].dirty)){
+              <mat-error>
+                O status do contrato é <strong>obrigatório</strong>
+              </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Periodo pagamento</mat-label>
+              <mat-select formControlName="periodoPagamento">
+                @for (item of periodosPagamento; track item) {
+                <mat-option [value]="item">{{periodosPagamentoLabelMapping[item]}}</mat-option>
+                }
+              </mat-select>
+              @if(form.controls['periodoPagamento'].hasError('required') && (form.controls['periodoPagamento'].touched
+              ||
+              form.controls['periodoPagamento'].dirty)){
+              <mat-error>
+                O Período de pagamento é <strong>obrigatório</strong>
+              </mat-error>
+              }
+            </mat-form-field>
+
+          </section>
+
+          <section>
+            <mat-form-field appearance="outline" class="mat-form-field-custom">
+              <mat-label>Descrição do contrato</mat-label>
+              <input matInput formControlName="descricao">              
+            </mat-form-field>
+          </section>
+
+          <section>
+
+
+            <mat-form-field appearance="outline" class="mat-form-field-custom">
+              <mat-label>Termos e Condições</mat-label>
+              <textarea matInput formControlName="termosCondicoes" rows="5"
+                placeholder="Digite os termos e condições aqui..."></textarea>
+              @if(form.controls['termosCondicoes'].hasError('required') && (form.controls['termosCondicoes'].touched ||
+              form.controls['termosCondicoes'].dirty)){
+              <mat-error> Os termos e condições são <strong>obrigatórios</strong> </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="mat-form-field-custom">
+              <mat-label>Observações</mat-label>
+              <textarea matInput formControlName="observacoes" rows="5"
+                placeholder="Digite os observações aqui..."></textarea>
+
+            </mat-form-field>
 
           </section>
 
