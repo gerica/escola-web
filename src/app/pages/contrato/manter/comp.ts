@@ -116,7 +116,7 @@ export class ManterComp implements OnInit {
 
   ngOnInit(): void {
     this._createForm();
-    this.initForm();
+    this._initForm();
     this._observarClientes();
     this._observarCidades();
 
@@ -137,7 +137,7 @@ export class ManterComp implements OnInit {
     }
 
     this.spinner.showUntilCompleted(
-      this.contratoService.salvar(this.contrato()?.id, this.form.value as Partial<Contrato>)).subscribe({
+      this.contratoService.salvar(this.contrato()?.idContrato, this.form.value as Partial<Contrato>)).subscribe({
         next: (result) => {
           this.contrato.set(result);
           this.notification.showSuccess('Operação realizada com sucesso.');
@@ -145,10 +145,23 @@ export class ManterComp implements OnInit {
       });
   }
 
+  carregarContrato() {
+    const contrato = this.contrato();
+    if (!contrato?.idContrato) {
+      return;
+    }
+    this.spinner.showUntilCompleted(
+      this.contratoService.carregarContrato(contrato.idContrato)).subscribe({
+        next: (result) => {
+          console.log(result);
+        }
+      });
+  }
+
   private _createForm() {
     this.form = this.fb.group({
       numeroContrato: new FormControl('', [Validators.required]),
-      cliente: new FormControl('', [Validators.required]),      
+      cliente: new FormControl('', [Validators.required]),
       dataInicio: new FormControl('', [Validators.required]),
       dataFim: new FormControl('', [Validators.required]),
       valorTotal: new FormControl('', [Validators.required]),
@@ -160,23 +173,22 @@ export class ManterComp implements OnInit {
     });
   }
 
-  private initForm() {
+  private _initForm() {
     const tempEntity = this.route.snapshot.data['entity'] as Contrato;
 
-    // if (tempEntity) {
-    //   this.contrato.set(tempEntity);
-    //   this.spinner
-    //     .showUntilCompleted(this.utilService.recuperarMunicipioPorId(this.contrato()?.cidade.codigo))
-    //     .subscribe(
-    //       result => {
-    //         const estadoEncontrado = this.optionsEstados().find(e => e.sigla === result.uf)
-    //         const cidadeEncontrada = this.optionsCidades().find(c => c.codigo === result.codigo) || result;
-    //         this.form.patchValue({
-    //           ...this.contrato(),
-    //           estado: estadoEncontrado,
-    //         }, { emitEvent: true });
-    //       });
-    // }
+    if (tempEntity) {
+      this.contrato.set(tempEntity);
+      this.spinner
+        .showUntilCompleted(this.clienteService.recuperarPorId(this.contrato()?.idCliente as number))
+        .subscribe(
+          result => {
+
+            this.form.patchValue({
+              ...this.contrato(),
+              cliente: result,
+            }, { emitEvent: true });
+          });
+    }
   }
 
   private _observarClientes() {

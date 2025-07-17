@@ -76,7 +76,6 @@ export class ListComp implements OnInit, OnDestroy {
   }
 
   buscarContratos() {
-    console.log('buscar cotnratos');
     this.spinner
       .showUntilCompleted(this.contratosService.buscar(this.ctrlFiltro.value, this.page()))
       .subscribe(result => {

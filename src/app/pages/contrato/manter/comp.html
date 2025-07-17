@@ -179,12 +179,13 @@
 
           <section class="container">
             <button mat-raised-button color="secondary" type="button" routerLink="/contrato">Voltar</button>
+            <button mat-raised-button color="primary" type="button" (click)="carregarContrato()">Carregar Contrato</button>
             <button mat-raised-button color="primary" type="submit">Salvar</button>
           </section>
         </app-innercard>
       </mat-tab>
 
-      @if(contrato()?.id){
+      @if(contrato()?.idContrato){
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon>call</mat-icon>
