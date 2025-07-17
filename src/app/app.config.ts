@@ -1,5 +1,5 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, inject, provideAppInitializer } from '@angular/core';
+import { ApplicationConfig, DEFAULT_CURRENCY_CODE, inject, LOCALE_ID, provideAppInitializer } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { InMemoryCache, Operation } from '@apollo/client/core';
 import { APOLLO_OPTIONS, Apollo } from 'apollo-angular';
@@ -21,7 +21,7 @@ const maskConfigFunction: () => Partial<NgxMaskConfig> = () => {
 };
 
 
-const createApollo = (httpLink: HttpLink) => {  
+const createApollo = (httpLink: HttpLink) => {
   return {
     cache: new InMemoryCache(),
     link: httpLink.create({
@@ -64,5 +64,8 @@ export const appConfig: ApplicationConfig = {
       useFactory: () => inject(AuthService).token,
     },
     { provide: MatPaginatorIntl, useClass: MatPaginatorIntlPtBr },
+    // Provedores para o Locale e Moeda
+    { provide: LOCALE_ID, useValue: 'pt-BR' }, // Define o locale padrão para 'pt-BR'
+    { provide: DEFAULT_CURRENCY_CODE, useValue: 'BRL' } // Define a moeda padrão para 'BRL'
   ]
 };

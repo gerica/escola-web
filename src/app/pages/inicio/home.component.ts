@@ -15,7 +15,7 @@ import { InnercardComponent } from "../../shared/components/innercard/innercard.
     CommonModule,
     MatButtonModule,
     InnercardComponent
-]
+  ]
 })
 export class HomeComponent implements OnInit {
   private readonly router = inject(Router);
@@ -28,20 +28,6 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
 
-  getOutoContrato() {
-    this.spinner.showUntilCompleted(this.contratoService.getOutroContrato()).subscribe({
-      next: (result) => {
-        this.notification.showSuccess(result);
-      },
-      error: (err) => {
-        this.notification.showError(err.message);
-      }
-    });
-  }
 
 }

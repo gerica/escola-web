@@ -116,7 +116,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Status cliente</mat-label>
+              <mat-label>Status contrato</mat-label>
               <mat-select formControlName="statusContrato">
                 @for (item of statusContrato; track item) {
                 <mat-option [value]="item">{{statusContratoLabelMapping[item]}}</mat-option>
@@ -178,7 +178,7 @@
           </section>
 
           <section class="container">
-            <button mat-raised-button color="secondary" type="button" routerLink="/cliente">Voltar</button>
+            <button mat-raised-button color="secondary" type="button" routerLink="/contrato">Voltar</button>
             <button mat-raised-button color="primary" type="submit">Salvar</button>
           </section>
         </app-innercard>

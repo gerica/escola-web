@@ -1,44 +1,44 @@
-<app-innercard [titulo]="'Cliente: '+ (data.nome | primeiraMaiuscula)" [estiloCardTitulo]="{'padding': '1em',}">
+<app-innercard [titulo]="'Cliente: '+ (data.nomeCliente | primeiraMaiuscula)" [estiloCardTitulo]="{'padding': '1em',}">
 
   <div class="containerOut">
     <div class="containerInner">
-      <span>Nome:</span>
-      <span>{{data.nome | primeiraMaiuscula}}</span>
+      <span>Número do Contrato:</span>
+      <span>{{data.numeroContrato}}</span>
     </div>
 
     <div class="containerInner">
-      <span>Data de Nascimento:</span>
-      <span>{{data.dataNascimento | date: 'dd/MM/yyyy'}}</span>
+      <span>Cliente:</span>
+      <span>{{data.nomeCliente| primeiraMaiuscula}}</span>
     </div>
 
     <div class="containerInner">
-      <span>CPF:</span>
-      <span>{{data.docCPF}}</span>
+      <span>Data início:</span>
+      <span>{{data.dataInicio | date: 'dd/MM/yyyy'}}</span>
     </div>
 
     <div class="containerInner">
-      <span>RG:</span>
-      <span>{{data.docRG}}</span>
+      <span>Data fim:</span>
+      <span>{{data.dataFim | date: 'dd/MM/yyyy'}}</span>
     </div>
 
     <div class="containerInner">
-      <span>Endereço:</span>
-      <span>{{data.endereco}} - {{data.cidade.descricao}} - {{data.cidade.uf}}</span>
+      <span>Valor:</span>
+      <span>{{data.valorTotal | currency: 'BRL'}}</span>
     </div>
 
     <div class="containerInner">
-      <span>E-mail:</span>
-      <span>{{data.email}}</span>
+      <span>Status:</span>
+      <span>{{statusContratoLabelMapping[data.statusContrato]}}</span>
     </div>
 
     <div class="containerInner">
-      <span>Profissão:</span>
-      <span>{{data.profissao}}</span>
+      <span>Período Pagamento:</span>
+      <span>{{periodosPagamentoLabelMapping[data.periodoPagamento]}}</span>
     </div>
 
     <div class="containerInner">
-      <span>Local de Trabalho:</span>
-      <span>{{data.localTrabalho}}</span>
+      <span>Descrição:</span>
+      <span>{{data.descricao}}</span>
     </div>
 
   </div>

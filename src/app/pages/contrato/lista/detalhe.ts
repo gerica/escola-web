@@ -4,7 +4,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { ButtonsRowComponent, InnercardComponent } from 'src/app/shared/components';
-import Cliente from 'src/app/shared/models/cliente';
+import Contrato from 'src/app/shared/models/contrato';
+import { PeriodoPagamentoLabelMapping } from 'src/app/shared/models/periodos-pagamento.enum';
+import { StatusContratoLabelMapping } from 'src/app/shared/models/status-contrato.enum';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
 
 
@@ -23,6 +25,8 @@ import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pi
     InnercardComponent
   ]
 })
-export class ClienteDetalheDialog {
-  public readonly data: Cliente = inject(MAT_DIALOG_DATA);
+export class ContratoDetalheDialog {
+  public readonly data: Contrato = inject(MAT_DIALOG_DATA);
+  statusContratoLabelMapping = StatusContratoLabelMapping;
+  periodosPagamentoLabelMapping = PeriodoPagamentoLabelMapping;
 }
