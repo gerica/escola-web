@@ -76,4 +76,62 @@ export class DataUtils {
 
         return `${year}-${month}-${day}`;
     }
+
+    static formatDateToISOString(date: Date | string | undefined | null): string | null {
+        if (!date) {
+            return null;
+        }
+
+        let dateObj: Date;
+        if (typeof date === 'string') {
+            dateObj = new Date(date);
+            if (isNaN(dateObj.getTime())) {
+                console.error(`Could not parse invalid date string: ${date}`);
+                return null;
+            }
+        } else {
+            dateObj = date;
+        }
+
+        // toISOString() retorna algo como "2025-06-22T03:00:00.000Z" (UTC)
+        // Se o seu backend espera a hora local, você pode precisar ajustar
+        // ou formatar manualmente para YYYY-MM-DDTHH:MM:SS
+        // Exemplo para formato local YYYY-MM-DDTHH:MM:SS:
+        const year = dateObj.getFullYear();
+        const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+        const day = dateObj.getDate().toString().padStart(2, '0');
+        const hours = dateObj.getHours().toString().padStart(2, '0');
+        const minutes = dateObj.getMinutes().toString().padStart(2, '0');
+        const seconds = dateObj.getSeconds().toString().padStart(2, '0');
+
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    }
+
+    static formatDateToISOStringWithMillisUTC(date: Date | string | undefined | null): string | null {
+        if (!date) {
+            return null;
+        }
+
+        let dateObj: Date;
+        if (typeof date === 'string') {
+            dateObj = new Date(date);
+            if (isNaN(dateObj.getTime())) {
+                console.error(`Could not parse invalid date string: ${date}`);
+                return null;
+            }
+        } else {
+            dateObj = date;
+        }
+
+        // toISOString() retorna algo como "YYYY-MM-DDTHH:MM:SS.sssZ"
+        // Ex: "2025-06-21T21:00:00.000Z" (assumindo que a data original era 18:00 no seu fuso horário e UTC+3)
+        return dateObj.toISOString();
+    }
+
+    // No seu componente Angular, ao enviar para o backend:
+    // const dataAssinaturaParaEnviar = MyDateUtil.formatDateToISOStringWithMillisUTC(someDateVariable);
+    // Isso enviará: "2025-06-22T00:00:00.000Z" (se a data do cliente for 21/06 21:00 -03, em UTC é 22/06 00:00)
+
+    // No seu componente Angular, você chamaria:
+    // const dataAssinaturaParaEnviar = MyDateUtil.formatDateToISOString(someDateVariable);
 }

@@ -19,19 +19,18 @@ export class ContratoService {
       variables: {
         request: {
           idContrato: id || undefined,
-          idCliente: entity.cliente?.id,
+          idCliente: entity.cliente?.id || entity.idCliente,
           numeroContrato: entity.numeroContrato,
-          dataInicio: DataUtils.formatDateToYYYYMMDD(entity.dataInicio),
-          dataFim: DataUtils.formatDateToYYYYMMDD(entity.dataInicio),
           valorTotal: entity.valorTotal,
           statusContrato: entity.statusContrato,
           descricao: entity.descricao,
           termosCondicoes: entity.termosCondicoes,
-          dataAssinatura: DataUtils.formatDateToYYYYMMDD(entity.dataAssinatura),
           periodoPagamento: entity.periodoPagamento,
-          dataProximoPagamento: DataUtils.formatDateToYYYYMMDD(entity.dataProximoPagamento),
           observacoes: entity.observacoes,
-          contratoDoc: entity.contratoDoc
+          contratoDoc: entity.contratoDoc,
+          dataInicio: DataUtils.formatDateToYYYYMMDD(entity.dataInicio),
+          dataFim: DataUtils.formatDateToYYYYMMDD(entity.dataInicio),
+          dataProximoPagamento: DataUtils.formatDateToYYYYMMDD(entity.dataProximoPagamento),
         },
       },
       context: {
@@ -101,9 +100,9 @@ export class ContratoService {
       },
     }).pipe(
       map(result => result.data.parseContrato as Contrato),
-      tap(value => {
-        console.log(value);
-      }),
+      // tap(value => {
+      //   console.log(value);
+      // }),
     );
   }
 }

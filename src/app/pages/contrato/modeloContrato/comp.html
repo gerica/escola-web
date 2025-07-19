@@ -1,0 +1,13 @@
+<form [formGroup]="form" (submit)="onSubmit()">
+  <app-innercard>
+    <section>
+      <editor-component formControlName="contratoDoc" placeholder="Informe o modelo" height="500px"></editor-component>
+    </section>
+
+    <section class="container">
+      <button mat-raised-button color="primary" type="button" (click)="carregarContrato()">Carregar
+        Contrato</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">Salvar</button>
+    </section>
+  </app-innercard>
+</form>

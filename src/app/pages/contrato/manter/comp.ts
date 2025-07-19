@@ -29,6 +29,8 @@ import Contrato from 'src/app/shared/models/contrato';
 import { StatusContrato, StatusContratoLabelMapping } from 'src/app/shared/models/status-contrato.enum';
 import { PeriodoPagamento, PeriodoPagamentoLabelMapping } from 'src/app/shared/models/periodos-pagamento.enum';
 import { MatSelectModule } from '@angular/material/select';
+import { EditorComponent } from 'src/app/shared/components/editor/editor.component';
+import { ManterContratoComp } from '../modeloContrato/comp';
 
 // Register the locale data for pt-BR
 registerLocaleData(localePt, 'pt-BR');
@@ -64,7 +66,9 @@ export const MY_DATE_FORMATS = {
     MatAutocompleteModule,
     MatAutocompleteModule,
     MatSelectModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ManterContratoComp
+
   ],
   providers: [
     provideNativeDateAdapter(),
@@ -141,6 +145,9 @@ export class ManterComp implements OnInit {
         next: (result) => {
           this.contrato.set(result);
           this.notification.showSuccess('Operação realizada com sucesso.');
+        },
+        error: (err) => {
+          this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
         }
       });
   }
@@ -154,8 +161,18 @@ export class ManterComp implements OnInit {
       this.contratoService.carregarContrato(contrato.idContrato)).subscribe({
         next: (result) => {
           console.log(result);
+        },
+        error: (err) => {
+          this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
         }
       });
+  }
+
+  titulocabecalho() {
+    if (this.contrato()?.idContrato) {
+      return `Contrato: ${this.contrato()?.numeroContrato} - ${this.contrato()?.nomeCliente}`;
+    }
+    return 'Novo contrato';
   }
 
   private _createForm() {

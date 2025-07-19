@@ -1,4 +1,4 @@
-<app-innercard titulo="Manter Cliente" [estiloCardTitulo]="{'padding': '1em',}">
+<app-innercard [titulo]="''+titulocabecalho()" [estiloCardTitulo]="{'padding': '1em',}">
 
   <form [formGroup]="form" (submit)="onSubmit()">
     <mat-tab-group>
@@ -151,13 +151,11 @@
           <section>
             <mat-form-field appearance="outline" class="mat-form-field-custom">
               <mat-label>Descrição do contrato</mat-label>
-              <input matInput formControlName="descricao">              
+              <input matInput formControlName="descricao">
             </mat-form-field>
           </section>
 
           <section>
-
-
             <mat-form-field appearance="outline" class="mat-form-field-custom">
               <mat-label>Termos e Condições</mat-label>
               <textarea matInput formControlName="termosCondicoes" rows="5"
@@ -179,29 +177,30 @@
 
           <section class="container">
             <button mat-raised-button color="secondary" type="button" routerLink="/contrato">Voltar</button>
-            <button mat-raised-button color="primary" type="button" (click)="carregarContrato()">Carregar Contrato</button>
             <button mat-raised-button color="primary" type="submit">Salvar</button>
           </section>
         </app-innercard>
+
+
       </mat-tab>
 
       @if(contrato()?.idContrato){
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon>call</mat-icon>
-          Contatos
+          Contrato
         </ng-template>
-        <!-- <app-cliente-contato [cliente]="cliente()"></app-cliente-contato> -->
+        <app-contrato-manter-contrato [contrato]="contrato()" [contrato]="contrato()"></app-contrato-manter-contrato>
 
       </mat-tab>
 
-      <mat-tab>
+      <!-- <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon>family_restroom</mat-icon>
           Dependentes
         </ng-template>
-        <!-- <app-cliente-dependente [cliente]="cliente()"></app-cliente-dependente> -->
-      </mat-tab>
+      
+      </mat-tab> -->
       }
     </mat-tab-group>
   </form>
