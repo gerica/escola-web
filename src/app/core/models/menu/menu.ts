@@ -33,7 +33,7 @@ const listaFuncoes = [
   },
   {
     icon: 'contract',
-    name: 'Novo',
+    name: 'Gestão',
     router: 'cliente/novo',
     identifier: 'cliente-novo',
     parent: 'cliente',
@@ -82,7 +82,7 @@ export class Menu {
         }
       }
     });
-    console.log(itensMenu);
+    // console.log(itensMenu);
     return itensMenu;
   }
 }

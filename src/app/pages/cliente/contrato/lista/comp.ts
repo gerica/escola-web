@@ -17,13 +17,13 @@ import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { LoadingSpinnerService } from 'src/app/core/services';
 import Contrato from 'src/app/shared/models/contrato';
 import { ContratoService } from 'src/app/shared/services/contrato.service';
-import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
+import { InnercardComponent } from "../../../../shared/components/innercard/innercard.component";
 import { ContratoDetalheDialog } from './detalhe';
 
 @Component({
   selector: 'app-cliente-list',
   templateUrl: './comp.html',
-  styleUrls: ['./comp.scss', '../../pages.component.scss'],
+  styleUrls: ['./comp.scss', '../../../pages.component.scss'],
   imports: [
     CommonModule,
     RouterModule,

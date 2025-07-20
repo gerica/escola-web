@@ -25,6 +25,10 @@ const routes: Routes = [
     component: ManterComp,
     resolve: { entity: localResolver },
   },
+  {
+    path: 'contrato',
+    loadChildren: () => import('./contrato/contrato.routes').then(m => m.ContratoRoutes),
+  },
   { path: '**', component: NotFoundComponent },
 ];
 

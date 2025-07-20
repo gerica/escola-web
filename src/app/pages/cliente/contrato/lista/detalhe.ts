@@ -13,7 +13,7 @@ import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pi
 @Component({
   selector: 'cliente-detalhe-dialog',
   templateUrl: './detalhe.html',
-  styleUrl: '../../entity-detalhe.scss',
+  styleUrl: '../../../entity-detalhe.scss',
   standalone: true,
   imports: [
     CommonModule,    

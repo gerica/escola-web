@@ -23,7 +23,7 @@ import Cliente from 'src/app/shared/models/cliente';
 import { Estado } from 'src/app/shared/models/estado';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
-import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
+import { InnercardComponent } from "../../../../shared/components/innercard/innercard.component";
 import { ContratoService } from 'src/app/shared/services/contrato.service';
 import Contrato from 'src/app/shared/models/contrato';
 import { StatusContrato, StatusContratoLabelMapping } from 'src/app/shared/models/status-contrato.enum';
@@ -51,7 +51,7 @@ export const MY_DATE_FORMATS = {
 @Component({
   selector: 'app-contrato-manter',
   templateUrl: './comp.html',
-  styleUrls: ['./comp.scss', '../../pages.component.scss'],
+  styleUrls: ['./comp.scss', '../../../pages.component.scss'],
   imports: [
     CommonModule,
     RouterModule,

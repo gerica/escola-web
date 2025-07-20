@@ -2,7 +2,7 @@
 
   <section class="containerControles">
     <mat-form-field appearance="outline">
-      <mat-label>Filtrar por nome, data de bnascimento, cpf e RG</mat-label>
+      <mat-label>Filtrar por número do contrato, nome do cliente e data início</mat-label>
       <input matInput [formControl]="ctrlFiltro" placeholder="Nome ou Email" (keydown.enter)="buscarContratos()" />
       <button *ngIf="ctrlFiltro.value" matSuffix mat-icon-button aria-label="Filtro" (click)="buscarContratos()">
         <mat-icon>search</mat-icon>
@@ -53,7 +53,7 @@
             <a matTooltip="Exibir dados" aria-hidden="false" (click)="visualizar(element)" matTooltip="Visualizar">
               <mat-icon color="primary">web_asset</mat-icon>
             </a>
-            <a matTooltip="Editar dados" aria-hidden="false" [routerLink]="['/contrato/manter', element.idContrato]">
+            <a matTooltip="Editar dados" aria-hidden="false" [routerLink]="['/cliente/contrato/manter', element.idContrato]">
               <mat-icon color="primary">edit</mat-icon>
             </a>
           </td>

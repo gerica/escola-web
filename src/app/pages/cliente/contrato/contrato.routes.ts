@@ -1,7 +1,7 @@
 import { inject, NgModule } from '@angular/core';
 import { ResolveFn, RouterModule, Routes } from '@angular/router';
 import { LoadingSpinnerService } from 'src/app/core/services';
-import { NotFoundComponent } from '../not-found';
+import { NotFoundComponent } from '../../not-found';
 import { ListComp } from './lista/comp';
 import { ManterComp } from './manter/comp';
 import Contrato from 'src/app/shared/models/contrato';

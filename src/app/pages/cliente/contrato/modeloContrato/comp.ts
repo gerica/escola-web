@@ -13,13 +13,13 @@ import { LoadingSpinnerService, NotificationService } from 'src/app/core/service
 import { EditorComponent } from 'src/app/shared/components/editor/editor.component';
 import Contrato from 'src/app/shared/models/contrato';
 import { ContratoService } from 'src/app/shared/services/contrato.service';
-import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
+import { InnercardComponent } from "../../../../shared/components/innercard/innercard.component";
 
 
 @Component({
   selector: 'app-contrato-manter-contrato',
   templateUrl: './comp.html',
-  styleUrls: ['./comp.scss', '../../pages.component.scss'],
+  styleUrls: ['./comp.scss', '../../../pages.component.scss'],
   imports: [
     CommonModule,
     RouterModule,

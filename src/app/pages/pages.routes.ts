@@ -24,10 +24,6 @@ const routes: Routes = [
         loadChildren: () => import('./cliente/cliente.routes').then(m => m.ClienteRoutes),
       },
       {
-        path: 'contrato',
-        loadChildren: () => import('./contrato/contrato.routes').then(m => m.ContratoRoutes),
-      },
-      {
         path: 'administrativo',
         loadChildren: () => import('./administrativo/administrativo.routes').then(m => m.AdministrativoRoutes),
       },
