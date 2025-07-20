@@ -31,10 +31,12 @@
         <span>
           <div class="toolbar__item__funcao" mat-button [matMenuTriggerFor]="menu">{{ item.name }}</div>
           <mat-menu #menu="matMenu" class="toolbar__submenu">
-            <div mat-menu-item *ngFor="let submenu of item.submenus; index as subi" class="toolbar__subitem"
+            @for(submenu of item.submenus; track $index){
+              <div mat-menu-item class="toolbar__subitem"
               [routerLink]="submenu.router" routerLinkActive="toolbar__subitem---active" tabindex="subi">
               <span class="toolbar__subitem_text">{{ submenu.name }}</span>
             </div>
+          }
           </mat-menu>
         </span>
         }

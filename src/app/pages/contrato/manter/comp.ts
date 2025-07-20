@@ -121,7 +121,7 @@ export class ManterComp implements OnInit {
   ngOnInit(): void {
     this._createForm();
     this._initForm();
-    this._observarClientes();
+    // this._observarClientes();
     this._observarCidades();
 
   }

@@ -5,11 +5,13 @@ const funcoesPorPerfil = {
   ADMIN: [
     'inicio',
     'cliente',
+    'cliente-novo',
+    'cliente-contrato',
     'contrato',
     'administrativo',
   ],
   USER: [
-    'inicio',    
+    'inicio',
     'contrato',
   ],
 };
@@ -24,17 +26,24 @@ const listaFuncoes = [
   },
   {
     icon: 'contract',
-    name: 'Contrato',
-    router: 'contrato',
-    identifier: 'contrato',
-    parent: null,
-  },
-  {
-    icon: 'contract',
     name: 'Cliente',
     router: 'cliente',
     identifier: 'cliente',
     parent: null,
+  },
+  {
+    icon: 'contract',
+    name: 'Novo',
+    router: 'cliente/novo',
+    identifier: 'cliente-novo',
+    parent: 'cliente',
+  },
+  {
+    icon: 'contract',
+    name: 'Contrato',
+    router: 'cliente/contrato',
+    identifier: 'cliente-contrato',
+    parent: 'cliente',
   },
   {
     icon: 'contract',
@@ -73,6 +82,7 @@ export class Menu {
         }
       }
     });
+    console.log(itensMenu);
     return itensMenu;
   }
 }

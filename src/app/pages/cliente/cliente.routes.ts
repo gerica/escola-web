@@ -13,7 +13,7 @@ const localResolver: ResolveFn<Cliente> = route => {
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'novo',
     component: ListComp,
   },
   {
