@@ -2,7 +2,7 @@ import { CommonModule, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt'; // This provides the locale data
 import { Component, inject, LOCALE_ID, OnInit, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormControl, ReactiveFormsModule, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
@@ -11,25 +11,24 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { provideNgxMask } from 'ngx-mask';
-import { BehaviorSubject, finalize, map, Observable, startWith, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, finalize, Observable, switchMap, tap } from 'rxjs';
 import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operators';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { Cidade } from 'src/app/shared/models/cidade';
 import Cliente from 'src/app/shared/models/cliente';
+import Contrato from 'src/app/shared/models/contrato';
 import { Estado } from 'src/app/shared/models/estado';
+import { PeriodoPagamento, PeriodoPagamentoLabelMapping } from 'src/app/shared/models/periodos-pagamento.enum';
+import { StatusContrato, StatusContratoLabelMapping } from 'src/app/shared/models/status-contrato.enum';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
+import { ContratoService } from 'src/app/shared/services/contrato.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../../shared/components/innercard/innercard.component";
-import { ContratoService } from 'src/app/shared/services/contrato.service';
-import Contrato from 'src/app/shared/models/contrato';
-import { StatusContrato, StatusContratoLabelMapping } from 'src/app/shared/models/status-contrato.enum';
-import { PeriodoPagamento, PeriodoPagamentoLabelMapping } from 'src/app/shared/models/periodos-pagamento.enum';
-import { MatSelectModule } from '@angular/material/select';
-import { EditorComponent } from 'src/app/shared/components/editor/editor.component';
 import { ManterContratoComp } from '../modeloContrato/comp';
 
 // Register the locale data for pt-BR
@@ -152,21 +151,21 @@ export class ManterComp implements OnInit {
       });
   }
 
-  carregarContrato() {
-    const contrato = this.contrato();
-    if (!contrato?.idContrato) {
-      return;
-    }
-    this.spinner.showUntilCompleted(
-      this.contratoService.carregarContrato(contrato.idContrato)).subscribe({
-        next: (result) => {
-          console.log(result);
-        },
-        error: (err) => {
-          this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
-        }
-      });
-  }
+  // carregarContrato() {
+  //   const contrato = this.contrato();
+  //   if (!contrato?.idContrato) {
+  //     return;
+  //   }
+  //   this.spinner.showUntilCompleted(
+  //     this.contratoService.carregarContrato(contrato.idContrato)).subscribe({
+  //       next: (result) => {
+  //         console.log(result);
+  //       },
+  //       error: (err) => {
+  //         this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+  //       }
+  //     });
+  // }
 
   titulocabecalho() {
     if (this.contrato()?.idContrato) {

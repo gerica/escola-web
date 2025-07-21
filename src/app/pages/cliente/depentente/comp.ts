@@ -75,8 +75,7 @@ export class DependenteComp implements OnInit {
 
   recuperarDependentes() {
     if (this.cliente && this.cliente.id) { // Ensure cliente and cliente.id exist
-      this.spinner
-        .showUntilCompleted(this.dependenteService.recuperarPorIdCliente(this.cliente.id)) // Use cliente.id directly
+      this.dependenteService.recuperarPorIdCliente(this.cliente.id) // Use cliente.id directly
         .subscribe({
           next: (result) => {
             this.dependentesCliente.set(result);

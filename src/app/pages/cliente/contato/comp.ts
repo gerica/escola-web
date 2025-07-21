@@ -63,8 +63,7 @@ export class ContatoComp implements OnInit {
 
   recuperarContatos() {
     if (this.cliente && this.cliente.id) { // Ensure cliente and cliente.id exist
-      this.spinner
-        .showUntilCompleted(this.contatoService.recuperarPorIdCliente(this.cliente.id)) // Use cliente.id directly
+      this.contatoService.recuperarPorIdCliente(this.cliente.id) // Use cliente.id directly
         .subscribe({
           next: (result) => {
             this.contatosCliente.set(result);
