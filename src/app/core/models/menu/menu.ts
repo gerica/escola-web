@@ -1,66 +1,14 @@
 import { UserRole } from "../user-role.model";
 import { MenuItem } from "./menu-item";
-
-const funcoesPorPerfil = {
-  ADMIN: [
-    'inicio',
-    'cliente',
-    'cliente-novo',
-    'cliente-contrato',
-    'contrato',
-    'administrativo',
-  ],
-  USER: [
-    'inicio',
-    'contrato',
-  ],
-};
-
-const listaFuncoes = [
-  {
-    icon: 'house',
-    name: 'Início',
-    router: 'inicio',
-    identifier: 'inicio',
-    parent: null,
-  },
-  {
-    icon: 'contract',
-    name: 'Cliente',
-    router: 'cliente',
-    identifier: 'cliente',
-    parent: null,
-  },
-  {
-    icon: 'contract',
-    name: 'Gestão',
-    router: 'cliente/novo',
-    identifier: 'cliente-novo',
-    parent: 'cliente',
-  },
-  {
-    icon: 'contract',
-    name: 'Contrato',
-    router: 'cliente/contrato',
-    identifier: 'cliente-contrato',
-    parent: 'cliente',
-  },
-  {
-    icon: 'contract',
-    name: 'Administrativo',
-    router: 'administrativo',
-    identifier: 'administrativo',
-    parent: null,
-  },
-
-];
+import { modulos } from "./modulos-comum";
+import { modulosPorPerfil } from "./modulos-perfil";
 
 export class Menu {
   static montarMenuPorPerfis(perfis: UserRole[] | undefined): MenuItem[] {
     // perfis = [UserRole.ADMIN];
     // console.log(perfis);
-    const identifieres = (perfis || []).map(p => funcoesPorPerfil[UserRole[p]]).flat();
-    const funcoesHabilitadas = listaFuncoes.filter(f => identifieres.includes(f.identifier)) || [];
+    const identifieres = (perfis || []).map(p => modulosPorPerfil[UserRole[p]]).flat();
+    const funcoesHabilitadas = modulos.filter(f => identifieres.includes(f.router)) || [];
     const itensMenu: MenuItem[] = [];
     funcoesHabilitadas.map(f => {
       if (!f.parent) {
@@ -73,9 +21,9 @@ export class Menu {
     // segundo nivel
     funcoesHabilitadas.map(f => {
       if (f.parent) {
-        const pai = itensMenu.find(m => m.identifier === f.parent);
+        const pai = itensMenu.find(m => m.router === f.parent);
         if (pai) {
-          pai.submenus.push({
+          pai.submenus?.push({
             ...f,
             submenus: [],
           });

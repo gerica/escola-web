@@ -21,13 +21,13 @@
     <section class="toolbar__item__funcoes">
       @for(item of menu; track $index){
       <span>
-        @if(!item.submenus.length){
+        @if(!item.submenus?.length){
         <div class="toolbar__item__funcao" [routerLink]="item.router" routerLinkActive="toolbar__item__funcao---active"
           tabindex="i">
           {{ item.name }}
         </div>
         }
-        @if(item.submenus.length){
+        @if(item.submenus?.length){
         <span>
           <div class="toolbar__item__funcao" mat-button [matMenuTriggerFor]="menu">{{ item.name }}</div>
           <mat-menu #menu="matMenu" class="toolbar__submenu">

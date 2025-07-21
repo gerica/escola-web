@@ -78,7 +78,7 @@ export class AuthService {
         password
       },
       context: {
-        uri: '/auth/graphql'
+        uri: '/admin/graphql'
       },
     }).pipe(
       map(result => result.data.authenticate as User),
