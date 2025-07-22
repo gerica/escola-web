@@ -1,12 +1,15 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { inject, NgModule } from '@angular/core';
+import { ResolveFn, RouterModule, Routes } from '@angular/router';
+import { LoadingSpinnerService } from 'src/app/core/services';
+import { Empresa } from 'src/app/shared/models/empresa';
+import { EmpresaService } from 'src/app/shared/services/empresa.service';
 import { NotFoundComponent } from '../not-found';
 import { ListComp } from './lista/comp';
 import { ManterComp } from './manter/comp';
 
-// const localResolver: ResolveFn<Cliente> = route => {
-//   return inject(LoadingSpinnerService).showUntilCompleted(inject(ClienteService).recuperarPorId(+route.paramMap.get('id')!));
-// };
+const localResolver: ResolveFn<Empresa> = route => {
+  return inject(LoadingSpinnerService).showUntilCompleted(inject(EmpresaService).recuperarPorId(+route.paramMap.get('id')!));
+};
 
 const routes: Routes = [
   {
@@ -20,7 +23,7 @@ const routes: Routes = [
   {
     path: 'manter/:id',
     component: ManterComp,
-    // resolve: { entity: localResolver },
+    resolve: { entity: localResolver },
   },
   { path: '**', component: NotFoundComponent },
 ];

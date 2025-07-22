@@ -2,38 +2,51 @@
 
   <section class="containerControles">
     <mat-form-field appearance="outline">
-      <mat-label>Filtrar por ...</mat-label>
-      <input matInput [formControl]="ctrlFiltro" placeholder="Nome ou Email" (keydown.enter)="buscarClientes()" />
-      <button *ngIf="ctrlFiltro.value" matSuffix mat-icon-button aria-label="Filtro" (click)="buscarClientes()">
+      <mat-label>Filtrar por nome fantasia, razão social, cnpj e email</mat-label>
+      <input matInput [formControl]="ctrlFiltro" placeholder="nome fantasia, razão social, cnpj e email"
+        (keydown.enter)="buscarEmpresas()" />
+      <button *ngIf="ctrlFiltro.value" matSuffix mat-icon-button aria-label="Filtro" (click)="buscarEmpresas()">
         <mat-icon>search</mat-icon>
       </button>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" routerLink="/cliente/manter">Nova empresa</button>
+    <button mat-raised-button color="primary" routerLink="/empresa/manter">Nova empresa</button>
   </section>
 
   <app-innercard>
-    @if(!clientes().empty){
+    @if(!empresas().empty){
     <section class="lista">
-      <table mat-table [dataSource]="clientes().content" matSort (matSortChange)="sortData($event)"
+      <table mat-table [dataSource]="empresas().content" matSort (matSortChange)="sortData($event)"
         class="mat-elevation-z8">
 
         <!-- Position Column -->
-        <ng-container matColumnDef="nome">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="nome"> Nome </th>
-          <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
+        <ng-container matColumnDef="nomeFantasia">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="nomeFantasia"> Nome Fantasia </th>
+          <td mat-cell *matCellDef="let element"> {{element.nomeFantasia}} </td>
         </ng-container>
 
-        <!-- Name Column -->
-        <ng-container matColumnDef="dataNascimento">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="dataNascimento"> Data de Nascimento </th>
-          <td mat-cell *matCellDef="let element"> {{element.dataNascimento | date: 'dd/MM/yyyy'}} </td>
+        <!-- Position Column -->
+        <ng-container matColumnDef="razaoSocial">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="razaoSocial"> Razão Social </th>
+          <td mat-cell *matCellDef="let element"> {{element.razaoSocial}} </td>
         </ng-container>
 
         <!-- Weight Column -->
-        <ng-container matColumnDef="docCPF">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="docCPF"> CPF </th>
-          <td mat-cell *matCellDef="let element"> {{element.docCPF}} </td>
+        <ng-container matColumnDef="cnpj">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="cnpj"> CNPJ </th>
+          <td mat-cell *matCellDef="let element"> {{element.cnpj | cnpj}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="inscricaoEstadual">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="inscricaoEstadual">Inscrição Estadual </th>
+          <td mat-cell *matCellDef="let element"> {{element.inscricaoEstadual}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="telefone">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="telefone">Telefone </th>
+          <td mat-cell *matCellDef="let element"> {{element.telefone | telefone}} </td>
         </ng-container>
 
         <!-- Symbol Column -->
@@ -45,25 +58,10 @@
         <ng-container matColumnDef="acoes">
           <th mat-header-cell *matHeaderCellDef> </th>
           <td mat-cell *matCellDef="let element" class="cursorSelect">
-
-            <a matTooltip="Exibir dados" aria-hidden="false" (click)="visualizar(element)"
-              [matTooltip]="'Visualizar, status: ' + getStatusClienteDesc(element.statusCliente)">
-
-              @if(isStatusAtivo(element.statusCliente)) {
-              <!-- <a matTooltip="Exibir dados" aria-hidden="false" (click)="visualizar(element)" matTooltip="Visualizar"> -->
-              <mat-icon color="primary">check_circle</mat-icon>
-              <!-- </a> -->
-              } @else if(isStatusInativo(element.statusCliente)) {
-              <mat-icon color="warn">cancel</mat-icon>
-              } @else if(isStatusBloqueado(element.statusCliente)) {
-              <mat-icon color="accent">block</mat-icon>
-              } @else if(isStatusPendente(element.statusCliente)) {
-              <mat-icon class="color-info">pending</mat-icon>
-              } @else {
-              <mat-icon>help_outline</mat-icon>
-              }
+            <a matTooltip="Exibir dados" aria-hidden="false" (click)="visualizar(element)" matTooltip="Visualizar">
+              <mat-icon color="primary">topic</mat-icon>
             </a>
-            <a matTooltip="Editar dados" aria-hidden="false" [routerLink]="['/cliente/manter', element.id]">
+            <a matTooltip="Editar dados" aria-hidden="false" [routerLink]="['/empresa/manter', element.id]">
               <mat-icon color="primary">edit</mat-icon>
             </a>
           </td>
@@ -76,12 +74,12 @@
       </table>
 
 
-      <mat-paginator class="mat-elevation-z5" [length]="clientes().totalElements" [pageIndex]="clientes().number"
-        [pageSize]="pageSize" (page)="page.set({ page: $event.pageIndex, size: $event.pageSize }); buscarClientes()"
+      <mat-paginator class="mat-elevation-z5" [length]="empresas().totalElements" [pageIndex]="empresas().number"
+        [pageSize]="pageSize" (page)="page.set({ page: $event.pageIndex, size: $event.pageSize }); buscarEmpresas()"
         [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons />
     </section>
     } @else {
-    <span>Nenhum cliente cadastrado</span>
+    <span>Nenhum registro cadastrado</span>
     }
   </app-innercard>
 

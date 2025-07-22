@@ -1,147 +1,138 @@
-<app-innercard titulo="Manter Contrato" [estiloCardTitulo]="{'padding': '1em',}">
+<!--
+  Componente Angular para a tela de gestão de empresas.
+  Permite cadastrar e editar informações de uma empresa.
+  Utiliza Angular Material para os componentes de UI e Reactive Forms para o gerenciamento do formulário.
+-->
+<app-innercard titulo="Manter Empresa" [estiloCardTitulo]="{'padding': '1em'}">
 
+  <!-- Formulário reativo para os dados da empresa -->
   <form [formGroup]="form" (submit)="onSubmit()">
     <mat-tab-group>
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon>description</mat-icon>
-          Dados
+          <mat-icon>business</mat-icon> <!-- Ícone para dados da empresa -->
+          Dados da Empresa
         </ng-template>
 
         <app-innercard class="cardInner">
+          <!-- Seção para informações básicas da empresa (Nome Fantasia, Razão Social, CNPJ) -->
           <section class="containerLinha">
             <mat-form-field appearance="outline">
-              <mat-label>Contratante</mat-label>
-              <input id="nomeInput" matInput placeholder="Contratante" formControlName="nome">
-              @if(form.controls['nome'].hasError('required')){
-              <mat-error id="requiredEmailError">
-                O nome é <strong>obrigatório</strong>
-              </mat-error>
-              }
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Data do contrato</mat-label>
-              <input matInput [matDatepicker]="picker" formControlName="dataNascimento">
-              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-              @if(form.controls['dataNascimento'].hasError('required')){
+              <mat-label>Nome Fantasia</mat-label>
+              <input id="nomeFantasiaInput" matInput placeholder="Nome Fantasia" formControlName="nomeFantasia">
+              <!-- Validação de campo obrigatório -->
+              @if(form.controls['nomeFantasia'].hasError('required')){
               <mat-error>
-                A data de nascimento é <strong>obrigatório</strong>
+                O Nome Fantasia é <strong>obrigatório</strong>
               </mat-error>
               }
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Natural</mat-label>
-              <input #srvInput matInput type="text" formControlName="cidade" [matAutocomplete]="servidorAutoComplete"
-                (input)="srvTextSubject.next(srvInput.value)" />
+              <mat-label>Razão Social</mat-label>
+              <input id="razaoSocialInput" matInput placeholder="Razão Social" formControlName="razaoSocial">
+              <!-- Validação de campo obrigatório -->
+              @if(form.controls['razaoSocial'].hasError('required')){
+              <mat-error>
+                A Razão Social é <strong>obrigatória</strong>
+              </mat-error>
+              }
             </mat-form-field>
-
-            <!-- Autocomplete -->
-            <mat-autocomplete #servidorAutoComplete="matAutocomplete" requireSelection autoActiveFirstOption
-              [displayWith]="displayFnCidade">
-              <mat-option *ngIf="srvLoading()">
-                <mat-spinner diameter="30" />
-              </mat-option>
-
-              <mat-option *ngIf="!cidades().content && !srvLoading()">
-                Nenhum servidor encontrado
-              </mat-option>
-
-              <ng-container *ngIf="!srvLoading()">
-                <mat-option *ngFor="let item of cidades().content" [value]="item">
-                  {{ item?.descricao }} - {{ item?.estado }}
-                </mat-option>
-              </ng-container>
-            </mat-autocomplete>
 
             <mat-form-field appearance="outline">
-              <mat-label>Profissão</mat-label>
-              <input id="profisaInput" matInput formControlName="profissao" type="text">
+              <mat-label>CNPJ</mat-label>
+              <!--
+                Para a máscara de CNPJ, você precisaria de uma biblioteca externa como ngx-mask.
+                Por enquanto, o input é apenas de texto.
+                Ex: <input type="text" matInput formControlName="cnpj" mask="00.000.000/0000-00">
+              -->
+              <input type="text" matInput formControlName="cnpj" placeholder="00.000.000/0000-00"
+                mask="00.000.000/0000-00">
+              <!-- Validação de campo obrigatório -->
+              @if (form.controls['cnpj'].hasError('required')) {
+              <mat-error>O CNPJ é <strong>obrigatório</strong></mat-error>
+              }
+              <!-- Exemplo de validação de formato/tamanho para CNPJ -->
+              <!-- @if (form.controls['cnpj'].hasError('pattern') || form.controls['cnpj'].hasError('minlength') ||
+              form.controls['cnpj'].hasError('maxlength')) {
+              <mat-error>Formato de CNPJ inválido</mat-error>
+              } -->
             </mat-form-field>
 
+            <!-- Seção para informações de contato e endereço -->
+
+            <mat-form-field appearance="outline">
+              <mat-label>Inscrição Estadual</mat-label>
+              <input type="text" matInput formControlName="inscricaoEstadual"
+                placeholder="Inscrição Estadual (opcional)">
+            </mat-form-field>
           </section>
 
           <section class="containerLinha">
-            <mat-form-field appearance="outline">
-              <mat-label>RG</mat-label>
-              <input type="text" matInput formControlName="docRG" name="docRG">
-              @if (form.get('docRG')?.hasError('required')) {
-              <mat-error>CPF é <strong>obrigatório</strong></mat-error>
-              }
-            </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>CPF</mat-label>
-              <input type="text" matInput formControlName="docCPF" name="docCPF" mask="000.000.000-00">
-              @if (form.get('docCPF')?.hasError('required')) {
-              <mat-error>CPF é <strong>obrigatório</strong></mat-error>
-              }
+              <mat-label>Telefone</mat-label>
+              <input type="text" matInput formControlName="telefone" placeholder="(00) 00000-0000" mask="(00) 00000-0000">
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>E-mail</mat-label>
-              <input id="emailInput" matInput formControlName="email" type="email">
-              @if (form.controls['email'].hasError('email') &&
-              !form.controls['email'].hasError('required')) {
+              <input id="emailInput" matInput formControlName="email" type="email" placeholder="email@exemplo.com">
+              <!-- Validação de formato de e-mail -->
+              @if (form.controls['email'].hasError('email') && !form.controls['email'].hasError('required')) {
               <mat-error>Entre com um e-mail válido</mat-error>
               }
+              <!-- Validação de campo obrigatório -->
               @if(form.controls['email'].hasError('required')){
-              <mat-error> E-mail é <strong>obrigatório</strong> </mat-error>
+              <mat-error> O E-mail é <strong>obrigatório</strong> </mat-error>
               }
             </mat-form-field>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Status cliente</mat-label>
-              <mat-select formControlName="statusCliente">
-                @for (item of statusCliente; track item) {
-                <mat-option [value]="item">{{statusClienteLabelMapping[item]}}</mat-option>
-                }
-              </mat-select>
-              @if(form.controls['statusCliente'].hasError('required') && (form.controls['statusCliente'].touched ||
-              form.controls['statusCliente'].dirty)){
-              <mat-error>
-                O status do cliente é <strong>obrigatório</strong>
-              </mat-error>
+            <mat-form-field appearance="outline" class="mat-form-field-full-width">
+              <mat-label>Endereço Completo</mat-label>
+              <input id="enderecoInput" matInput formControlName="endereco"
+                placeholder="Rua, Número, Bairro, Cidade, Estado, CEP">
+              <!-- Validação de campo obrigatório -->
+              @if(form.controls['endereco'].hasError('required')){
+              <mat-error> O Endereço é <strong>obrigatório</strong> </mat-error>
               }
             </mat-form-field>
 
-          </section>
-          <section>
-            <mat-form-field appearance="outline" class="mat-form-field-custom">
-              <mat-label>Endereço</mat-label>
-              <input id="emailInput" matInput formControlName="endereco">
-              @if(form.controls['endereco'].hasError('endereco')){
-              <mat-error> Endereço é <strong>obrigatório</strong> </mat-error>
+            <mat-form-field appearance="outline" class="mat-form-field-full-width">
+              <mat-label>URL do Logo</mat-label>
+              <input type="url" matInput formControlName="logoUrl" placeholder="https://exemplo.com/logo.png" maxlength="255">
+              <!-- Validação de formato de URL (opcional, mas boa prática) -->
+              @if (form.controls['logoUrl'].hasError('pattern')) {
+              <mat-error>Entre com uma URL válida</mat-error>
               }
             </mat-form-field>
           </section>
 
+          <!-- Seção para o status Ativo -->
+          <section class="containerLinha">
+            <mat-checkbox formControlName="ativo">Empresa Ativa</mat-checkbox>
+          </section>
 
+          <!-- Seção para botões de ação -->
           <section class="container">
-            <button mat-raised-button color="secondary" type="button" routerLink="/cliente/novo">Voltar</button>
+            <button mat-raised-button color="secondary" type="button" routerLink="/empresa">Voltar</button>
             <button mat-raised-button color="primary" type="submit">Salvar</button>
           </section>
         </app-innercard>
       </mat-tab>
 
-      @if(cliente()?.id){
+      <!--
+        Aba de usuários da empresa (só visível se a empresa já existir, ou seja, tiver um ID)
+        Assumindo que `empresa()` é um signal ou getter que retorna a empresa atual.
+      -->
+      @if(empresa()?.id){
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon>call</mat-icon>
-          Contatos
+          <mat-icon>group</mat-icon>
+          Usuários
         </ng-template>
-        desenvolver
-
-      </mat-tab>
-
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon>family_restroom</mat-icon>
-          Dependentes
-        </ng-template>
-        desenvolver
+        <!-- Conteúdo para a gestão de usuários da empresa -->
+        <p>Desenvolver a gestão de usuários para esta empresa aqui.</p>
       </mat-tab>
       }
     </mat-tab-group>

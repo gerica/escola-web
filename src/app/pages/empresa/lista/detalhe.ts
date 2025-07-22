@@ -4,27 +4,27 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { ButtonsRowComponent, InnercardComponent } from 'src/app/shared/components';
-import Cliente from 'src/app/shared/models/cliente';
+import { Empresa } from 'src/app/shared/models/empresa';
 import { StatusClienteLabelMapping } from 'src/app/shared/models/status-cliente.enum';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
 
 
 @Component({
-  selector: 'cliente-detalhe-dialog',
+  selector: 'empresa-detalhe-dialog',
   templateUrl: './detalhe.html',
   styleUrl: '../../entity-detalhe.scss',
   standalone: true,
   imports: [
-    CommonModule,    
+    CommonModule,
     MatButtonModule,
-    MatDividerModule,    
+    MatDividerModule,
     MatDialogModule,
     PrimeiraMaiusculaPipe,
     ButtonsRowComponent,
     InnercardComponent
   ]
 })
-export class ClienteDetalheDialog {
-  public readonly data: Cliente = inject(MAT_DIALOG_DATA);
+export class EmpresaDetalheDialog {
+  public readonly data: Empresa = inject(MAT_DIALOG_DATA);
   statusClienteLabelMapping = StatusClienteLabelMapping;
 }

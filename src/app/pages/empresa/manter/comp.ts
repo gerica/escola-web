@@ -1,29 +1,27 @@
 import { CommonModule, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt'; // This provides the locale data
 import { Component, inject, LOCALE_ID, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormControl, ReactiveFormsModule, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { BehaviorSubject, finalize, switchMap, tap } from 'rxjs';
-import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
-import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operators';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
-import { Cidade } from 'src/app/shared/models/cidade';
-import Cliente from 'src/app/shared/models/cliente';
+import { Empresa } from 'src/app/shared/models/empresa';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { StatusCliente, StatusClienteLabelMapping } from 'src/app/shared/models/status-cliente.enum';
-import { MatSelectModule } from '@angular/material/select';
+import { EmpresaService } from 'src/app/shared/services/empresa.service';
+
 
 // Register the locale data for pt-BR
 registerLocaleData(localePt, 'pt-BR');
@@ -57,6 +55,7 @@ export const MY_DATE_FORMATS = {
     MatInputModule,
     MatDatepickerModule,
     MatAutocompleteModule,
+    MatCheckboxModule,
     NgxMaskDirective,
     MatProgressSpinnerModule,
     MatSelectModule,
@@ -76,74 +75,51 @@ export class ManterComp implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly notification = inject(NotificationService);
   private readonly spinner = inject(LoadingSpinnerService);
-  private readonly clienteService = inject(ClienteService);
+  private readonly empresaService = inject(EmpresaService);
   private readonly utilService = inject(UtilsService);
   private readonly fb = inject(FormBuilder);
 
-  form!: UntypedFormGroup;
-  cliente = signal<Cliente | null>(null);
-
-  statusCliente = Object.values(StatusCliente);
-  statusClienteLabelMapping = StatusClienteLabelMapping;
-
-  srvTextSubject = new BehaviorSubject<string>('');
-  cidades = signal(emptyPage<Cidade>());
-  srvLoading = signal(false);
-  pageSize = 10;
-  page = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'descricao', direction: 'asc' }));
+  form!: FormGroup;
+  empresa = signal<Empresa | null>(null); // Use 'any' por enquanto, ou crie uma interface para Empresa
 
   ngOnInit(): void {
     this._createForm();
     this._initForm();
-    this._observarCidades();
   }
 
   private _createForm() {
     this.form = this.fb.group({
-      nome: new UntypedFormControl('', [Validators.required]),
-      dataNascimento: new UntypedFormControl('', [Validators.required]),
-      cidade: new UntypedFormControl('', [Validators.required]),
-      docCPF: new UntypedFormControl('', Validators.required),
-      docRG: new UntypedFormControl('', [Validators.required]),
-      endereco: new UntypedFormControl('', [Validators.required]),
-      email: new UntypedFormControl('', [Validators.email, Validators.required]),
-      statusCliente: new FormControl<string | null>(StatusCliente.ATIVO, { validators: [Validators.required] }),
-
-      profissao: new UntypedFormControl(''),
-      localTrabalho: new UntypedFormControl(''),
+      id: [null], // ID não é exibido, mas pode ser usado para edição
+      nomeFantasia: ['', Validators.required],
+      razaoSocial: ['', Validators.required],
+      // cnpj: ['', [Validators.required, Validators.pattern(/^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/)]], // Exemplo de regex para CNPJ formatado
+      // cnpj: ['', [Validators.required, Validators.pattern(/^\d{14}$/)]], // Exemplo de regex para CNPJ formatado
+      cnpj: ['', [Validators.required]], // Exemplo de regex para CNPJ formatado
+      inscricaoEstadual: [''],
+      telefone: [''],
+      email: ['', [Validators.required, Validators.email]],
+      endereco: ['', Validators.required],
+      logoUrl: ['', Validators.pattern(/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i)], // Exemplo de regex para URL
+      ativo: [true],
+      // dataCadastro e dataAtualizacao são gerenciados pelo backend
     });
   }
 
   private _initForm() {
-    const tempEntity = this.route.snapshot.data['entity'] as Cliente;
+    const tempEntity = this.route.snapshot.data['entity'] as Empresa;
 
     if (tempEntity) {
-      this.cliente.set(tempEntity);
+      this.empresa.set(tempEntity);
       this.form.patchValue({
-        ...this.cliente(),
-        // cidade: { descricao: this.cliente()?.cidadeDesc, uf: this.cliente()?.uf, codigoCidade: this.cliente()?.codigoCidade }
+        ...this.empresa(),
       }, { emitEvent: true });
     }
   }
 
-  private _observarCidades() {
-    this.srvTextSubject.asObservable()
-      .pipe(
-        debounceDistinctUntilChanged(400),
-        tap(() => this.srvLoading.set(true)),
-        switchMap((text) => {
-          return this.utilService.recuperarPorFiltro(text, this.page()).pipe(
-            minTime(700),
-            finalize(() => this.srvLoading.set(false))
-          );
-        })
-      ).subscribe({
-        next: (result) => this.cidades.set(result),
-        error: (err) => console.log(err),
-      });
-  }
+
 
   onSubmit() {
+    console.log(this.form.value);
     if (!this.form.valid) {
       this.notification.showError('Informe todos os campos obrigatórios.');
       this.form.markAllAsTouched();
@@ -152,16 +128,17 @@ export class ManterComp implements OnInit {
     }
 
     this.spinner.showUntilCompleted(
-      this.clienteService.salvar(this.cliente()?.id, this.form.value as Partial<Cliente>)).subscribe({
+      this.empresaService.salvar(this.form.value as Partial<Empresa>)).subscribe({
         next: (result) => {
-          this.cliente.set(result);
+          this.empresa.set(result);
           this.notification.showSuccess('Operação realizada com sucesso.');
+        },
+        error: (err) => { // <--- Add error handling
+          this.notification.showError('Erro no backend. ' + err.message);
+          console.error('Erro ao recuperar dependentes:', err);
         }
       });
   }
 
-  displayFnCidade(cidade: Cidade): string {
-    return cidade && `${cidade.descricao} - ${cidade.uf}`;
-  }
 
 }
