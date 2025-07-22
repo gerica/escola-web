@@ -1,0 +1,150 @@
+<app-innercard titulo="Manter Contrato" [estiloCardTitulo]="{'padding': '1em',}">
+
+  <form [formGroup]="form" (submit)="onSubmit()">
+    <mat-tab-group>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>description</mat-icon>
+          Dados
+        </ng-template>
+
+        <app-innercard class="cardInner">
+          <section class="containerLinha">
+            <mat-form-field appearance="outline">
+              <mat-label>Contratante</mat-label>
+              <input id="nomeInput" matInput placeholder="Contratante" formControlName="nome">
+              @if(form.controls['nome'].hasError('required')){
+              <mat-error id="requiredEmailError">
+                O nome é <strong>obrigatório</strong>
+              </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Data do contrato</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="dataNascimento">
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              @if(form.controls['dataNascimento'].hasError('required')){
+              <mat-error>
+                A data de nascimento é <strong>obrigatório</strong>
+              </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Natural</mat-label>
+              <input #srvInput matInput type="text" formControlName="cidade" [matAutocomplete]="servidorAutoComplete"
+                (input)="srvTextSubject.next(srvInput.value)" />
+            </mat-form-field>
+
+            <!-- Autocomplete -->
+            <mat-autocomplete #servidorAutoComplete="matAutocomplete" requireSelection autoActiveFirstOption
+              [displayWith]="displayFnCidade">
+              <mat-option *ngIf="srvLoading()">
+                <mat-spinner diameter="30" />
+              </mat-option>
+
+              <mat-option *ngIf="!cidades().content && !srvLoading()">
+                Nenhum servidor encontrado
+              </mat-option>
+
+              <ng-container *ngIf="!srvLoading()">
+                <mat-option *ngFor="let item of cidades().content" [value]="item">
+                  {{ item?.descricao }} - {{ item?.estado }}
+                </mat-option>
+              </ng-container>
+            </mat-autocomplete>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Profissão</mat-label>
+              <input id="profisaInput" matInput formControlName="profissao" type="text">
+            </mat-form-field>
+
+          </section>
+
+          <section class="containerLinha">
+            <mat-form-field appearance="outline">
+              <mat-label>RG</mat-label>
+              <input type="text" matInput formControlName="docRG" name="docRG">
+              @if (form.get('docRG')?.hasError('required')) {
+              <mat-error>CPF é <strong>obrigatório</strong></mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>CPF</mat-label>
+              <input type="text" matInput formControlName="docCPF" name="docCPF" mask="000.000.000-00">
+              @if (form.get('docCPF')?.hasError('required')) {
+              <mat-error>CPF é <strong>obrigatório</strong></mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>E-mail</mat-label>
+              <input id="emailInput" matInput formControlName="email" type="email">
+              @if (form.controls['email'].hasError('email') &&
+              !form.controls['email'].hasError('required')) {
+              <mat-error>Entre com um e-mail válido</mat-error>
+              }
+              @if(form.controls['email'].hasError('required')){
+              <mat-error> E-mail é <strong>obrigatório</strong> </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Status cliente</mat-label>
+              <mat-select formControlName="statusCliente">
+                @for (item of statusCliente; track item) {
+                <mat-option [value]="item">{{statusClienteLabelMapping[item]}}</mat-option>
+                }
+              </mat-select>
+              @if(form.controls['statusCliente'].hasError('required') && (form.controls['statusCliente'].touched ||
+              form.controls['statusCliente'].dirty)){
+              <mat-error>
+                O status do cliente é <strong>obrigatório</strong>
+              </mat-error>
+              }
+            </mat-form-field>
+
+          </section>
+          <section>
+            <mat-form-field appearance="outline" class="mat-form-field-custom">
+              <mat-label>Endereço</mat-label>
+              <input id="emailInput" matInput formControlName="endereco">
+              @if(form.controls['endereco'].hasError('endereco')){
+              <mat-error> Endereço é <strong>obrigatório</strong> </mat-error>
+              }
+            </mat-form-field>
+          </section>
+
+
+          <section class="container">
+            <button mat-raised-button color="secondary" type="button" routerLink="/cliente/novo">Voltar</button>
+            <button mat-raised-button color="primary" type="submit">Salvar</button>
+          </section>
+        </app-innercard>
+      </mat-tab>
+
+      @if(cliente()?.id){
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>call</mat-icon>
+          Contatos
+        </ng-template>
+        desenvolver
+
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>family_restroom</mat-icon>
+          Dependentes
+        </ng-template>
+        desenvolver
+      </mat-tab>
+      }
+    </mat-tab-group>
+  </form>
+
+</app-innercard>

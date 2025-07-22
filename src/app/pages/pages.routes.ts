@@ -27,6 +27,10 @@ const routes: Routes = [
         path: 'administrativo',
         loadChildren: () => import('./administrativo/administrativo.routes').then(m => m.AdministrativoRoutes),
       },
+      {
+        path: 'empresa',
+        loadChildren: () => import('./empresa/empresa.routes').then(m => m.EmpresaRoutes),
+      },
       { path: '**', component: NotFoundComponent },
     ],
   },

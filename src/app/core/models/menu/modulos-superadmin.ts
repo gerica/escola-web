@@ -1,5 +1,5 @@
 import { MenuItem } from "./menu-item";
-export const moduloSuperadminEmpresa = 'superadmin/empresa';
+export const moduloSuperadminEmpresa = 'empresa';
 export const moduloSuperadminUsuario = 'usuario';
 export const moduloSuperadminSistema = 'superadmin/sistema';
 export const moduloSuperadminRelatorio = 'superadmin/relatorio';
