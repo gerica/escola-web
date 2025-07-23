@@ -21,6 +21,7 @@ import { ClienteService } from 'src/app/shared/services/cliente.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
 import { EmpresaService } from 'src/app/shared/services/empresa.service';
+import { ListComp } from '../empresa-usuario/comp';
 
 
 // Register the locale data for pt-BR
@@ -59,6 +60,7 @@ export const MY_DATE_FORMATS = {
     NgxMaskDirective,
     MatProgressSpinnerModule,
     MatSelectModule,
+    ListComp
 
   ],
   providers: [

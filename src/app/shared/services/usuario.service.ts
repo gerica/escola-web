@@ -3,7 +3,7 @@ import { Apollo } from 'apollo-angular';
 import { map, Observable, tap } from 'rxjs';
 
 import { Page, PageRequest } from 'src/app/core/models';
-import { Usuario, FETCH_ALL_USUARIOS, FETCH_USUARIO_BY_ID, SAVE_USUARIO } from '../models/usuario';
+import { Usuario, FETCH_ALL_USUARIOS, FETCH_USUARIO_BY_ID, SAVE_USUARIO, FETCH_ALL_USUARIOS_BY_EMPRESA } from '../models/usuario';
 
 const URL = '/admin/graphql';
 @Injectable({ providedIn: 'root' })
@@ -56,6 +56,28 @@ export class UsuarioService {
       // tap(value => {
       //   console.log("Received GraphQL data:", value);
       // }),
+    );
+  }
+
+  buscarPorEmpresa(filtro: string, idEmpresa: number, pageRequest: PageRequest): Observable<Page<Usuario>> {
+    return this.apollo.query<any>({
+      query: FETCH_ALL_USUARIOS_BY_EMPRESA,
+      variables: {
+        filtro: filtro,
+        idEmpresa: idEmpresa,
+        page: pageRequest.page,
+        size: pageRequest.size,
+        sort: pageRequest.sorts || [],
+      },
+      context: {
+        uri: URL
+      },
+      fetchPolicy: 'network-only', // Or 'no-cache'      
+    }).pipe(
+      map(result => result.data.fetchAllUsuariosByFilterAndEmpresa as Page<Usuario>),
+      tap(value => {
+        console.log("Received GraphQL data:", value);
+      }),
     );
   }
 

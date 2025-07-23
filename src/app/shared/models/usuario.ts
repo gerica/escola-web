@@ -83,5 +83,35 @@ const FETCH_USUARIO_BY_ID = gql`
   }
 `;
 
+const FETCH_ALL_USUARIOS_BY_EMPRESA = gql`  
+  query fetchAllUsuariosByFilterAndEmpresa($filtro: String, $idEmpresa: ID!, $page: Int, $size: Int, $sort: [SortRequest]) { 
+    fetchAllUsuariosByFilterAndEmpresa(filtro: $filtro, idEmpresa: $idEmpresa, page: $page, size: $size, sort: $sort) {    
+      number
+      size
+      totalElements
+      totalPages
+      first
+      last
+      empty
+      content {
+        id
+        empresa {
+          id
+          nomeFantasia
+        }
+        username
+        firstname
+        lastname
+        email
+        enabled
+        roles
+        dataCadastro
+        dataAtualizacao
 
-export { SAVE_USUARIO, FETCH_ALL_USUARIOS, FETCH_USUARIO_BY_ID };
+      }
+    }
+  }
+`;
+
+
+export { SAVE_USUARIO, FETCH_ALL_USUARIOS, FETCH_USUARIO_BY_ID, FETCH_ALL_USUARIOS_BY_EMPRESA };
