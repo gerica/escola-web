@@ -1,0 +1,47 @@
+@use '../../../../scss/settings/palette';
+@use '@angular/material' as mat;
+@include mat.core();
+
+
+.containerControles {
+  display: flex;
+  justify-content: space-between;
+  // align-items: center;
+}
+
+.cursorSelect {
+  cursor: pointer;
+}
+
+
+mat-form-field {
+  margin: 0 0.5rem;
+  width: 70%;
+}
+
+// .status-ativo {
+//   // background-color: palette.$white-87-opacity;
+//   background-color: mat.m2-get-color-from-palette(palette.$primarias, 50);
+// }
+
+// .status-inativo {
+//   background-color: mat.m2-get-color-from-palette(palette.$error, 50);
+// }
+
+// .status-bloqueado {
+//   background-color: mat.m2-get-color-from-palette(palette.$warning, 50);
+// }
+
+// .status-pendente {
+//   background-color: mat.m2-get-color-from-palette(palette.$info, 50);
+// }
+
+// /* Opcional: Para remover bordas indesejadas que podem aparecer com a cor de fundo */
+// .mat-row {
+//   border-bottom-color: transparent !important;
+// }
+
+// /* Opcional: Se quiser um efeito hover que mantenha a cor de fundo */
+// .mat-row:hover {
+//   background-color: var(--mat-row-hover-color, rgba(0, 0, 0, 0.04)) !important; /* Mantém o hover padrão do Material, mas pode ser ajustado */
+// }

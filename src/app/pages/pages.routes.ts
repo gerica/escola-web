@@ -31,6 +31,10 @@ const routes: Routes = [
         path: 'empresa',
         loadChildren: () => import('./empresa/empresa.routes').then(m => m.EmpresaRoutes),
       },
+      {
+        path: 'usuario',
+        loadChildren: () => import('./usuario/usuario.routes').then(m => m.CompRoutes),
+      },
       { path: '**', component: NotFoundComponent },
     ],
   },
