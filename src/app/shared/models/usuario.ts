@@ -13,6 +13,8 @@ export interface Usuario {
   email: string;
   enabled: Boolean,
   roles: UserRole[];
+  dataCadastro: Date
+  dataAtualizacao: Date
 }
 
 const SAVE_USUARIO = gql`
@@ -24,7 +26,6 @@ const SAVE_USUARIO = gql`
         nomeFantasia
       }
       username
-      password
       firstname
       lastname
       email
@@ -51,11 +52,14 @@ const FETCH_ALL_USUARIOS = gql`
           nomeFantasia
         }
         username
-        password
         firstname
         lastname
         email
         enabled
+        roles
+        dataCadastro
+        dataAtualizacao
+
       }
     }
   }
@@ -70,7 +74,6 @@ const FETCH_USUARIO_BY_ID = gql`
           nomeFantasia
         }
         username
-        password
         firstname
         lastname
         email

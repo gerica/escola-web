@@ -114,7 +114,7 @@ export class ManterComp implements OnInit {
       email: ['', Validators.email],
       enabled: [true],
       roles: [[], Validators.required], // Array para múltiplas seleções
-      empresa: [null, Validators.required] // O valor será um objeto Empresa
+      empresa: [null] // O valor será um objeto Empresa
     });
   }
 

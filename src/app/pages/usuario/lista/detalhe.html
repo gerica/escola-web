@@ -3,22 +3,17 @@
   <div class="containerOut">
     <div class="containerInner">
       <span>Nome :</span>
-      <span>{{data.firstname | primeiraMaiuscula}}</span>
-    </div>
-
-    <!-- <div class="containerInner">
-      <span>Razão Social:</span>
-      <span>{{data.razaoSocial}}</span>
+      <span>{{data.firstname | primeiraMaiuscula}} {{ data.lastname | primeiraMaiuscula}}</span>
     </div>
 
     <div class="containerInner">
-      <span>cnpj</span>
-      <span>{{data.cnpj}}</span>
+      <span>Usuário:</span>
+      <span>{{data.username}}</span>
     </div>
 
     <div class="containerInner">
-      <span>Inscrição Estadual</span>
-      <span>{{data.inscricaoEstadual}}</span>
+      <span>Empresa</span>
+      <span>{{data.empresa?.nomeFantasia}}</span>
     </div>
 
     <div class="containerInner">
@@ -27,26 +22,15 @@
     </div>
 
     <div class="containerInner">
-      <span>Telefone:</span>
-      <span>{{data.telefone}}</span>
+      <span>Papeis:</span>
+      <span>{{data.roles}}</span>
     </div>
 
-    <div class="containerInner">
-      <span>Ativo:</span>
-      <span>{{data.ativo ? 'Sim' : 'Não'}}</span>
-    </div>
-
-    <div class="containerInner">
-      <span>Logo:</span>
-      <span >
-        <img style="max-width: 350px;" [src]="data.logoUrl"/>
-      </span>
-    </div>
 
     <div class="containerInner">
       <span>Data de Cadastro:</span>
       <span>{{data.dataCadastro | date: 'dd/MM/yyyy'}}</span>
-    </div> -->
+    </div>
 
   </div>
 
