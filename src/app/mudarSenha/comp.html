@@ -1,0 +1,70 @@
+<form [formGroup]="form">
+    <mat-card>
+        <mat-card-title style="align-self: center;">Escola</mat-card-title>
+        <mat-card-subtitle style="padding: 8px;">Primeiro acesso</mat-card-subtitle>
+        <mat-card-content>
+
+            @if(error()){
+            <div class="error">
+                {{ error() }}
+            </div>
+            }
+
+            <section>
+                <mat-form-field class="full-width">
+                    <input id="emailInput" matInput placeholder="Login" formControlName="username"
+                        autocomplete="username">
+                    @if(form.controls['username'].hasError('required')){
+                    <mat-error id="requiredEmailError">
+                        Usuário é <strong>obrigatório</strong>
+                    </mat-error>
+                    }
+
+                </mat-form-field>
+            </section>
+
+            <section>
+
+                <mat-form-field class="full-width">
+                    <input id="passwordInput" matInput placeholder="Senha" formControlName="password" type="password"
+                        autocomplete="current-password">
+                    @if(form.controls['password'].hasError('required')){
+                    <mat-error id="requiredPasswordError">
+                        Senha é <strong>obrigatório</strong>
+                    </mat-error>
+                    }
+                </mat-form-field>
+            </section>
+
+            <mat-form-field class="full-width">
+                <input id="newPasswordInput" matInput placeholder="Nova senha" formControlName="newPassword"
+                    type="password" autocomplete="current-password">
+                @if(form.controls['password'].hasError('required')){
+                <mat-error id="requiredPasswordError">
+                    Senha é <strong>obrigatório</strong>
+                </mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field class="full-width">
+                <input id="newPasswordAgainInput" matInput placeholder="Repita a senha"
+                    formControlName="newPasswordAgain" type="password" autocomplete="current-password">
+                @if(form.controls['password'].hasError('required')){
+                <mat-error id="requiredPasswordError">
+                    Senha é <strong>obrigatório</strong>
+                </mat-error>
+                }
+            </mat-form-field>
+
+
+        </mat-card-content>
+
+        <mat-card-actions class="login-actions">
+            <button mat-raised-button id="login" color="primary" [disabled]="form.invalid"
+                (click)="submit()">Login</button>
+            <button mat-button id="resetPassword" routerLink="/login" type="button">Voltar</button>
+        </mat-card-actions>
+
+    </mat-card>
+
+</form>

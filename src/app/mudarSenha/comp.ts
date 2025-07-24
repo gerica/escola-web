@@ -12,9 +12,9 @@ import { AppConfigService } from '../core/services/app.config.service';
 
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  selector: 'app-mudar-senha',
+  templateUrl: './comp.html',
+  styleUrls: ['./comp.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -25,9 +25,10 @@ import { AppConfigService } from '../core/services/app.config.service';
     MatButtonModule,
     ReactiveFormsModule,
     MatSlideToggleModule,
+    // MatProgressBarModule,
   ],
 })
-export class LoginComponent implements OnInit {
+export class Comp implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly notification = inject(NotificationService);
   private readonly router = inject(Router);
@@ -47,8 +48,9 @@ export class LoginComponent implements OnInit {
 
     this.form = new UntypedFormGroup({
       username: new UntypedFormControl(savedUserEmail, [Validators.required]),
-      password: new UntypedFormControl('6vkWITTQcIKO2y1PEP6mPM', Validators.required),
-      rememberMe: new UntypedFormControl(savedUserEmail !== null)
+      password: new UntypedFormControl('', Validators.required),
+      newPassword: new UntypedFormControl('', Validators.required),
+      newPasswordAgain: new UntypedFormControl('', Validators.required),
     });
   }
 

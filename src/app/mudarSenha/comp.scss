@@ -1,0 +1,22 @@
+:host {
+    display: flex;
+    justify-content: center;
+    margin: 20rem 0px;
+}
+
+
+mat-form-field {
+    width: 100%;
+
+}
+
+.error {
+    padding: 16px;
+    // width: 300px;
+    color: white;
+    background-color: red;
+}
+
+.login-actions {
+    align-self: end;
+}
