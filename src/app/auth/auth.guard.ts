@@ -20,11 +20,16 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         return this.checkAuth(state.url);
     }
 
-    private checkAuth(returnUrl: string): boolean | UrlTree {        
+    private checkAuth(returnUrl: string): boolean | UrlTree {
         // console.log(this.authService.isAuthenticatedUser());
-        if (this.authService.isAuthenticatedUser()) { // Supondo que você tenha um método para verificar a autenticação
-            return true; // Usuário autenticado, permite o acesso à rota
-        } else {
+        if (this.authService.isPrimeiroAcesso()) { // Supondo que você tenha um método para verificar a autenticação
+
+            this.router.navigate(['/mudarSenha'], { queryParams: { returnUrl } });
+            return false;
+        } else if (this.authService.isAuthenticatedUser()) {
+            return true;
+        }
+        else {
             // Usuário não autenticado, redireciona para a página de login            
             this.router.navigate(['/login'], { queryParams: { returnUrl } });
             return false;

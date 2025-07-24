@@ -1,15 +1,27 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ReactiveFormsModule, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  ReactiveFormsModule,
+  UntypedFormControl,
+  UntypedFormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle'; // <-- Importe este!
 import { Router, RouterModule } from '@angular/router';
 import { AuthService, LoadingSpinnerService, NotificationService } from '../core/services';
-import { AppConfigService } from '../core/services/app.config.service';
 
+export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const newPassword = control.get('newPassword');
+  const newPasswordAgain = control.get('newPasswordAgain');
+
+  return newPassword && newPasswordAgain && newPassword.value !== newPasswordAgain.value ? { passwordMismatch: true } : null;
+};
 
 @Component({
   selector: 'app-mudar-senha',
@@ -24,8 +36,6 @@ import { AppConfigService } from '../core/services/app.config.service';
     MatInputModule,
     MatButtonModule,
     ReactiveFormsModule,
-    MatSlideToggleModule,
-    // MatProgressBarModule,
   ],
 })
 export class Comp implements OnInit {
@@ -33,13 +43,11 @@ export class Comp implements OnInit {
   private readonly notification = inject(NotificationService);
   private readonly router = inject(Router);
   private readonly spinner = inject(LoadingSpinnerService);
-  private readonly appConfigService = inject(AppConfigService);
 
   error = signal("");
   form!: UntypedFormGroup;
 
   ngOnInit() {
-
     this.createForm();
   }
 
@@ -48,34 +56,34 @@ export class Comp implements OnInit {
 
     this.form = new UntypedFormGroup({
       username: new UntypedFormControl(savedUserEmail, [Validators.required]),
-      password: new UntypedFormControl('', Validators.required),
-      newPassword: new UntypedFormControl('', Validators.required),
+      newPassword: new UntypedFormControl('', [Validators.required, Validators.minLength(6)]),
       newPasswordAgain: new UntypedFormControl('', Validators.required),
-    });
+    }, { validators: passwordMatchValidator });
   }
 
   submit(): void {
-    const username = this.form.get('username')?.value;
-    const password = this.form.get('password')?.value;
-    const rememberMe = this.form.get('rememberMe')?.value;
+    if (this.form.invalid) {
+      return;
+    }
 
-    this.spinner.showUntilCompleted(this.authService.login(username, password)).subscribe({
+    const { newPassword } = this.form.value;
+
+    // Supondo que você tenha um método changePassword em seu authService
+    this.spinner.showUntilCompleted(
+      this.authService.changePassword(newPassword)
+    ).subscribe({
       next: () => {
-        if (rememberMe) {
-          localStorage.setItem('savedUserEmail', username);
-        } else {
-          localStorage.removeItem('savedUserEmail');
-        }
-        this.notification.showSuccess('Login realizado com sucesso!');
-        this.router.navigate(['/']); // Redireciona para a página principal (editor)
+        this.notification.showSuccess('Senha alterada com sucesso!');
+        this.router.navigate(['/']); // Redireciona para a página de login
       },
       error: (err) => {
-        this.notification.showSuccess(err.message);
-        // this.error.set(err.message);
+        // É uma boa prática usar um método específico para erros
+        this.notification.showError(err.message || 'Ocorreu um erro ao alterar a senha.');
+        this.error.set(err.message || 'Ocorreu um erro ao alterar a senha.');
       }
     });
-  }
-  resetPassword() {
-    this.router.navigate(['/auth/password-reset-request']);
+    // console.log("Formulário enviado!", { username, password, newPassword });
+    // this.notification.showSuccess('Lógica de mudança de senha a ser implementada.');
+    // this.router.navigate(['/login']);
   }
 }

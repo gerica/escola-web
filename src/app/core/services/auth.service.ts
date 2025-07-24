@@ -12,9 +12,18 @@ const LOGIN = gql`
         firstName
         lastName
         roles
+        precisaAlterarSenha
     }
   }
 `;
+
+const CHANGE_PASSWORD = gql`
+  mutation changePassword($newPassword: String!) {
+    changePassword(newPassword: $newPassword)
+  }
+`;
+
+const URL = '/admin/graphql';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -52,9 +61,9 @@ export class AuthService {
     }
 
     try {
-      const payload = JSON.parse(atob(token.split('.')[1]));      
+      const payload = JSON.parse(atob(token.split('.')[1]));
       // O 'exp' é um timestamp em segundos, o Date.now() é em milissegundos.
-      const isExpired = payload.exp * 1000 < Date.now();      
+      const isExpired = payload.exp * 1000 < Date.now();
 
       if (isExpired) {
         this.logout(); // Limpa o token expirado
@@ -69,6 +78,11 @@ export class AuthService {
     }
   }
 
+  isPrimeiroAcesso(): boolean {
+    const user = this.loggedUser();
+    return user?.precisaAlterarSenha || false;
+  }
+
   // Métodos para login e logout (exemplo)
   login(username: string, password: string): Observable<boolean> {
     return this.apollo.mutate<any>({
@@ -78,7 +92,7 @@ export class AuthService {
         password
       },
       context: {
-        uri: '/admin/graphql'
+        uri: URL
       },
     }).pipe(
       map(result => result.data.authenticate as User),
@@ -87,6 +101,30 @@ export class AuthService {
         localStorage.setItem(KEY_LOCAL_TOKEN, user.token);
         this.setLoggedUser(user);
         this._token.set(user.token);
+      }),
+      map(token => !!token) // Retorna true se o login foi bem-sucedido
+    );
+  }
+
+  changePassword(newPassword: string): Observable<boolean> {
+    return this.apollo.mutate<any>({
+      mutation: CHANGE_PASSWORD,
+      variables: {
+        newPassword
+      },
+      context: {
+        uri: URL
+      },
+    }).pipe(
+      map(result => result.data.changePassword as String),
+      tap(() => {
+        const user = this.loggedUser();
+        if (user) {
+          const newUse = { ...user, precisaAlterarSenha: false }
+          localStorage.setItem(KEY_LOCAL_STORE_USUARIO, JSON.stringify(newUse));
+          this.setLoggedUser(newUse);
+        }
+        // this._token.set(user.token);
       }),
       map(token => !!token) // Retorna true se o login foi bem-sucedido
     );
