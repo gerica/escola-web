@@ -11,10 +11,12 @@
       <span>{{data.username}}</span>
     </div>
 
+    @if(data.empresa != null){
     <div class="containerInner">
       <span>Empresa</span>
       <span>{{data.empresa.nomeFantasia}}</span>
     </div>
+    }
 
     <div class="containerInner">
       <span>E-mail:</span>
@@ -23,7 +25,7 @@
 
     <div class="containerInner">
       <span>Papeis:</span>
-      <span>{{data.roles}}</span>
+      <span>{{data.roles | primeiraMaiuscula}}</span>
     </div>
 
 

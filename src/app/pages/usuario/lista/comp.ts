@@ -19,6 +19,7 @@ import { Usuario } from 'src/app/shared/models/usuario';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
 import { UsuarioDetalheDialog } from './detalhe';
+import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
 
 @Component({
   selector: 'app-cliente-list',
@@ -39,6 +40,7 @@ import { UsuarioDetalheDialog } from './detalhe';
     MatInputModule,
     ReactiveFormsModule,
     InnercardComponent,
+    PrimeiraMaiusculaPipe
   ]
 })
 export class ListComp implements OnInit, OnDestroy {
@@ -53,7 +55,7 @@ export class ListComp implements OnInit, OnDestroy {
   ctrlFiltro = new FormControl('', { nonNullable: true });
   pageSize = 10;
   page = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'username', direction: 'asc' }));
-  displayedColumns: string[] = ['username', 'firstname', 'empresa', 'email', 'acoes'];
+  displayedColumns: string[] = ['username', 'firstname', 'empresa', 'roles', 'email', 'acoes'];
   // Subject to emit a signal when the component is destroyed, for RxJS cleanup
   private destroy$ = new Subject<void>();
 

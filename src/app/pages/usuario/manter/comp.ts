@@ -23,7 +23,7 @@ import { InnercardComponent } from "../../../shared/components/innercard/innerca
 import { EmpresaService } from 'src/app/shared/services/empresa.service';
 import { Usuario } from 'src/app/shared/models/usuario';
 import { debounceTime, distinctUntilChanged, finalize, Subject, switchMap, tap } from 'rxjs';
-import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
+import { emptyPage, firstPageAndSort, PageRequest, UserRole } from 'src/app/core/models';
 import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operators';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
 
@@ -99,6 +99,7 @@ export class ManterComp implements OnInit {
 
   ngOnInit(): void {
     this._creatForm();
+    this._setupConditionalValidators();
     this._observerEmpresa();
     this._initForm();
 
@@ -115,6 +116,30 @@ export class ManterComp implements OnInit {
       enabled: [true],
       roles: [[], Validators.required], // Array para múltiplas seleções
       empresa: [null] // O valor será um objeto Empresa
+    });
+  }
+
+  private _setupConditionalValidators() {
+    const rolesControl = this.form.get('roles');
+    const empresaControl = this.form.get('empresa');
+
+    if (!rolesControl || !empresaControl) {
+      return;
+    }
+
+    rolesControl.valueChanges.pipe(distinctUntilChanged()).subscribe(roles => {
+      if (!roles) {
+        return;
+      }
+      // Empresa é obrigatório se alguma role for selecionada, a menos que a ÚNICA role seja SUPER_ADMIN.
+      const isRequired = !(roles.length === 0 || (roles.length === 1 && roles[0] === UserRole.SUPER_ADMIN));
+
+      if (isRequired) {
+        empresaControl.setValidators(Validators.required);
+      } else {
+        empresaControl.clearValidators();
+      }
+      empresaControl.updateValueAndValidity();
     });
   }
 
