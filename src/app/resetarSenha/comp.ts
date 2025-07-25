@@ -1,12 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import {
-  AbstractControl,
   ReactiveFormsModule,
   UntypedFormControl,
   UntypedFormGroup,
-  ValidationErrors,
-  ValidatorFn,
   Validators
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,15 +13,9 @@ import { MatInputModule } from '@angular/material/input';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService, LoadingSpinnerService, NotificationService } from '../core/services';
 
-export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-  const newPassword = control.get('newPassword');
-  const newPasswordAgain = control.get('newPasswordAgain');
-
-  return newPassword && newPasswordAgain && newPassword.value !== newPasswordAgain.value ? { passwordMismatch: true } : null;
-};
 
 @Component({
-  selector: 'app-mudar-senha',
+  selector: 'app-resetar-senha',
   templateUrl: './comp.html',
   styleUrls: ['./comp.scss'],
   standalone: true,
@@ -38,7 +29,7 @@ export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): V
     ReactiveFormsModule,
   ],
 })
-export class CompChangePass implements OnInit {
+export class CompResetSenha implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly notification = inject(NotificationService);
   private readonly router = inject(Router);
@@ -55,10 +46,8 @@ export class CompChangePass implements OnInit {
     const savedUserEmail = localStorage.getItem('savedUserEmail');
 
     this.form = new UntypedFormGroup({
-      username: new UntypedFormControl(savedUserEmail, [Validators.required]),
-      newPassword: new UntypedFormControl('', [Validators.required, Validators.minLength(6)]),
-      newPasswordAgain: new UntypedFormControl('', Validators.required),
-    }, { validators: passwordMatchValidator });
+      email: new UntypedFormControl('', [Validators.email, Validators.required]),
+    });
   }
 
   submit(): void {
@@ -66,11 +55,11 @@ export class CompChangePass implements OnInit {
       return;
     }
 
-    const { newPassword } = this.form.value;
+    const { email } = this.form.value;
 
     // Supondo que você tenha um método changePassword em seu authService
     this.spinner.showUntilCompleted(
-      this.authService.changePassword(newPassword)
+      this.authService.resetPassword(email)
     ).subscribe({
       next: (result) => {
         this.notification.showSuccess(result);
@@ -78,12 +67,9 @@ export class CompChangePass implements OnInit {
       },
       error: (err) => {
         // É uma boa prática usar um método específico para erros
-        this.notification.showError(err.message || 'Ocorreu um erro ao alterar a senha.');
-        this.error.set(err.message || 'Ocorreu um erro ao alterar a senha.');
+        this.notification.showError(err.message || 'Ocorreu um erro ao resetar a senha.');
+        this.error.set(err.message || 'Ocorreu um erro ao resetar a senha.');
       }
     });
-    // console.log("Formulário enviado!", { username, password, newPassword });
-    // this.notification.showSuccess('Lógica de mudança de senha a ser implementada.');
-    // this.router.navigate(['/login']);
   }
 }

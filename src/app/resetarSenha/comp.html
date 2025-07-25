@@ -1,0 +1,31 @@
+<form [formGroup]="form" (ngSubmit)="submit()" style="width: 500px; margin: auto;">
+    <mat-card>
+        <mat-card-title style="align-self: center;">Escola</mat-card-title>
+        <mat-card-subtitle style="padding: 8px;">Reiniciar senha</mat-card-subtitle>
+        <mat-card-content>
+
+            <section>
+                <mat-form-field appearance="outline">
+                    <mat-label>E-mail</mat-label>
+                    <input id="emailInput" matInput formControlName="email" type="email">
+                    @if (form.controls['email'].hasError('email') &&
+                    !form.controls['email'].hasError('required')) {
+                    <mat-error>Entre com um e-mail válido</mat-error>
+                    }
+                    @if(form.controls['email'].hasError('required')){
+                    <mat-error> E-mail é <strong>obrigatório</strong> </mat-error>
+                    }
+                </mat-form-field>
+            </section>
+
+        </mat-card-content>
+
+        <mat-card-actions class="login-actions">
+            <button mat-raised-button id="changePasswordBtn" color="primary" [disabled]="form.invalid"
+                type="submit">Reiniciar Senha</button>
+            <button mat-button id="backToLoginBtn" routerLink="/login" type="button">Voltar</button>
+        </mat-card-actions>
+
+    </mat-card>
+
+</form>

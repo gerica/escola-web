@@ -23,6 +23,12 @@ const CHANGE_PASSWORD = gql`
   }
 `;
 
+const RESET_PASSWORD = gql`
+  mutation resetPassword($email: String!) {
+    resetPassword(email: $email)
+  }
+`;
+
 const URL = '/admin/graphql';
 
 @Injectable({ providedIn: 'root' })
@@ -106,7 +112,7 @@ export class AuthService {
     );
   }
 
-  changePassword(newPassword: string): Observable<boolean> {
+  changePassword(newPassword: string): Observable<string> {
     return this.apollo.mutate<any>({
       mutation: CHANGE_PASSWORD,
       variables: {
@@ -116,7 +122,7 @@ export class AuthService {
         uri: URL
       },
     }).pipe(
-      map(result => result.data.changePassword as String),
+      map(result => result.data.changePassword as string),
       tap(() => {
         const user = this.loggedUser();
         if (user) {
@@ -126,7 +132,24 @@ export class AuthService {
         }
         // this._token.set(user.token);
       }),
-      map(token => !!token) // Retorna true se o login foi bem-sucedido
+
+    );
+  }
+
+  resetPassword(email: string): Observable<string> {
+    return this.apollo.mutate<any>({
+      mutation: RESET_PASSWORD,
+      variables: {
+        email
+      },
+      context: {
+        uri: URL
+      },
+    }).pipe(
+      map(result => result.data.resetPassword as string),
+      tap((result) => {
+        console.log(result);
+      }),
     );
   }
 

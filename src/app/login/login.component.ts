@@ -73,7 +73,5 @@ export class LoginComponent implements OnInit {
       }
     });
   }
-  resetPassword() {
-    this.router.navigate(['/auth/password-reset-request']);
-  }
+  
 }

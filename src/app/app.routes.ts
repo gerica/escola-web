@@ -1,11 +1,13 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
 import { LoginComponent } from './login/login.component';
-import { Comp } from './mudarSenha/comp';
+import { CompChangePass } from './mudarSenha/comp';
+import { CompResetSenha } from './resetarSenha/comp';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
-    { path: 'mudarSenha', component: Comp },
+    { path: 'mudarSenha', component: CompChangePass },
+    { path: 'resetarSenha', component: CompResetSenha },
     {
         path: '',
         // Se PagesModule contém componentes que não são standalone,

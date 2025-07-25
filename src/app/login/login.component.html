@@ -26,7 +26,7 @@
 
 
 
-<form [formGroup]="form">
+<form [formGroup]="form" style="width: 500px; margin: auto;">
     <mat-card>
         <mat-card-title style="align-self: center;">Escola</mat-card-title>
         <mat-card-subtitle style="padding: 8px;">Entrar na conta</mat-card-subtitle>
@@ -69,7 +69,7 @@
         <mat-card-actions class="login-actions">
             <button mat-raised-button id="login" color="primary" [disabled]="form.invalid"
                 (click)="submit()">Login</button>
-            <button mat-button id="resetPassword" (click)="resetPassword()" type="button">Esqueceu a senha?</button>
+            <button mat-button id="resetPassword" routerLink="/resetarSenha" type="button">Esqueceu a senha?</button>
         </mat-card-actions>
 
     </mat-card>
