@@ -1,3 +1,4 @@
+import { Empresa } from 'src/app/shared/models/empresa';
 import { UserRole } from './user-role.model';
 
 export interface User {
@@ -7,4 +8,5 @@ export interface User {
   lastName?: string;
   roles?: UserRole[];
   precisaAlterarSenha?: boolean;
+  empresa: Empresa; 
 }

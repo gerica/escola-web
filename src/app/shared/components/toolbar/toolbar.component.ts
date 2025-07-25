@@ -2,7 +2,7 @@ import { Component, Input, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { Router, RouterModule } from '@angular/router';
-import { APP_CONFIG, MenuItem } from 'src/app/core/models';
+import { APP_CONFIG, APP_USER, MenuItem } from 'src/app/core/models';
 import { AuthService } from 'src/app/core/services';
 
 
@@ -16,8 +16,9 @@ export class ToolbarComponent {
   private readonly router = inject(Router);
   readonly authService = inject(AuthService);
 
-
   appConfig = inject(APP_CONFIG);
+
+  appUser = inject(APP_USER);
 
   @Input() menu!: MenuItem[];
 

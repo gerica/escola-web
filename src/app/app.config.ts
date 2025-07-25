@@ -6,7 +6,7 @@ import { APOLLO_OPTIONS, Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { routes } from './app.routes';
 import { AuthGuard } from './auth/auth.guard';
-import { APP_CONFIG, APP_TOKEN } from './core/models';
+import { APP_CONFIG, APP_TOKEN, APP_USER } from './core/models';
 import { AuthService } from './core/services';
 import { AppConfigService } from './core/services/app.config.service';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
@@ -62,6 +62,10 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_TOKEN,
       useFactory: () => inject(AuthService).token,
+    },
+    {
+      provide: APP_USER,
+      useFactory: () => inject(AuthService).loggedUser,
     },
     { provide: MatPaginatorIntl, useClass: MatPaginatorIntlPtBr },
     // Provedores para o Locale e Moeda

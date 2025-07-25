@@ -3,7 +3,16 @@
     <section>
       <a routerLink="/">
         <div class="toolbar__home">
-          @if(appConfig()){
+          @if(appUser()&& appUser()?.empresa?.id) {
+          <div class="toolbar__home__logo">
+            <img [src]="appUser()?.empresa?.logoUrl" alt="{{ appUser()?.empresa?.nomeFantasia }}"
+              class="toolbar__home__logo__image" />
+          </div>
+          <div class="toolbar__home__sistema">
+            <div>{{ appUser()?.empresa?.nomeFantasia }}</div>
+            <div class="toolbar__home__sistema__versao"> v{{ appConfig().buildInfo.version }} </div>
+          </div>
+          } @else if(appConfig()){
           <div class="toolbar__home__logo">
             <img src="./assets/images/logo.png" alt="{{ appConfig().buildInfo.description }}"
               class="toolbar__home__logo__image" />
@@ -32,11 +41,11 @@
           <div class="toolbar__item__funcao" mat-button [matMenuTriggerFor]="menu">{{ item.name }}</div>
           <mat-menu #menu="matMenu" class="toolbar__submenu">
             @for(submenu of item.submenus; track $index){
-              <div mat-menu-item class="toolbar__subitem"
-              [routerLink]="submenu.router" routerLinkActive="toolbar__subitem---active" tabindex="subi">
+            <div mat-menu-item class="toolbar__subitem" [routerLink]="submenu.router"
+              routerLinkActive="toolbar__subitem---active" tabindex="subi">
               <span class="toolbar__subitem_text">{{ submenu.name }}</span>
             </div>
-          }
+            }
           </mat-menu>
         </span>
         }
@@ -53,7 +62,7 @@
         authService.loggedUser()?.lastName }}</span>
     </div>
     <mat-menu #menuTop="matMenu" class="toolbar__submenu">
-      <div style="width: 280px">        
+      <div style="width: 280px">
         @if(authService.loggedUser()){
         <div>
           @if(authService.loggedUser()){

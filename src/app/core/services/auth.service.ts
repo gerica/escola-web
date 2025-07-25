@@ -13,6 +13,11 @@ const LOGIN = gql`
         lastName
         roles
         precisaAlterarSenha
+        empresa{
+          id
+          nomeFantasia
+          logoUrl
+        }
     }
   }
 `;
