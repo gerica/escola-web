@@ -8,7 +8,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'; // <-- Importe este!
 import { Router, RouterModule } from '@angular/router';
 import { AuthService, LoadingSpinnerService, NotificationService } from '../core/services';
-import { AppConfigService } from '../core/services/app.config.service';
 
 
 @Component({
@@ -32,7 +31,6 @@ export class LoginComponent implements OnInit {
   private readonly notification = inject(NotificationService);
   private readonly router = inject(Router);
   private readonly spinner = inject(LoadingSpinnerService);
-  private readonly appConfigService = inject(AppConfigService);
 
   error = signal("");
   form!: UntypedFormGroup;
@@ -68,8 +66,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/']); // Redireciona para a página principal (editor)
       },
       error: (err) => {
-        this.notification.showSuccess(err.message);
-        // this.error.set(err.message);
+        this.notification.showError(err.message);
       }
     });
   }

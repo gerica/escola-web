@@ -10,7 +10,7 @@ export class NotificationService {
       panelClass: ['snackbar-success'],
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
-
+      duration: 3000,
     });
   }
 
@@ -19,7 +19,7 @@ export class NotificationService {
       panelClass: ['snackbar-error'],
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
-      duration: 5000, // Duration in milliseconds (e.g., 5000 ms = 5 seconds)
+      duration: 10000, // Duration in milliseconds (e.g., 5000 ms = 5 seconds)
     });
   }
 }
