@@ -15,8 +15,8 @@ const routes: Routes = [
   {
     path: '',
     component: ListComp,
-  },
-  {
+  },  
+    {
     path: 'manter',
     component: ManterComp,
   },

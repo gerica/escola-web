@@ -10,6 +10,7 @@ export const moduloAdminTipoDocumentosModelos = 'administrativo/modelos-document
 export const moduloAdminTabelasAuxiliares = 'administrativo/tabelas-auxiliares';
 export const moduloAdminNotificacao = 'administrativo/notificacoes';
 export const moduloAdminAssinaturas = 'administrativo/assinaturas';
+export const moduloAdminEmpresa = 'empresa/manter/:id';
 
 export const modulosAdminEmpresa: MenuItem[] = [
   {
@@ -24,6 +25,13 @@ export const modulosAdminEmpresa: MenuItem[] = [
     name: 'Gestão',
     router: moduloClienteNovo,
     parent: moduloCliente,
+    submenus: null,
+  },
+  {
+    icon: 'contract',
+    name: ' Empresa',
+    router: moduloAdminEmpresa,
+    parent: null,
     submenus: null,
   },
   {

@@ -22,6 +22,21 @@ export class ToolbarComponent {
 
   @Input() menu!: MenuItem[];
 
+  onMenuClick(item: MenuItem): void {
+    // Special handling for dynamic routes like 'empresa/manter/:id'
+    if (item.router.includes(':id')) {
+      const empresaId = this.appUser()?.empresa?.id;
+      if (empresaId) {
+        const finalRoute = item.router.replace(':id', String(empresaId));
+        this.router.navigate([finalRoute]);
+      } else {
+        console.error('User does not have an associated company to navigate to the company page.');
+      }
+    } else {
+      this.router.navigate([item.router]);
+    }
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);

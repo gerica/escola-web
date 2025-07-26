@@ -85,7 +85,7 @@ export class ListComp implements OnInit, OnDestroy {
           this.usuarios.set(result);
         },
         error: (err) => { // <--- Add error handling
-          this.notification.showError('Erro no backend. ' + err.message);
+          this.notification.showError(err.message);
           console.error('Erro ao recuperar dependentes:', err);
         }
       });
@@ -100,7 +100,7 @@ export class ListComp implements OnInit, OnDestroy {
           this.usuarios.set(result);
         },
         error: (err) => { // <--- Add error handling
-          this.notification.showError('Erro no backend. ' + err.message);
+          this.notification.showError(err.message);
           console.error('Erro ao recuperar dependentes:', err);
         }
       });

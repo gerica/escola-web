@@ -1,5 +1,5 @@
 import { MenuItem } from "./menu-item";
-export const moduloSuperadminEmpresa = 'empresa';
+export const moduloEmpresas = 'empresa';
 export const moduloUsuario = 'usuario';
 export const moduloSuperadminSistema = 'superadmin/sistema';
 export const moduloSuperadminRelatorio = 'superadmin/relatorio';
@@ -9,11 +9,10 @@ export const moduloAdmin = 'administrativo';
 export const moduloAdminPerfil = 'administrativo/perfis';
 
 export const modulosSuperadmin: MenuItem[] = [
-
   {
     icon: 'contract',
     name: ' Empresas',
-    router: moduloSuperadminEmpresa,
+    router: moduloEmpresas,
     parent: null,
     submenus: null,
   },

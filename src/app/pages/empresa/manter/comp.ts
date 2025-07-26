@@ -22,6 +22,7 @@ import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
 import { EmpresaService } from 'src/app/shared/services/empresa.service';
 import { ListComp } from '../empresa-usuario/comp';
+import { APP_USER, UserRole } from 'src/app/core/models';
 
 
 // Register the locale data for pt-BR
@@ -81,8 +82,13 @@ export class ManterComp implements OnInit {
   private readonly utilService = inject(UtilsService);
   private readonly fb = inject(FormBuilder);
 
+  appUser = inject(APP_USER);
+  usuarioEhSuperAdmin = this.appUser()?.roles.includes(UserRole.SUPER_ADMIN) || false;
+
   form!: FormGroup;
   empresa = signal<Empresa | null>(null); // Use 'any' por enquanto, ou crie uma interface para Empresa
+
+
 
   ngOnInit(): void {
     this._createForm();
@@ -119,7 +125,6 @@ export class ManterComp implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.form.value);
     if (!this.form.valid) {
       this.notification.showError('Informe todos os campos obrigatórios.');
       this.form.markAllAsTouched();
@@ -134,7 +139,7 @@ export class ManterComp implements OnInit {
           this.notification.showSuccess('Operação realizada com sucesso.');
         },
         error: (err) => { // <--- Add error handling
-          this.notification.showError('Erro no backend. ' + err.message);
+          this.notification.showError(err.message);
           console.error('Erro ao recuperar dependentes:', err);
         }
       });

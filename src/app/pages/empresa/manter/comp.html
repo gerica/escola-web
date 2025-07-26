@@ -72,7 +72,8 @@
 
             <mat-form-field appearance="outline">
               <mat-label>Telefone</mat-label>
-              <input type="text" matInput formControlName="telefone" placeholder="(00) 00000-0000" mask="(00) 00000-0000">
+              <input type="text" matInput formControlName="telefone" placeholder="(00) 00000-0000"
+                mask="(00) 00000-0000">
             </mat-form-field>
 
             <mat-form-field appearance="outline">
@@ -100,7 +101,8 @@
 
             <mat-form-field appearance="outline" class="mat-form-field-full-width">
               <mat-label>URL do Logo</mat-label>
-              <input type="url" matInput formControlName="logoUrl" placeholder="https://exemplo.com/logo.png" maxlength="255">
+              <input type="url" matInput formControlName="logoUrl" placeholder="https://exemplo.com/logo.png"
+                maxlength="255">
               <!-- Validação de formato de URL (opcional, mas boa prática) -->
               @if (form.controls['logoUrl'].hasError('pattern')) {
               <mat-error>Entre com uma URL válida</mat-error>
@@ -108,14 +110,18 @@
             </mat-form-field>
           </section>
 
+          @if(usuarioEhSuperAdmin){
           <!-- Seção para o status Ativo -->
           <section class="containerLinha">
             <mat-checkbox formControlName="ativo">Empresa Ativa</mat-checkbox>
           </section>
+          }
 
           <!-- Seção para botões de ação -->
           <section class="container">
+            @if(usuarioEhSuperAdmin){
             <button mat-raised-button color="secondary" type="button" routerLink="/empresa">Voltar</button>
+            }
             <button mat-raised-button color="primary" type="submit">Salvar</button>
           </section>
         </app-innercard>
@@ -132,7 +138,7 @@
           Usuários
         </ng-template>
         <!-- Conteúdo para a gestão de usuários da empresa -->
-        <app-empresa-usuario-list [empresa]="empresa()"/>
+        <app-empresa-usuario-list [empresa]="empresa()" />
       </mat-tab>
       }
     </mat-tab-group>

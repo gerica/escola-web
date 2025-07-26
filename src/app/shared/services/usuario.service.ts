@@ -76,9 +76,9 @@ export class UsuarioService {
       fetchPolicy: 'network-only', // Or 'no-cache'      
     }).pipe(
       map(result => result.data.fetchAllUsuariosByFilterAndEmpresa as Page<Usuario>),
-      tap(value => {
-        console.log("Received GraphQL data:", value);
-      }),
+      // tap(value => {
+      //   console.log("Received GraphQL data:", value);
+      // }),
     );
   }
 
