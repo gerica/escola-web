@@ -57,7 +57,7 @@ export class ClienteDependenteService {
       }, context: {
         uri: '/clients/graphql'
       },
-      fetchPolicy: 'network-only', // Or 'no-cache'      
+      fetchPolicy: 'cache-first', // Or 'no-cache'      
     }).pipe(
       map(result => result.data.fetchDependenteByIdCliente as ClienteDependente[]),
       // tap(value => {
@@ -75,7 +75,7 @@ export class ClienteDependenteService {
       }, context: {
         uri: '/clients/graphql'
       },
-      fetchPolicy: 'network-only' // Use network-only or no-cache for individual fetches to ensure fresh data
+      fetchPolicy: 'cache-first' 
     }).pipe(
       map(result => result.data.fetchByIdCliente as ClienteDependente),
       // tap(value => {

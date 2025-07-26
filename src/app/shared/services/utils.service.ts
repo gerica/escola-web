@@ -23,7 +23,7 @@ export class UtilsService {
             context: {
                 uri: URL
             },
-            fetchPolicy: 'network-only', // Or 'no-cache'      
+            fetchPolicy: 'cache-first',
         }).pipe(
             map(result => result.data.fetchByFiltro as Page<Cidade>),
             // tap(value => {
@@ -37,7 +37,7 @@ export class UtilsService {
             query: FETCH_CIDADE_BY_CODIGO,
             variables: { codigo: codigo },
             context: { uri: URL },
-            fetchPolicy: 'network-only', // Or 'no-cache'      
+            fetchPolicy: 'cache-first',
         }).pipe(
             map(result => result.data.fetchMunicipioCodigo as Cidade),
             // tap(value => {

@@ -44,3 +44,9 @@ export const FETCH_CIDADE_BY_CODIGO = gql`
     }
   }
 `;
+
+export const FETCH_AVALIABLE_ROLES = gql`  
+  query getAvailableRoles{ 
+    getAvailableRoles
+  }
+`;

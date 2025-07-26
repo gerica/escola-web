@@ -69,7 +69,7 @@ export class EmpresaService {
       context: {
         uri: URL
       },
-      fetchPolicy: 'network-only' // Use network-only or no-cache for individual fetches to ensure fresh data
+      fetchPolicy: 'cache-first'
     }).pipe(
       map(result => {
         const entity = result.data.fetchByIdEmpresa as Empresa

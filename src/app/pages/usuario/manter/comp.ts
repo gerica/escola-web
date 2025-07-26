@@ -23,7 +23,7 @@ import { InnercardComponent } from "../../../shared/components/innercard/innerca
 import { EmpresaService } from 'src/app/shared/services/empresa.service';
 import { Usuario } from 'src/app/shared/models/usuario';
 import { debounceTime, distinctUntilChanged, finalize, Subject, switchMap, tap } from 'rxjs';
-import { emptyPage, firstPageAndSort, PageRequest, UserRole } from 'src/app/core/models';
+import { APP_USER, emptyPage, firstPageAndSort, PageRequest, UserRole } from 'src/app/core/models';
 import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operators';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
 
@@ -85,8 +85,8 @@ export class ManterComp implements OnInit {
 
   form!: FormGroup;
   user = signal<Usuario | null>(null); // Signal para o usuário atual (para edição)
-
-  allRoles: string[] = ['SUPER_ADMIN', 'ADMIN_EMPRESA', 'COORDENADOR', 'PROFESSOR', 'FINANCEIRO', 'RECEPCIONISTA'];
+  appUser = inject(APP_USER);
+  allRoles = signal<string[]>([]);
 
   // Para o autocomplete de Empresa
   empresaTextSubject = new Subject<string>();
@@ -94,15 +94,16 @@ export class ManterComp implements OnInit {
   empresas = signal(emptyPage<Empresa>()); // Armazena a lista de empresas
   pageSize = 10;
   page = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'nomeFantasia', direction: 'asc' }));
-
   usuario = signal<Usuario | null>(null); // Use 'any' por enquanto, ou crie uma interface para Empresa
+
+  usuarioEhSuperAdmin = this.appUser()?.roles.includes(UserRole.SUPER_ADMIN);
 
   ngOnInit(): void {
     this._creatForm();
     this._setupConditionalValidators();
     this._observerEmpresa();
     this._initForm();
-
+    this._recuperarRoles();
   }
 
   private _creatForm() {
@@ -151,8 +152,12 @@ export class ManterComp implements OnInit {
       this.form.patchValue({
         ...this.usuario(),
       }, { emitEvent: true });
-    } else {
+    } else if (this.usuarioEhSuperAdmin) {
       this._buscarEmpresas();
+    } else {
+      this.form.patchValue({
+        empresa: this.appUser()?.empresa,
+      }, { emitEvent: true });
     }
   }
 
@@ -184,6 +189,14 @@ export class ManterComp implements OnInit {
     });
   }
 
+  private _recuperarRoles() {
+    this.usuarioService.getRoles().subscribe({
+      next: (result) => {
+        this.allRoles.set(result);
+      }
+    });
+  }
+
   // Função para exibir o nome da empresa no autocomplete
   displayFnEmpresa(empresa: Empresa): string {
     return empresa ? empresa.nomeFantasia : '';
@@ -204,7 +217,7 @@ export class ManterComp implements OnInit {
           this.notification.showSuccess('Operação realizada com sucesso.');
         },
         error: (err) => { // <--- Add error handling
-          this.notification.showError('Erro no backend. ' + err.message);
+          this.notification.showError(err.message);
           console.error('Erro ao executar chamada ao backend:', err);
         }
       });

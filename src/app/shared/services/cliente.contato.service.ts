@@ -52,7 +52,7 @@ export class ClienteContatoService {
       }, context: {
         uri: '/clients/graphql'
       },
-      fetchPolicy: 'network-only', // Or 'no-cache'      
+      fetchPolicy: 'cache-first', // Or 'no-cache'      
     }).pipe(
       map(result => result.data.fetchContatoByIdCliente as ClienteContato[]),
       // tap(value => {
@@ -70,7 +70,7 @@ export class ClienteContatoService {
       }, context: {
         uri: '/clients/graphql'
       },
-      fetchPolicy: 'network-only' // Use network-only or no-cache for individual fetches to ensure fresh data
+      fetchPolicy: 'cache-first' 
     }).pipe(
       map(result => result.data.fetchByIdCliente as ClienteContato),
       // tap(value => {

@@ -4,6 +4,7 @@ import { map, Observable, tap } from 'rxjs';
 
 import { Page, PageRequest } from 'src/app/core/models';
 import { Usuario, FETCH_ALL_USUARIOS, FETCH_USUARIO_BY_ID, SAVE_USUARIO, FETCH_ALL_USUARIOS_BY_EMPRESA } from '../models/usuario';
+import { FETCH_AVALIABLE_ROLES } from '../models/utils';
 
 const URL = '/admin/graphql';
 @Injectable({ providedIn: 'root' })
@@ -90,7 +91,7 @@ export class UsuarioService {
       context: {
         uri: URL
       },
-      fetchPolicy: 'network-only' // Use network-only or no-cache for individual fetches to ensure fresh data
+      fetchPolicy: 'cache-first'
     }).pipe(
       map(result => {
         const entity = result.data.fetchByIdUsuario as Usuario
@@ -98,6 +99,23 @@ export class UsuarioService {
           ...entity,
         }
       }),
+      // tap(value => {
+      //   console.log("Received GraphQL data (fetchByIdCliente):", value);
+      // }),
+      // map(result => result)
+    );
+  }
+
+  getRoles(): Observable<string[]> {
+    return this.apollo.query<any>({
+      query: FETCH_AVALIABLE_ROLES,
+      context: {
+        uri: URL
+      },
+      fetchPolicy: 'cache-first'
+    }).pipe(
+      map(result => result.data.getAvailableRoles as string[]
+      ),
       // tap(value => {
       //   console.log("Received GraphQL data (fetchByIdCliente):", value);
       // }),

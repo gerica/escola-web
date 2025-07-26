@@ -81,7 +81,7 @@
                 O `roles` no TS deve ser um array de strings (Role enum).
               -->
               <mat-select formControlName="roles" multiple>
-                @for (role of allRoles; track role) {
+                @for (role of allRoles(); track role) {
                 <mat-option [value]="role">{{role}}</mat-option>
                 }
               </mat-select>
@@ -96,7 +96,7 @@
             <mat-form-field appearance="outline" class="mat-form-field-full-width">
               <mat-label>Empresa</mat-label>
               <input #empresaInput matInput type="text" formControlName="empresa"
-                [matAutocomplete]="empresaAutoComplete" (input)="empresaTextSubject.next(empresaInput.value)" />
+                [matAutocomplete]="empresaAutoComplete" (input)="empresaTextSubject.next(empresaInput.value)" [readonly]="!usuarioEhSuperAdmin"/>
               <!-- Validação de campo obrigatório -->
               @if(form.controls['empresa'].hasError('required')){
               <mat-error>

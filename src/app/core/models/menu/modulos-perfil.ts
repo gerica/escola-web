@@ -1,12 +1,12 @@
 import { moduloAdminNotificacao, moduloAdminParametros, moduloAdminTabelasAuxiliares, moduloAdminTipoDocumentosModelos, moduloCliente, moduloClienteContrato, moduloClienteNovo } from "./modulos-admin-empresa";
 import { moduloInicial } from "./modulos-comum";
-import { moduloAdmin, moduloAdminPerfil, moduloAminCamposFormularios, moduloSuperadminAssinaturas, moduloSuperadminEmpresa, moduloSuperadminRelatorio, moduloSuperadminSistema, moduloSuperadminUsuario } from "./modulos-superadmin";
+import { moduloAdmin, moduloAdminPerfil, moduloAminCamposFormularios, moduloSuperadminAssinaturas, moduloSuperadminEmpresa, moduloSuperadminRelatorio, moduloSuperadminSistema, moduloUsuario } from "./modulos-superadmin";
 
 export const modulosPorPerfil = {
   SUPER_ADMIN: [
     moduloInicial,
     moduloSuperadminEmpresa,
-    moduloSuperadminUsuario,
+    moduloUsuario,
     moduloSuperadminSistema,
     moduloSuperadminRelatorio,
     moduloAdmin,
@@ -19,6 +19,7 @@ export const modulosPorPerfil = {
     moduloCliente,
     moduloClienteNovo,
     moduloClienteContrato,
+    moduloUsuario,
     moduloAdmin,
     moduloAdminPerfil,
     moduloAdminParametros,

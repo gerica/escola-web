@@ -1,6 +1,6 @@
 import { MenuItem } from "./menu-item";
 export const moduloSuperadminEmpresa = 'empresa';
-export const moduloSuperadminUsuario = 'usuario';
+export const moduloUsuario = 'usuario';
 export const moduloSuperadminSistema = 'superadmin/sistema';
 export const moduloSuperadminRelatorio = 'superadmin/relatorio';
 export const moduloSuperadminAssinaturas = 'superadmin/assinaturas';
@@ -20,7 +20,7 @@ export const modulosSuperadmin: MenuItem[] = [
   {
     icon: 'contract',
     name: ' Usuários',
-    router: moduloSuperadminUsuario,
+    router: moduloUsuario,
     parent: null,
     submenus: null,
   },
