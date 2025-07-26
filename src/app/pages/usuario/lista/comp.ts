@@ -11,15 +11,17 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
-import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
-import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
+import { APP_TOKEN, emptyPage, firstPageAndSort, PageRequest, User } from 'src/app/core/models';
+import { AuthService, LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { Usuario } from 'src/app/shared/models/usuario';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
 import { UsuarioDetalheDialog } from './detalhe';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
+import { KEY_SUPER_ADMIN_TOKEN, KEY_SUPER_ADMIN_USER } from 'src/app/shared/common/constants';
+import { ConfirmDialogComponent } from 'src/app/core/components';
 
 @Component({
   selector: 'app-cliente-list',
@@ -49,7 +51,9 @@ export class ListComp implements OnInit, OnDestroy {
   private readonly notification = inject(NotificationService);
   private readonly spinner = inject(LoadingSpinnerService);
   private readonly usuarioService = inject(UsuarioService);
+  private readonly authService = inject(AuthService);
   private readonly dialog = inject(MatDialog);
+  private readonly router = inject(Router);
 
   usuarios = signal(emptyPage<Usuario>());
   ctrlFiltro = new FormControl('', { nonNullable: true });
@@ -113,4 +117,41 @@ export class ListComp implements OnInit, OnDestroy {
       }
     });
   }
+
+  impersonate(user: User): void {
+    const dialogRef$ = this.dialog.open(ConfirmDialogComponent, {
+      width: '550px',
+      data: {
+        title: `Realizar Impersonação como ${user.username}`,
+        message: 'Você tem certeza que deseja acessar como este usuário?'
+      },
+    });
+
+    dialogRef$.afterClosed().subscribe(result => {
+      if (result) {
+        this.spinner
+          .showUntilCompleted(this.authService.impersonate(user.id))
+          .subscribe({
+            next: () => {
+              this.notification.showSuccess('Sessão de suporte inicializado com sucesso!');
+              this.authService.carregarMenu();
+              this.applyImpersonationTheme();
+              this.router.navigate(['/']); // Redireciona para a página principal (editor)
+            },
+            error: (err) => {
+              this.notification.showError(err.message);
+              localStorage.removeItem(KEY_SUPER_ADMIN_TOKEN);
+              localStorage.removeItem(KEY_SUPER_ADMIN_USER);
+              console.error('Falha na impersonação:', err);
+            },
+          });
+      }
+    });
+  }
+
+  private applyImpersonationTheme(): void {
+    document.body.classList.add('impersonation-theme');
+    localStorage.setItem('theme', 'impersonation'); // Persist theme
+  }
+
 }

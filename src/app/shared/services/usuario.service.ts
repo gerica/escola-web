@@ -1,9 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
-import { map, Observable, tap } from 'rxjs';
-
+import { map, Observable } from 'rxjs';
 import { Page, PageRequest } from 'src/app/core/models';
-import { Usuario, FETCH_ALL_USUARIOS, FETCH_USUARIO_BY_ID, SAVE_USUARIO, FETCH_ALL_USUARIOS_BY_EMPRESA } from '../models/usuario';
+import { FETCH_ALL_USUARIOS, FETCH_ALL_USUARIOS_BY_EMPRESA, FETCH_USUARIO_BY_ID, SAVE_USUARIO, Usuario } from '../models/usuario';
 import { FETCH_AVALIABLE_ROLES } from '../models/utils';
 
 const URL = '/admin/graphql';
@@ -122,6 +121,7 @@ export class UsuarioService {
       // map(result => result)
     );
   }
+  
 }
 
 

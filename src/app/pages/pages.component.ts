@@ -6,8 +6,9 @@ import { MatDrawerMode, MatSidenav, MatSidenavModule } from '@angular/material/s
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs';
 import { Menu, MenuItem } from '../core/models';
-import { AuthService } from '../core/services';
-import { ToolbarComponent } from '../shared/components';
+import { AuthService, NotificationService } from '../core/services';
+import { InnercardComponent, ToolbarComponent } from '../shared/components';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   templateUrl: './pages.component.html',
@@ -16,26 +17,37 @@ import { ToolbarComponent } from '../shared/components';
     CommonModule,
     RouterModule,
     MatIconModule,
-    ToolbarComponent,    
+    ToolbarComponent,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatButtonModule,
+    InnercardComponent
   ]
 
 })
 export class PagesComponent implements OnInit {
   private readonly router = inject(Router);
-  private userService = inject(AuthService);
+  private readonly notification = inject(NotificationService);
+  authService = inject(AuthService);
 
   @ViewChild('sidenav', { static: true }) sidenav!: MatSidenav;
 
   opened = signal(false);
   over = signal<MatDrawerMode>('side');
 
-  menu: MenuItem[] = [];
-
   ngOnInit(): void {
-    const user = this.userService.loggedUser();
-    this.menu = Menu.montarMenuPorPerfis(user?.roles);
+    this._carregarMenu();
+  }
+
+  endImpersonation(): void {
+    this.authService.endImpersonation();
+    this.notification.showSuccess('Sessão de suporte finalizado com sucesso!');
+    this._carregarMenu();
+    this.router.navigate(['/']); // Redireciona para a página principal (editor)
+  }
+
+  private _carregarMenu() {
+    this.authService.carregarMenu();
 
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       this.sidenav.close();
@@ -43,6 +55,5 @@ export class PagesComponent implements OnInit {
 
     this.opened.set(false);
     this.over.set('side');
-
   }
 }

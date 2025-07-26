@@ -1,26 +1,10 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { map, Observable, tap } from 'rxjs';
-import { User } from '../models';
-import { KEY_LOCAL_STORE_USUARIO, KEY_LOCAL_TOKEN } from 'src/app/shared/common/constants';
+import { KEY_LOCAL_STORE_USUARIO, KEY_LOCAL_TOKEN, KEY_SUPER_ADMIN_TOKEN, KEY_SUPER_ADMIN_USER } from 'src/app/shared/common/constants';
+import { IMPERSONATE_USER_MUTATION, ImpersonationResponse, LOGIN, Menu, MenuItem, User } from '../models';
+import { jwtDecode } from 'jwt-decode';
 
-const LOGIN = gql`
-  mutation authenticate($username: String!, $password: String!) {
-    authenticate(request: {username: $username, password: $password}) {
-        token
-        username
-        firstName
-        lastName
-        roles
-        precisaAlterarSenha
-        empresa{
-          id
-          nomeFantasia
-          logoUrl
-        }
-    }
-  }
-`;
 
 const CHANGE_PASSWORD = gql`
   mutation changePassword($newPassword: String!) {
@@ -40,9 +24,11 @@ const URL = '/admin/graphql';
 export class AuthService {
   private _loggedUser = signal<User | undefined>(undefined);
   private _token = signal<string | null>(null);
+  private _menu = signal<MenuItem[]>([]);
 
   loggedUser = this._loggedUser.asReadonly();
   token = this._token.asReadonly();
+  menu = this._menu.asReadonly();
 
   setLoggedUser(user: User | undefined) {
     this._loggedUser.set(user);
@@ -158,9 +144,70 @@ export class AuthService {
     );
   }
 
+  impersonate(userId: number): Observable<boolean> {
+    // 1. Salvar o token e o user original do SUPER_ADMIN        
+    localStorage.setItem(KEY_SUPER_ADMIN_TOKEN, this.token() as string); // Guarda em segurança
+    localStorage.setItem(KEY_SUPER_ADMIN_USER, JSON.stringify(this.loggedUser())); // Guarda em segurança
+
+    return this.apollo.mutate<any>({
+      mutation: IMPERSONATE_USER_MUTATION,
+      variables: { id: userId },
+      context: { uri: URL },
+    }).pipe(
+      map(result => result.data.impersonateUser as ImpersonationResponse),
+      tap(impersonateUser => {
+        localStorage.setItem(KEY_LOCAL_STORE_USUARIO, JSON.stringify(impersonateUser.user));
+        localStorage.setItem(KEY_LOCAL_TOKEN, impersonateUser.token);
+        this.setLoggedUser(impersonateUser.user);
+        this._token.set(impersonateUser.token);
+      }),
+      map(impersonateUser => !!impersonateUser.token) // Retorna true se o login foi bem-sucedido
+    );
+  }
+
+  isImpersonatedSession(): boolean {
+    const token = this.token();
+    if (!token) return false;
+
+    try {
+      const decodedToken: any = jwtDecode(token);
+      return decodedToken.is_impersonated === true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  endImpersonation(): void {
+    // 1. Pega o token original do SUPER_ADMIN que guardamos
+    const superAdminToken = localStorage.getItem(KEY_SUPER_ADMIN_TOKEN);
+    const superAdminUser = localStorage.getItem(KEY_SUPER_ADMIN_USER);
+
+    if (superAdminToken) {
+      // 2. Restaura o token original como o token ativo
+      localStorage.setItem(KEY_LOCAL_STORE_USUARIO, superAdminUser as string);
+      localStorage.setItem(KEY_LOCAL_TOKEN, superAdminToken);
+      this.setLoggedUser(JSON.parse(superAdminUser as string));
+      this._token.set(superAdminToken);
+
+      // 3. Limpa o token de backup
+      localStorage.removeItem(KEY_SUPER_ADMIN_TOKEN);
+      localStorage.removeItem(KEY_SUPER_ADMIN_USER);
+    } else {
+      // Fallback: se algo deu errado, apenas faz logout
+      this.logout();
+    }
+  }
+
+  carregarMenu() {
+    const user = this.loggedUser();
+    this._menu.set(Menu.montarMenuPorPerfis(user?.roles));
+  }
+
   logout(): void {
     localStorage.removeItem(KEY_LOCAL_TOKEN);
     localStorage.removeItem(KEY_LOCAL_STORE_USUARIO);
+    localStorage.removeItem(KEY_SUPER_ADMIN_TOKEN);
+    localStorage.removeItem(KEY_SUPER_ADMIN_USER);
     this._token.set(null);
     this.setLoggedUser(undefined);
   }

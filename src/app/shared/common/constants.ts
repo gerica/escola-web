@@ -7,6 +7,8 @@ export const KEY_LOCAL_STORE_USUARIO = `${NAME_APP}USUARIO`;
 export const KEY_LOCAL_TOKEN = `${NAME_APP}TOKEN`;
 export const KEY_LOCAL_STORE_ESTADOS = `${NAME_APP}ESTADOS`;
 export const KEY_LOCAL_STORE_CIDADES = `${NAME_APP}CIDADES`;
+export const KEY_SUPER_ADMIN_USER = `${NAME_APP}SUPER_ADMIN_USER`;
+export const KEY_SUPER_ADMIN_TOKEN = `${NAME_APP}SUPER_ADMIN_TOKEN`;
 
 export const TYPE_PDF = 'pdf';
 export const TYPE_CSV = 'csv';

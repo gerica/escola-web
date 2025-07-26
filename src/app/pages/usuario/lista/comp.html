@@ -57,6 +57,10 @@
             <a matTooltip="Editar dados" aria-hidden="false" [routerLink]="['/usuario/manter', element.id]">
               <mat-icon color="primary">edit</mat-icon>
             </a>
+            <a matTooltip="Impersonar" aria-hidden="false" (click)="impersonate(element)">
+              <mat-icon color="primary">group</mat-icon>
+            </a>
+
           </td>
 
         </ng-container>

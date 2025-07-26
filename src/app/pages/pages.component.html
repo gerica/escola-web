@@ -1,5 +1,5 @@
 <!-- Toolbar -->
-<app-toolbar [menu]="menu" />
+<app-toolbar [menu]="authService.menu()" />
 
 <!-- <button class="nav-tool-items" mat-mini-fab (click)="sidenav.toggle()" aria-label="Abrir e fechar menu">
   <mat-icon>menu</mat-icon>
@@ -8,9 +8,9 @@
 <mat-sidenav-container>
   <!-- Sidenav -->
   <mat-sidenav #sidenav [mode]="over()" [opened]="opened()" [fixedInViewport]="true" fixedTopGap="64">
-    @if(menu && menu.length > 0){
+    @if(authService.menu() && authService.menu.length > 0){
     <mat-nav-list>
-      <mat-list-item *ngFor="let item of menu" [routerLink]="item.router">
+      <mat-list-item *ngFor="let item of authService.menu()" [routerLink]="item.router">
         <mat-icon>{{ item.icon }}</mat-icon>
         {{ item.name }}
       </mat-list-item>
@@ -19,6 +19,19 @@
   </mat-sidenav>
   <!-- Main content -->
   <mat-sidenav-content>
+    <!-- em seu app.component.html -->
+    @if(authService.isImpersonatedSession()) {
+
+    <app-innercard titulo="Sessão de suporte Ativado" [estiloCard]="{'margin-bottom': '1em',}" [estiloCardTitulo]="{'padding': '1em',}">
+      <div class="containerBtnSessaoSuporte">
+        <div>
+          Você está em uma sessão de suporte.
+        </div>
+        <button mat-raised-button color="primary" (click)="endImpersonation()">Encerrar Sessão</button>
+      </div>
+    </app-innercard>
+    }
+
     <router-outlet />
   </mat-sidenav-content>
 </mat-sidenav-container>
