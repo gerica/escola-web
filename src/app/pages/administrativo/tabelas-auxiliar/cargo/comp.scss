@@ -1,0 +1,31 @@
+.cardInner {
+  padding: 1rem;
+}
+
+.container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.containerLinha {
+  display: flex;
+  justify-content: start
+}
+
+mat-form-field {
+  margin: 0 0.5rem;
+  width: 40%;
+}
+
+.containerInfo {
+  padding: 8px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.containerControles {
+  display: flex;
+  justify-content: space-between;
+  // align-items: center;
+}

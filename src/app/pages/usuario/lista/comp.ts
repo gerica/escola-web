@@ -13,15 +13,15 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, RouterModule } from '@angular/router';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
-import { APP_TOKEN, emptyPage, firstPageAndSort, PageRequest, User } from 'src/app/core/models';
+import { ConfirmDialogComponent } from 'src/app/core/components';
+import { emptyPage, firstPageAndSort, PageRequest, User } from 'src/app/core/models';
 import { AuthService, LoadingSpinnerService, NotificationService } from 'src/app/core/services';
+import { KEY_SUPER_ADMIN_TOKEN, KEY_SUPER_ADMIN_USER } from 'src/app/shared/common/constants';
 import { Usuario } from 'src/app/shared/models/usuario';
+import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
 import { UsuarioDetalheDialog } from './detalhe';
-import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
-import { KEY_SUPER_ADMIN_TOKEN, KEY_SUPER_ADMIN_USER } from 'src/app/shared/common/constants';
-import { ConfirmDialogComponent } from 'src/app/core/components';
 
 @Component({
   selector: 'app-cliente-list',
