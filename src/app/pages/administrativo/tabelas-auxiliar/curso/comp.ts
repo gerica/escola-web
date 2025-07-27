@@ -17,12 +17,13 @@ import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { InnercardComponent } from 'src/app/shared/components';
 import { Cargo } from 'src/app/shared/models/cargo';
+import { Curso } from 'src/app/shared/models/curso';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
 import { AdministrativoService } from 'src/app/shared/services/admin.service';
 
 
 @Component({
-  selector: 'app-tabela-auxiliar-cargo-manter',
+  selector: 'app-tabela-auxiliar-curso-manter',
   templateUrl: './comp.html',
   styleUrls: ['./comp.scss', '../../../pages.component.scss'],
   imports: [
@@ -41,7 +42,7 @@ import { AdministrativoService } from 'src/app/shared/services/admin.service';
     InnercardComponent,
   ],
 })
-export class CargoManterComp implements OnInit {
+export class CursoManterComp implements OnInit {
 
   private readonly notification = inject(NotificationService);
   private readonly spinner = inject(LoadingSpinnerService);
@@ -49,12 +50,12 @@ export class CargoManterComp implements OnInit {
   private readonly fb = inject(FormBuilder);
 
   form!: FormGroup;
-  cargos = signal(emptyPage<Cargo>());
-  // cargo = signal<Cargo | null>(null);
+  cursos = signal(emptyPage<Curso>());
+
   ctrlFiltro = new FormControl('', { nonNullable: true });
   pageSize = 10;
   page = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'nome', direction: 'asc' }));
-  displayedColumns: string[] = ['nome', 'descricao', 'ativo', 'acoes'];
+  displayedColumns: string[] = ['nome', 'descricao','duracao','categoria','valorMensalidade', 'ativo', 'acoes'];
 
 
   ngOnInit(): void {
@@ -67,6 +68,9 @@ export class CargoManterComp implements OnInit {
       id: [null],
       nome: ['', Validators.required],
       descricao: [''],
+      duracao: ['', Validators.required],
+      categoria: ['', Validators.required],
+      valorMensalidade: ['', Validators.required],
       ativo: [true],
     });
   }
@@ -89,10 +93,10 @@ export class CargoManterComp implements OnInit {
     }
 
     this.spinner.showUntilCompletedCascate(
-      this.admService.salvarCargo(this.form.value as Partial<Cargo>)
+      this.admService.salvarCurso(this.form.value as Partial<Cargo>)
     ).pipe(
       switchMap(_ => {
-        return this.admService.buscarCargo(this.ctrlFiltro.value, this.page());
+        return this.admService.buscarCurso(this.ctrlFiltro.value, this.page());
       }),
       catchError(err => {
         this.notification.showError(err.message);
@@ -101,7 +105,7 @@ export class CargoManterComp implements OnInit {
       })
     ).subscribe({
       next: (result) => {
-        this.cargos.set(result);
+        this.cursos.set(result);
         this.notification.showSuccess('Operação realizada com sucesso.');
       }, error: (err) => {
         this.notification.showError(err.message);
@@ -115,10 +119,10 @@ export class CargoManterComp implements OnInit {
 
   buscar() {
     this.spinner
-      .showUntilCompleted(this.admService.buscarCargo(this.ctrlFiltro.value, this.page()))
+      .showUntilCompleted(this.admService.buscarCurso(this.ctrlFiltro.value, this.page()))
       .subscribe({
         next: (result) => {
-          this.cargos.set(result);
+          this.cursos.set(result);
         },
         error: (err) => { // <--- Add error handling
           this.notification.showError(err.message);

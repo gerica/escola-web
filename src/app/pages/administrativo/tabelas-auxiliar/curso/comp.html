@@ -1,0 +1,146 @@
+<app-innercard>
+  <form [formGroup]="form" (submit)="onSubmit()">
+
+    <section class="containerLinha">
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input matInput placeholder="nome" formControlName="nome">
+        <!-- Validação de campo obrigatório -->
+        @if(form.controls['nome'].hasError('required') && (form.controls['nome'].touched ||
+        form.controls['nome'].dirty)){
+        <mat-error>
+          O nome é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Descrição</mat-label>
+        <input matInput placeholder="descricao" formControlName="descricao">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Duração</mat-label>
+        <input matInput placeholder="duracao" formControlName="duracao">
+        <!-- Validação de campo obrigatório -->
+        @if(form.controls['duracao'].hasError('required') && (form.controls['duracao'].touched ||
+        form.controls['duracao'].dirty)){
+        <mat-error>
+          A duração é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+    </section>
+
+    <section>
+      <mat-form-field appearance="outline">
+        <mat-label>Categoria</mat-label>
+        <input matInput placeholder="categoria" formControlName="categoria">
+        <!-- Validação de campo obrigatório -->
+        @if(form.controls['categoria'].hasError('required') && (form.controls['categoria'].touched ||
+        form.controls['categoria'].dirty)){
+        <mat-error>
+          A categoria é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Valor mensalidade</mat-label>
+        <input matInput placeholder="valorMensalidade" formControlName="valorMensalidade" type="number" step="0.01">
+        <!-- Validação de campo obrigatório -->
+        @if(form.controls['valorMensalidade'].hasError('required') && (form.controls['valorMensalidade'].touched ||
+        form.controls['valorMensalidade'].dirty)){
+        <mat-error>
+          O valor da mensalidade é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-checkbox formControlName="ativo">Ativo</mat-checkbox>
+    </section>
+    <section class="container">
+      @if(this.form.get('id')?.value !== null){
+      <button mat-raised-button color="secondary" type="button" (click)="novo()">Novo</button>
+      }
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Salvar</button>
+    </section>
+
+  </form>
+  <!-- <mat-divider style="margin-top: 8px; margin-bottom: 8px;"></mat-divider> -->
+
+  <app-innercard titulo="Lista de Cursos" [estiloCardTitulo]="{'padding': '1em',}" [estiloCard]="{'margin-top': '1em'}">
+    <section class="containerControles">
+      <mat-form-field appearance="outline">
+        <mat-label>Filtrar por nome </mat-label>
+        <input matInput [formControl]="ctrlFiltro" placeholder="nome e email" (keydown.enter)="buscar()" />
+        <button *ngIf="ctrlFiltro.value" matSuffix mat-icon-button aria-label="Filtro" (click)="buscar()">
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
+
+    </section>
+    @if(!cursos().empty){
+    <section class="lista">
+      <table mat-table [dataSource]="cursos().content" matSort (matSortChange)="sortData($event)"
+        class="mat-elevation-z8">
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="nome">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="nome"> Nome </th>
+          <td mat-cell *matCellDef="let element"> {{element.nome | primeiraMaiuscula}} </td>
+        </ng-container>
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="descricao">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="descricao"> Descrição </th>
+          <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
+        </ng-container>
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="duracao">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="duracao"> Duração </th>
+          <td mat-cell *matCellDef="let element"> {{element.duracao}} </td>
+        </ng-container>
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="categoria">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="categoria"> Categoria </th>
+          <td mat-cell *matCellDef="let element"> {{element.categoria}} </td>
+        </ng-container>
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="valorMensalidade">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="valorMensalidade"> Valor </th>
+          <td mat-cell *matCellDef="let element"> {{element.valorMensalidade | currency : 'BRL'}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="ativo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="ativo">Ativo </th>
+          <td mat-cell *matCellDef="let element"> {{element.ativo? 'Sim' : 'Não'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="acoes">
+          <th mat-header-cell *matHeaderCellDef> </th>
+          <td mat-cell *matCellDef="let element" class="cursorSelect">
+            <a matTooltip="Editar dados" aria-hidden="false" (click)="preEditar(element)">
+              <mat-icon color="primary">edit</mat-icon>
+            </a>
+          </td>
+
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <mat-paginator class="mat-elevation-z5" [length]="cursos().totalElements" [pageIndex]="cursos().number"
+        [pageSize]="pageSize" (page)="page.set({ page: $event.pageIndex, size: $event.pageSize }); buscar()"
+        [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons />
+    </section>
+    } @else {
+    <span>Nenhum registro cadastrado</span>
+    }
+  </app-innercard>
+
+</app-innercard>

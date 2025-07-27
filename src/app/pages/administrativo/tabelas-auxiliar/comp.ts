@@ -4,6 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
 import { CargoManterComp } from './cargo/comp';
+import { CursoManterComp } from './curso/comp';
 
 
 @Component({
@@ -15,7 +16,8 @@ import { CargoManterComp } from './cargo/comp';
     InnercardComponent,
     MatTabsModule,
     MatIconModule,
-    CargoManterComp
+    CargoManterComp,
+    CursoManterComp
   ],
 })
 export class AuxiliarManterComp { }
