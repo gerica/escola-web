@@ -10,5 +10,7 @@ export const KEY_LOCAL_STORE_CIDADES = `${NAME_APP}CIDADES`;
 export const KEY_SUPER_ADMIN_USER = `${NAME_APP}SUPER_ADMIN_USER`;
 export const KEY_SUPER_ADMIN_TOKEN = `${NAME_APP}SUPER_ADMIN_TOKEN`;
 
+export const URL_ADMIN = '/admin/graphql';
+
 export const TYPE_PDF = 'pdf';
 export const TYPE_CSV = 'csv';

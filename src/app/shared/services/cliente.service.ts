@@ -4,8 +4,8 @@ import { map, Observable, tap } from 'rxjs';
 import Cliente, { FETCH_ALL_CLIENTES, FETCH_CLIENTE_BY_ID, SAVE_CLIENTE } from '../models/cliente';
 import { DataUtils } from './data.service';
 import { Page, PageRequest } from 'src/app/core/models';
+import { URL_ADMIN } from '../common/constants';
 
-const URL = '/clients/graphql';
 @Injectable({ providedIn: 'root' })
 export class ClienteService {
 
@@ -31,9 +31,7 @@ export class ClienteService {
           statusCliente: cliente.statusCliente
         },
       },
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
     }).pipe(
       map(result => result.data.saveCliente as Cliente),
       // tap(value => {
@@ -51,9 +49,7 @@ export class ClienteService {
         size: pageRequest.size,
         sort: pageRequest.sorts || [],
       },
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
       fetchPolicy: 'network-only', // Or 'no-cache'      
     }).pipe(
       map(result => result.data.fetchAllClientes as Page<Cliente>),
@@ -69,9 +65,7 @@ export class ClienteService {
       variables: {
         id: id // Pass the ID directly
       },
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
       fetchPolicy: 'cache-first'
     }).pipe(
       map(result => {

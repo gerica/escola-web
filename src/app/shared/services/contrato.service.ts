@@ -4,8 +4,7 @@ import { map, Observable, tap } from 'rxjs';
 import Contrato, { CARREGAR_CONTRATO, FETCH_ALL_CONTRATOS, FETCH_CONTRATO_BY_ID, SAVE_CONTRATO } from '../models/contrato';
 import { Page, PageRequest } from 'src/app/core/models';
 import { DataUtils } from './data.service';
-
-const URL = '/clients/graphql';
+import { URL_ADMIN } from '../common/constants';
 
 @Injectable({ providedIn: 'root' })
 export class ContratoService {
@@ -33,9 +32,7 @@ export class ContratoService {
           dataProximoPagamento: DataUtils.formatDateToYYYYMMDD(entity.dataProximoPagamento),
         },
       },
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
     }).pipe(
       map(result => result.data.saveContrato as Contrato),
       // tap(value => {
@@ -53,9 +50,7 @@ export class ContratoService {
         size: pageRequest.size,
         sort: pageRequest.sorts || [],
       },
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
       fetchPolicy: 'network-only', // Or 'no-cache'      
     }).pipe(
       map(result => result.data.fetchAllContratos as Page<Contrato>),
@@ -71,9 +66,7 @@ export class ContratoService {
       variables: {
         id: id // Pass the ID directly
       },
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
       fetchPolicy: 'cache-first'
     }).pipe(
       map(result => {
@@ -95,9 +88,7 @@ export class ContratoService {
       variables: {
         id: id
       },
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
     }).pipe(
       map(result => result.data.parseContrato as Contrato),
       // tap(value => {

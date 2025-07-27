@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
 import ClienteContato, { DELETE_CONTATO_BY_ID, FETCH_ALL_CONTATOS_BY_CLIENTE, FETCH_CONTATO_BY_ID, SAVE_CLIENTE_CONTATO } from '../models/cliente-contato';
+import { URL_ADMIN } from '../common/constants';
 
 @Injectable({ providedIn: 'root' })
 export class ClienteContatoService {
@@ -17,9 +18,8 @@ export class ClienteContatoService {
           idCliente: idCliente,
           numero: entity.numero,
         },
-      }, context: {
-        uri: '/clients/graphql'
-      }
+      }, 
+      context: { uri: URL_ADMIN },
     }).pipe(
       map(result => result.data.saveClienteContato as ClienteContato),
       // tap(value => {
@@ -33,9 +33,8 @@ export class ClienteContatoService {
       mutation: DELETE_CONTATO_BY_ID,
       variables: {
         id: id
-      }, context: {
-        uri: '/clients/graphql'
-      },
+      }, 
+      context: { uri: URL_ADMIN },
     }).pipe(
       map(result => result.data.deleteContatoById as Boolean),
       // tap(value => {
@@ -49,9 +48,8 @@ export class ClienteContatoService {
       query: FETCH_ALL_CONTATOS_BY_CLIENTE,
       variables: {
         id: idCliente
-      }, context: {
-        uri: '/clients/graphql'
-      },
+      }, 
+      context: { uri: URL_ADMIN },
       fetchPolicy: 'cache-first', // Or 'no-cache'      
     }).pipe(
       map(result => result.data.fetchContatoByIdCliente as ClienteContato[]),
@@ -67,9 +65,8 @@ export class ClienteContatoService {
       query: FETCH_CONTATO_BY_ID,
       variables: {
         id: id // Pass the ID directly
-      }, context: {
-        uri: '/clients/graphql'
-      },
+      }, 
+      context: { uri: URL_ADMIN },
       fetchPolicy: 'cache-first' 
     }).pipe(
       map(result => result.data.fetchByIdCliente as ClienteContato),

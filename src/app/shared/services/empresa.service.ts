@@ -4,8 +4,9 @@ import { map, Observable, tap } from 'rxjs';
 
 import { Page, PageRequest } from 'src/app/core/models';
 import { Empresa, FETCH_ALL_EMPRESAS, FETCH_EMPRESA_BY_ID, SAVE_EMPRESA } from '../models/empresa';
+import { URL_ADMIN } from '../common/constants';
 
-const URL = '/admin/graphql';
+
 @Injectable({ providedIn: 'root' })
 export class EmpresaService {
 
@@ -28,9 +29,7 @@ export class EmpresaService {
           ativo: entity.ativo,
         },
       },
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
     }).pipe(
       map(result => result.data.saveEmpresa as Empresa),
       // tap(value => {
@@ -48,9 +47,7 @@ export class EmpresaService {
         size: pageRequest.size,
         sort: pageRequest.sorts || [],
       },
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
       fetchPolicy: 'network-only', // Or 'no-cache'      
     }).pipe(
       map(result => result.data.fetchAllEmpresasByFilter as Page<Empresa>),
@@ -66,9 +63,7 @@ export class EmpresaService {
       variables: {
         id: id // Pass the ID directly
       },
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
       fetchPolicy: 'cache-first'
     }).pipe(
       map(result => {

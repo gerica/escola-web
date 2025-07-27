@@ -4,8 +4,8 @@ import { map, Observable } from 'rxjs';
 import { Page, PageRequest } from 'src/app/core/models';
 import { FETCH_ALL_USUARIOS, FETCH_ALL_USUARIOS_BY_EMPRESA, FETCH_USUARIO_BY_ID, SAVE_USUARIO, Usuario } from '../models/usuario';
 import { FETCH_AVALIABLE_ROLES } from '../models/utils';
+import { URL_ADMIN } from '../common/constants';
 
-const URL = '/admin/graphql';
 @Injectable({ providedIn: 'root' })
 export class UsuarioService {
 
@@ -27,9 +27,7 @@ export class UsuarioService {
           roles: entity.roles
         },
       },
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
     }).pipe(
       map(result => result.data.saveUsuario as Usuario),
       // tap(value => {
@@ -47,9 +45,7 @@ export class UsuarioService {
         size: pageRequest.size,
         sort: pageRequest.sorts || [],
       },
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
       fetchPolicy: 'network-only', // Or 'no-cache'      
     }).pipe(
       map(result => result.data.fetchAllUsuariosByFilter as Page<Usuario>),
@@ -69,9 +65,7 @@ export class UsuarioService {
         size: pageRequest.size,
         sort: pageRequest.sorts || [],
       },
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
       fetchPolicy: 'network-only', // Or 'no-cache'      
     }).pipe(
       map(result => result.data.fetchAllUsuariosByFilterAndEmpresa as Page<Usuario>),
@@ -87,9 +81,7 @@ export class UsuarioService {
       variables: {
         id: id // Pass the ID directly
       },
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
       fetchPolicy: 'cache-first'
     }).pipe(
       map(result => {
@@ -108,9 +100,7 @@ export class UsuarioService {
   getRoles(): Observable<string[]> {
     return this.apollo.query<any>({
       query: FETCH_AVALIABLE_ROLES,
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
       fetchPolicy: 'cache-first'
     }).pipe(
       map(result => result.data.getAvailableRoles as string[]
@@ -121,7 +111,7 @@ export class UsuarioService {
       // map(result => result)
     );
   }
-  
+
 }
 
 

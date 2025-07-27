@@ -147,8 +147,8 @@ export class ContatoComp implements OnInit {
         ).pipe(
           switchMap(_ => this.contatoService.recuperarPorIdCliente(this.cliente!.id)),
           catchError(err => {
-            this.notification.showError('Erro ao apagar contato.');
-            console.error('Erro ao apagar contato:', err);
+            this.notification.showError(err.message);
+            console.error('Erro ao executar chamada ao backend:', err);
             return EMPTY; // Return EMPTY to stop the stream on error
           })
         ).subscribe({

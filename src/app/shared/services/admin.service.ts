@@ -2,8 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
 import { CHAVE_CONTRATO_CIDADE_PADRAO, CHAVE_CONTRATO_MODELO_PADRAO, FIND_BY_CHAVE, Parametro, SALVAR_PARAMETRO } from '../models/parametro';
+import { URL_ADMIN } from '../common/constants';
 
-const URL = '/admin/graphql';
 
 @Injectable({ providedIn: 'root' })
 export class AdministrativoService {
@@ -13,9 +13,7 @@ export class AdministrativoService {
         return this.apollo.query<{ findByChave: Parametro }>({
             query: FIND_BY_CHAVE,
             variables: { chave },
-            context: {
-                uri: URL
-            }
+            context: { uri: URL_ADMIN }
         }).pipe(
             map(result => result.data.findByChave),
             // tap(result => {
@@ -34,9 +32,7 @@ export class AdministrativoService {
                 },
 
             },
-            context: {
-                uri: URL
-            }
+            context: { uri: URL_ADMIN }
         }).pipe(map(result => result.data.salvarParametro as Parametro)
         );
     }
@@ -50,9 +46,7 @@ export class AdministrativoService {
                     modeloContrato: entity.modeloContrato
                 },
             },
-            context: {
-                uri: URL
-            }
+            context: { uri: URL_ADMIN }
         }).pipe(map(result => result.data.salvarParametro as Parametro)
         );
     }

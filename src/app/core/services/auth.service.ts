@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { map, Observable, tap } from 'rxjs';
-import { KEY_LOCAL_STORE_USUARIO, KEY_LOCAL_TOKEN, KEY_SUPER_ADMIN_TOKEN, KEY_SUPER_ADMIN_USER } from 'src/app/shared/common/constants';
+import { KEY_LOCAL_STORE_USUARIO, KEY_LOCAL_TOKEN, KEY_SUPER_ADMIN_TOKEN, KEY_SUPER_ADMIN_USER, URL_ADMIN } from 'src/app/shared/common/constants';
 import { IMPERSONATE_USER_MUTATION, ImpersonationResponse, LOGIN, Menu, MenuItem, User } from '../models';
 import { jwtDecode } from 'jwt-decode';
 
@@ -17,8 +17,6 @@ const RESET_PASSWORD = gql`
     resetPassword(email: $email)
   }
 `;
-
-const URL = '/admin/graphql';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -88,9 +86,7 @@ export class AuthService {
         username,
         password
       },
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
     }).pipe(
       map(result => result.data.authenticate as User),
       tap(user => {
@@ -109,9 +105,7 @@ export class AuthService {
       variables: {
         newPassword
       },
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
     }).pipe(
       map(result => result.data.changePassword as string),
       tap(() => {
@@ -133,9 +127,7 @@ export class AuthService {
       variables: {
         email
       },
-      context: {
-        uri: URL
-      },
+      context: { uri: URL_ADMIN },
     }).pipe(
       map(result => result.data.resetPassword as string),
       tap((result) => {
@@ -152,7 +144,7 @@ export class AuthService {
     return this.apollo.mutate<any>({
       mutation: IMPERSONATE_USER_MUTATION,
       variables: { id: userId },
-      context: { uri: URL },
+      context: { uri: URL_ADMIN },
     }).pipe(
       map(result => result.data.impersonateUser as ImpersonationResponse),
       tap(impersonateUser => {
