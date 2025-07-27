@@ -135,7 +135,7 @@ export class ListComp implements OnInit, OnDestroy {
             next: () => {
               this.notification.showSuccess('Sessão de suporte inicializado com sucesso!');
               this.authService.carregarMenu();
-              this.applyImpersonationTheme();
+              // this.applyImpersonationTheme();
               this.router.navigate(['/']); // Redireciona para a página principal (editor)
             },
             error: (err) => {
@@ -149,9 +149,9 @@ export class ListComp implements OnInit, OnDestroy {
     });
   }
 
-  private applyImpersonationTheme(): void {
-    document.body.classList.add('impersonation-theme');
-    localStorage.setItem('theme', 'impersonation'); // Persist theme
-  }
+  // private applyImpersonationTheme(): void {
+  //   document.body.classList.add('impersonation-theme');
+  //   localStorage.setItem('theme', 'impersonation'); // Persist theme
+  // }
 
 }

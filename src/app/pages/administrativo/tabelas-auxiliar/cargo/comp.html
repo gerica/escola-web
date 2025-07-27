@@ -33,11 +33,14 @@
   <app-innercard titulo="Lista de Cargos" [estiloCardTitulo]="{'padding': '1em',}" [estiloCard]="{'margin-top': '1em'}">
     <section class="containerControles">
       <mat-form-field appearance="outline">
-        <mat-label>Filtrar por nome </mat-label>
-        <input matInput [formControl]="ctrlFiltro" placeholder="nome e email" (keydown.enter)="buscar()" />
+        <mat-label>Filtrar por nome e descricão </mat-label>
+        <input matInput [formControl]="ctrlFiltro" placeholder="nome e descricão" (keydown.enter)="buscar()" />
+        <button *ngIf="ctrlFiltro.value" matSuffix mat-icon-button aria-label="Filtro" (click)="limparEbuscar()">
+          <mat-icon>close</mat-icon>
+        </button>
         <button *ngIf="ctrlFiltro.value" matSuffix mat-icon-button aria-label="Filtro" (click)="buscar()">
           <mat-icon>search</mat-icon>
-        </button>
+        </button>        
       </mat-form-field>
 
     </section>
@@ -69,6 +72,9 @@
           <td mat-cell *matCellDef="let element" class="cursorSelect">
             <a matTooltip="Editar dados" aria-hidden="false" (click)="preEditar(element)">
               <mat-icon color="primary">edit</mat-icon>
+            </a>
+            <a matTooltip="Remover" aria-hidden="false" (click)="confirmarExclusao(element)">
+              <mat-icon color="primary">delete</mat-icon>
             </a>
           </td>
 

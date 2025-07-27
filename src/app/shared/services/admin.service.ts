@@ -4,8 +4,8 @@ import { map, Observable, tap } from 'rxjs';
 import { URL_ADMIN } from '../common/constants';
 import { CHAVE_CONTRATO_CIDADE_PADRAO, CHAVE_CONTRATO_MODELO_PADRAO, FIND_BY_CHAVE, Parametro, SALVAR_PARAMETRO } from '../models/parametro';
 import { Page, PageRequest } from 'src/app/core/models';
-import { Cargo, FETCH_ALL_CARGOS, SAVE_CARGO } from '../models/cargo';
-import { Curso, FETCH_ALL_CURSOS, SAVE_CURSO } from '../models/curso';
+import { Cargo, DELETE_CARGO_BY_ID, FETCH_ALL_CARGOS, SAVE_CARGO } from '../models/cargo';
+import { Curso, DELETE_CURSO_BY_ID, FETCH_ALL_CURSOS, SAVE_CURSO } from '../models/curso';
 
 
 @Injectable({ providedIn: 'root' })
@@ -129,6 +129,36 @@ export class AdministrativoService {
             map(result => result.data.saveCurso as Curso),
             // tap(value => {
             //   console.log(value);
+            // }),
+        );
+    }
+
+    removerCargo(id: number): Observable<String> {
+        return this.apollo.mutate<any>({
+            mutation: DELETE_CARGO_BY_ID,
+            variables: {
+                id: id
+            },
+            context: { uri: URL_ADMIN },
+        }).pipe(
+            map(result => result.data.deleteCargoById as String),
+            // tap(value => {
+            //     console.log(value);
+            // }),
+        );
+    }
+
+    removerCurso(id: number): Observable<String> {
+        return this.apollo.mutate<any>({
+            mutation: DELETE_CURSO_BY_ID,
+            variables: {
+                id: id
+            },
+            context: { uri: URL_ADMIN },
+        }).pipe(
+            map(result => result.data.deleteCursoById as String),
+            // tap(value => {
+            //     console.log(value);
             // }),
         );
     }

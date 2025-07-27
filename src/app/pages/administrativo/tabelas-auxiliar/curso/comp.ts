@@ -3,20 +3,20 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDivider } from '@angular/material/divider';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { catchError, EMPTY, switchMap } from 'rxjs';
+import { ConfirmDialogComponent } from 'src/app/core/components';
 import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { InnercardComponent } from 'src/app/shared/components';
-import { Cargo } from 'src/app/shared/models/cargo';
+
 import { Curso } from 'src/app/shared/models/curso';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
 import { AdministrativoService } from 'src/app/shared/services/admin.service';
@@ -48,6 +48,7 @@ export class CursoManterComp implements OnInit {
   private readonly spinner = inject(LoadingSpinnerService);
   private readonly admService = inject(AdministrativoService);
   private readonly fb = inject(FormBuilder);
+  private readonly dialog = inject(MatDialog);
 
   form!: FormGroup;
   cursos = signal(emptyPage<Curso>());
@@ -80,7 +81,7 @@ export class CursoManterComp implements OnInit {
     this.form.patchValue({ ativo: true }, { emitEvent: true });
   }
 
-  preEditar(entity: Cargo) {
+  preEditar(entity: Curso) {
     this.form.patchValue({ ...entity }, { emitEvent: true });
   }
 
@@ -93,7 +94,7 @@ export class CursoManterComp implements OnInit {
     }
 
     this.spinner.showUntilCompletedCascate(
-      this.admService.salvarCurso(this.form.value as Partial<Cargo>)
+      this.admService.salvarCurso(this.form.value as Partial<Curso>)
     ).pipe(
       switchMap(_ => {
         return this.admService.buscarCurso(this.ctrlFiltro.value, this.page());
@@ -116,6 +117,10 @@ export class CursoManterComp implements OnInit {
     this.novo();
   }
 
+  limparEbuscar() {
+    this.ctrlFiltro.setValue('');
+    this.buscar();
+  }
 
   buscar() {
     this.spinner
@@ -135,5 +140,45 @@ export class CursoManterComp implements OnInit {
     this.page().sorts = [{ property: sort.active, direction: sort.direction }];
     this.buscar();
   }
+
+
+    confirmarExclusao(entity: Curso) {
+      const dialogRef$ = this.dialog.open(ConfirmDialogComponent, {
+        width: '550px',
+        data: {
+          title: `Realizar a exclusão do curso: ${entity.nome}`,
+          message: 'Você tem certeza que deseja excluir este curso?'
+        }
+      });
+  
+      dialogRef$.afterClosed().subscribe(result => {
+        if (result) {
+          this.excluir(entity);
+        }
+      });
+    }
+  
+    excluir(entity: Curso) {
+      this.spinner.showUntilCompletedCascate(
+        this.admService.removerCurso(entity.id)
+      ).pipe(
+        switchMap(_ => {
+          return this.admService.buscarCurso(this.ctrlFiltro.value, this.page());
+        }),
+        catchError(err => {
+          this.notification.showError(err.message);
+          console.error('Erro ao executar chamada ao backend:', err);
+          return EMPTY;
+        })
+      ).subscribe({
+        next: (result) => {
+          this.cursos.set(result);
+          this.notification.showSuccess('Operação realizada com sucesso.');
+        }, error: (err) => {
+          this.notification.showError(err.message);
+          console.error('Erro ao recuperar dependentes:', err);
+        }
+      });
+    }
 
 }

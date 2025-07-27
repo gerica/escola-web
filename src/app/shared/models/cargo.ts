@@ -44,3 +44,9 @@ export const SAVE_CARGO = gql`
     }
   }
 `;
+
+export const DELETE_CARGO_BY_ID = gql`
+  mutation deleteCargoById($id: ID!){  
+    deleteCargoById(id:$id)
+  }
+`;

@@ -2,16 +2,16 @@ import { gql } from "apollo-angular";
 import { Empresa } from "./empresa";
 
 export interface Curso {
-    id: number,
-    empresa: Empresa,
-    nome: String,
-    descricao: String,
-    duracao: String,
-    categoria: String,
-    valorMensalidade: number,
-    ativo: boolean,
-    dataCadastro: Date,
-    dataAtualizacao: Date, // Data e hora da última atualização do registro
+  id: number,
+  empresa: Empresa,
+  nome: String,
+  descricao: String,
+  duracao: String,
+  categoria: String,
+  valorMensalidade: number,
+  ativo: boolean,
+  dataCadastro: Date,
+  dataAtualizacao: Date, // Data e hora da última atualização do registro
 }
 
 export const FETCH_ALL_CURSOS = gql`  
@@ -48,5 +48,11 @@ export const SAVE_CURSO = gql`
         categoria
         valorMensalidade
     }
+  }
+`;
+
+export const DELETE_CURSO_BY_ID = gql`
+  mutation deleteCursoById($id: ID!){  
+    deleteCursoById(id:$id)
   }
 `;
