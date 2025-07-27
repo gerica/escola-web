@@ -17,6 +17,8 @@ import ClienteContato from 'src/app/shared/models/cliente-contato';
 import { ClienteContatoService } from 'src/app/shared/services/cliente.contato.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TipoContato, TipoContatoLabelMapping } from 'src/app/shared/models/tipo-contato.enum';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-cliente-contato',
@@ -34,6 +36,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatIconModule,
     NgxMaskPipe,
     MatTooltipModule,
+    MatSelectModule,
     InnercardComponent
   ],
   providers: [
@@ -55,9 +58,12 @@ export class ContatoComp implements OnInit {
   contatoCliente = signal<ClienteContato | null>(null);
   contatosCliente = signal<ClienteContato[]>([]);
 
+  tipoContato = Object.values(TipoContato);
+  tipoContatoLabelMapping = TipoContatoLabelMapping;
+
 
   ngOnInit(): void {
-    this.createForm();
+    this._createForm();
     this.recuperarContatos();
   }
 
@@ -67,6 +73,7 @@ export class ContatoComp implements OnInit {
         .subscribe({
           next: (result) => {
             this.contatosCliente.set(result);
+            console.log(this.contatosCliente());
           },
           error: (err) => { // <--- Add error handling
             this.notification.showError('Erro ao recuperar contatos.');
@@ -80,9 +87,11 @@ export class ContatoComp implements OnInit {
     }
   }
 
-  private createForm() {
+  private _createForm() {
     this.form = this.fb.group({
       numero: new FormControl<string | null>('', { validators: [Validators.required] }),
+      tipoContato: new FormControl<string | null>(TipoContato.WHATSAPP, { validators: [Validators.required] }),
+      observacao: new FormControl<string | null>('',),
     });
   }
 
@@ -106,12 +115,12 @@ export class ContatoComp implements OnInit {
     this.spinner.showUntilCompletedCascate(
       this.contatoService.salvar(clienteId, contatoId, formValue)
     ).pipe(
-      switchMap(savedContato => {
+      switchMap(_ => {
         return this.contatoService.recuperarPorIdCliente(clienteId);
       }),
       catchError(err => {
-        this.notification.showError('Erro ao salvar contato.');
-        console.error('Erro ao salvar contato:', err);
+        this.notification.showError(err.message);
+        console.error('Erro ao executar chamada ao backend:', err);
         return EMPTY;
       })
     ).subscribe({

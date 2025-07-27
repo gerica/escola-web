@@ -2,7 +2,7 @@
   <form [formGroup]="form" (submit)="onSubmit()">
 
     <section>
-      <mat-form-field appearance="outline" style="width: 30%;">
+      <mat-form-field appearance="outline">
         <mat-label>Número de contato</mat-label>
         <input type="text" matInput formControlName="numero" mask="(00)0000-0000">
         @if(form.controls['numero'].hasError('required') && (form.controls['numero'].touched ||
@@ -12,6 +12,27 @@
         </mat-error>
         }
       </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Tipo</mat-label>
+        <mat-select formControlName="tipoContato">
+          @for (item of tipoContato; track item) {
+          <mat-option [value]="item">{{tipoContatoLabelMapping[item]}}</mat-option>
+          }
+        </mat-select>
+        @if(form.controls['tipoContato'].hasError('required') && (form.controls['tipoContato'].touched ||
+        form.controls['tipoContato'].dirty)){
+        <mat-error>
+          O tipo é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mat-form-field-custom">
+        <mat-label>Observações</mat-label>
+        <textarea matInput formControlName="observacao" rows="3" placeholder="Digite os observações aqui..."></textarea>
+      </mat-form-field>
+
     </section>
     <section class="botoes">
       <button mat-raised-button color="primary" type="submit">Salvar</button>
@@ -24,11 +45,15 @@
 <app-innercard titulo="Lisa de Contatos" [estiloCardTitulo]="{'padding': '1em',}">
   <div class="containerContatos">
     @for (item of contatosCliente(); track $index) {
-    <mat-card appearance="outlined">
+    <mat-card appearance="outlined" style="width: 32%;">
       <mat-card-header>
         <mat-card-title>Número: {{item.numero | mask:'(00)0000-0000' }}</mat-card-title>
         <!-- <mat-card-subtitle>Número: {{item.numero | mask:'(00)0000-0000' }}</mat-card-subtitle> -->
       </mat-card-header>
+      <mat-card-content>
+        <div>Tipo: {{tipoContatoLabelMapping[item.tipoContato] }}</div>
+        <div>Observações: {{item.observacao }}</div>
+      </mat-card-content>
       <mat-card-actions style="justify-content: flex-end;">
         <button mat-mini-fab color="primary" type="button" (click)="apagar(item)" matTooltip="Excluir">
           <mat-icon>delete</mat-icon>

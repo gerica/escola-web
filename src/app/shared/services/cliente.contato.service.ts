@@ -17,6 +17,8 @@ export class ClienteContatoService {
           id: id || undefined,
           idCliente: idCliente,
           numero: entity.numero,
+          tipoContato: entity.tipoContato,
+          observacao: entity.observacao,
         },
       }, 
       context: { uri: URL_ADMIN },
@@ -50,7 +52,7 @@ export class ClienteContatoService {
         id: idCliente
       }, 
       context: { uri: URL_ADMIN },
-      fetchPolicy: 'cache-first', // Or 'no-cache'      
+      fetchPolicy: 'network-only', // Or 'no-cache'      
     }).pipe(
       map(result => result.data.fetchContatoByIdCliente as ClienteContato[]),
       // tap(value => {

@@ -1,9 +1,12 @@
 import { gql } from "apollo-angular";
+import { TipoContato } from "./tipo-contato.enum";
 
 export default interface ClienteContato {
   id: number,
   idCliente: number,
   numero: string,
+  tipoContato: TipoContato,
+  observacao: string,
 }
 
 const SAVE_CLIENTE_CONTATO = gql`
@@ -11,6 +14,8 @@ const SAVE_CLIENTE_CONTATO = gql`
     saveClienteContato(request:$request){
       id
       numero
+      tipoContato
+      observacao
     }
   }
 `;
@@ -26,6 +31,8 @@ const FETCH_ALL_CONTATOS_BY_CLIENTE = gql`
     fetchContatoByIdCliente(id: $id){    
       id
       numero
+      tipoContato
+      observacao
     }
   }
 `;

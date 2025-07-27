@@ -55,7 +55,7 @@ export class ClienteDependenteService {
         id: idCliente
       },
       context: { uri: URL_ADMIN },
-      fetchPolicy: 'cache-first', // Or 'no-cache'      
+      fetchPolicy: 'network-only', // Or 'no-cache'      
     }).pipe(
       map(result => result.data.fetchDependenteByIdCliente as ClienteDependente[]),
       // tap(value => {

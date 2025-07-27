@@ -69,7 +69,7 @@ export class DependenteComp implements OnInit {
   
 
   ngOnInit(): void {
-    this.createForm();
+    this._createForm();
     this.recuperarDependentes();
   }
 
@@ -92,7 +92,7 @@ export class DependenteComp implements OnInit {
     }
   }
 
-  private createForm() {
+  private _createForm() {
     this.form = this.fb.group({
       nome: new FormControl<string | null>('', { validators: [Validators.required] }),
       sexo: new FormControl<string | null>('', { validators: [Validators.required] }),
