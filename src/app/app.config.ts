@@ -58,35 +58,18 @@ export const MY_DATE_FORMATS = {
 
 export const MY_DATETIME_FORMATS = {
   parse: {
-    dateInput: 'DD/MM/YYYY',    
+    dateInput: 'DD/MM/YYYY', // How the date is parsed from the input
+    timeInput: 'HH:mm',     // Add this for parsing time from the input
   },
   display: {
-    dateInput: 'DD/MM/YYYY HH:mm', // Or just HH:mm if you only want time
-    monthInput: 'MM/YYYY',
-    timeInput: 'HH:mm',           // Crucial for just time
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',        
+    dateInput: 'DD/MM/YYYY', // How the date is displayed in the input
+    monthYearLabel: 'MMM YYYY', // e.g., "Jul 2025"
+    dateA11yLabel: 'LL', // for accessibility
+    monthYearA11yLabel: 'MMMM YYYY', // for accessibility
+    timeInput: 'HH:mm',     // Add this for displaying time in the input
+    timeOptionLabel: 'HH:mm', // Add this for displaying time options (e.g., in a dropdown)
   },
 };
-
-export const MY_TIMEPICKER_FORMATS = {
-  parse: {
-    timeInput: 'HH:mm',
-  },
-  display: {
-    timeInput: 'HH:mm',          // Formato de exibição principal
-    timeLabel: 'HH:mm',          // Rótulo do seletor de tempo
-    hourLabel: 'Hora',
-    minuteLabel: 'Minuto',
-    secondLabel: 'Segundo',
-    hourText: 'Horas',
-    minuteText: 'Minutos',
-    secondText: 'Segundos',
-    timeOptionLabel: 'HH:mm',    // Opções no dropdown
-  },
-};
-
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -121,9 +104,9 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_USER,
       useFactory: () => inject(AuthService).loggedUser,
-    },    
+    },
     provideNgxMask(),
-    provideNativeDateAdapter(),    
+    provideNativeDateAdapter(),
     { provide: LOCALE_ID, useValue: 'pt-BR' }, // Set Angular's global locale
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }, // Set Material Datepicker's locale
     { provide: MAT_DATE_FORMATS, useValue: MY_DATETIME_FORMATS }, // Apply custom date formats

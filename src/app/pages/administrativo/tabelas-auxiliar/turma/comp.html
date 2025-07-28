@@ -26,17 +26,36 @@
         }
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Capacidade máxima</mat-label>
-        <input matInput placeholder="capacidadeMaxima" formControlName="capacidadeMaxima">
-        <!-- Validação de campo obrigatório -->
-        @if(form.controls['capacidadeMaxima'].hasError('required') && (form.controls['capacidadeMaxima'].touched ||
-        form.controls['capacidadeMaxima'].dirty)){
-        <mat-error>
-          A capacidade máxina é <strong>obrigatório</strong>
-        </mat-error>
-        }
-      </mat-form-field>
+       <!-- curso -->
+            <mat-form-field appearance="outline">
+              <mat-label>Curso</mat-label>
+              <input #srvInput matInput type="text" formControlName="curso" [matAutocomplete]="clienteAutoComplete"
+                (input)="srvTextSubject.next(srvInput.value)" />
+              @if(form.controls['curso'].hasError('required') && (form.controls['curso'].touched ||
+              form.controls['curso'].dirty)){
+              <mat-error> Curso é <strong>obrigatório</strong> </mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Autocomplete -->
+            <mat-autocomplete #clienteAutoComplete="matAutocomplete" requireSelection autoActiveFirstOption
+              [displayWith]="displayCurso">
+              <mat-option *ngIf="srvLoading()">
+                <mat-spinner diameter="30" />
+              </mat-option>
+
+              <mat-option *ngIf="!cursos().content && !srvLoading()">
+                Nenhum registro encontrado
+              </mat-option>
+
+              <ng-container *ngIf="!srvLoading()">
+                <mat-option *ngFor="let item of cursos().content" [value]="item">
+                  {{ item?.nome }}
+                </mat-option>
+              </ng-container>
+            </mat-autocomplete>
+            <!-- final contratante -->
+
     </section>
 
     <section>
@@ -90,6 +109,48 @@
         form.controls['horarioInicio'].dirty)){
         <mat-error>
           O horário inicial é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Hora Fim</mat-label>
+        <input matInput [matTimepicker]="pickerFim" formControlName="horarioFim" placeholder="Hora Fim">
+        <mat-timepicker-toggle matIconSuffix [for]="pickerFim" />
+        <mat-timepicker #pickerFim />
+        @if(form.controls['horarioFim'].hasError('required') && (form.controls['horarioFim'].touched ||
+        form.controls['horarioFim'].dirty)){
+        <mat-error>
+          O horário fim é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Dias da semana</mat-label>
+        <mat-select formControlName="diasDaSemana" multiple>
+          @for (item of diasSemana; track item) {
+          <mat-option [value]="item">{{diasSemanaLabelMapping[item]}}</mat-option>
+          }
+        </mat-select>
+        @if(form.controls['diasDaSemana'].hasError('required') && (form.controls['diasDaSemana'].touched ||
+        form.controls['diasDaSemana'].dirty)){
+        <mat-error>
+          Pelo menos um perfil é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+
+    </section>
+    <section>
+      <mat-form-field appearance="outline">
+        <mat-label>Capacidade máxima</mat-label>
+        <input matInput placeholder="capacidadeMaxima" formControlName="capacidadeMaxima">
+        <!-- Validação de campo obrigatório -->
+        @if(form.controls['capacidadeMaxima'].hasError('required') && (form.controls['capacidadeMaxima'].touched ||
+        form.controls['capacidadeMaxima'].dirty)){
+        <mat-error>
+          A capacidade máxina é <strong>obrigatório</strong>
         </mat-error>
         }
       </mat-form-field>

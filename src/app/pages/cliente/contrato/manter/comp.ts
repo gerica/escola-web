@@ -43,8 +43,7 @@ import { ManterContratoComp } from '../modeloContrato/comp';
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    MatAutocompleteModule,
-    MatAutocompleteModule,
+    MatAutocompleteModule,    
     MatSelectModule,
     MatProgressSpinnerModule,
     ManterContratoComp

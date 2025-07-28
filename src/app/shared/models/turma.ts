@@ -55,7 +55,6 @@ export const SAVE_TURMA = gql`
   mutation saveTurma($request: TurmaRequest!){  
     saveTurma(request:$request){
         id
-        idCurso  
         nome
         codigo
         capacidadeMaxima

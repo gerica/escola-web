@@ -4,6 +4,7 @@ import { map, Observable } from 'rxjs';
 import { Page, PageRequest } from 'src/app/core/models';
 import { URL_ADMIN } from '../common/constants';
 import { DELETE_TURMA_BY_ID, FETCH_ALL_TURMAS, SAVE_TURMA, Turma } from '../models/turma';
+import { DataUtils } from './data.service';
 
 @Injectable({ providedIn: 'root' })
 export class TurmaService {
@@ -32,13 +33,14 @@ export class TurmaService {
             variables: {
                 request: {
                     id: entity.id || undefined,
+                    idCurso: entity.curso?.id || undefined,
                     nome: entity.nome,
                     codigo: entity.codigo,
                     capacidadeMaxima: entity.capacidadeMaxima,
                     status: entity.status,
                     anoPeriodo: entity.anoPeriodo,
-                    horarioInicio: entity.horarioInicio,
-                    horarioFim: entity.horarioFim,
+                    horarioInicio: DataUtils.formatTimeForGraphQL(entity.horarioInicio),
+                    horarioFim: DataUtils.formatTimeForGraphQL(entity.horarioFim),
                     diasDaSemana: entity.diasDaSemana,
                     professor: entity.professor
                 },
