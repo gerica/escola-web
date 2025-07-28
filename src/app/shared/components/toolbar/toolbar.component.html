@@ -41,7 +41,7 @@
           <div class="toolbar__item__funcao" mat-button [matMenuTriggerFor]="menu">{{ item.name }}</div>
           <mat-menu #menu="matMenu" class="toolbar__submenu">
             @for(submenu of item.submenus; track $index){
-            <div mat-menu-item class="toolbar__subitem" [routerLink]="submenu.router"
+            <div mat-menu-item class="toolbar__subitem" (click)="onMenuClick(submenu)"
               routerLinkActive="toolbar__subitem---active" tabindex="subi">
               <span class="toolbar__subitem_text">{{ submenu.name }}</span>
             </div>

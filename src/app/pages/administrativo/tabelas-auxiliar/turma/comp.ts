@@ -16,14 +16,13 @@ import { ConfirmDialogComponent } from 'src/app/core/components';
 import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { InnercardComponent } from 'src/app/shared/components';
-import { Cargo } from 'src/app/shared/models/cargo';
+import { Turma } from 'src/app/shared/models/turma';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
-import { AdministrativoService } from 'src/app/shared/services/admin.service';
-import { CargoService } from 'src/app/shared/services/cargo.service';
+import { TurmaService } from 'src/app/shared/services/turma.service';
 
 
 @Component({
-  selector: 'app-tabela-auxiliar-cargo-manter',
+  selector: 'app-tabela-auxiliar-turma-manter',
   templateUrl: './comp.html',
   styleUrls: ['./comp.scss', '../../../pages.component.scss'],
   imports: [
@@ -42,21 +41,21 @@ import { CargoService } from 'src/app/shared/services/cargo.service';
     InnercardComponent,
   ],
 })
-export class CargoManterComp implements OnInit {
+export class TurmaManterComp implements OnInit {
 
   private readonly notification = inject(NotificationService);
   private readonly spinner = inject(LoadingSpinnerService);
-  private readonly cargoService = inject(CargoService);
+  private readonly turmaService = inject(TurmaService);
   private readonly fb = inject(FormBuilder);
   private readonly dialog = inject(MatDialog);
 
   form!: FormGroup;
-  cargos = signal(emptyPage<Cargo>());
-  // cargo = signal<Cargo | null>(null);
+  turmas = signal(emptyPage<Turma>());
+
   ctrlFiltro = new FormControl('', { nonNullable: true });
   pageSize = 10;
   page = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'nome', direction: 'asc' }));
-  displayedColumns: string[] = ['nome', 'descricao', 'ativo', 'acoes'];
+  displayedColumns: string[] = ['nome', 'descricao','duracao','categoria','valorMensalidade', 'ativo', 'acoes'];
 
 
   ngOnInit(): void {
@@ -69,6 +68,9 @@ export class CargoManterComp implements OnInit {
       id: [null],
       nome: ['', Validators.required],
       descricao: [''],
+      duracao: ['', Validators.required],
+      categoria: ['', Validators.required],
+      valorMensalidade: ['', Validators.required],
       ativo: [true],
     });
   }
@@ -78,7 +80,7 @@ export class CargoManterComp implements OnInit {
     this.form.patchValue({ ativo: true }, { emitEvent: true });
   }
 
-  preEditar(entity: Cargo) {
+  preEditar(entity: Turma) {
     this.form.patchValue({ ...entity }, { emitEvent: true });
   }
 
@@ -91,10 +93,10 @@ export class CargoManterComp implements OnInit {
     }
 
     this.spinner.showUntilCompletedCascate(
-      this.cargoService.salvarCargo(this.form.value as Partial<Cargo>)
+      this.turmaService.salvarTurma(this.form.value as Partial<Turma>)
     ).pipe(
       switchMap(_ => {
-        return this.cargoService.buscarCargo(this.ctrlFiltro.value, this.page());
+        return this.turmaService.buscarTurma(this.ctrlFiltro.value, this.page());
       }),
       catchError(err => {
         this.notification.showError(err.message);
@@ -103,7 +105,7 @@ export class CargoManterComp implements OnInit {
       })
     ).subscribe({
       next: (result) => {
-        this.cargos.set(result);
+        this.turmas.set(result);
         this.notification.showSuccess('Operação realizada com sucesso.');
       }, error: (err) => {
         this.notification.showError(err.message);
@@ -121,10 +123,10 @@ export class CargoManterComp implements OnInit {
 
   buscar() {
     this.spinner
-      .showUntilCompleted(this.cargoService.buscarCargo(this.ctrlFiltro.value, this.page()))
+      .showUntilCompleted(this.turmaService.buscarTurma(this.ctrlFiltro.value, this.page()))
       .subscribe({
         next: (result) => {
-          this.cargos.set(result);
+          this.turmas.set(result);
         },
         error: (err) => { // <--- Add error handling
           this.notification.showError(err.message);
@@ -138,43 +140,44 @@ export class CargoManterComp implements OnInit {
     this.buscar();
   }
 
-  confirmarExclusao(entity: Cargo) {
-    const dialogRef$ = this.dialog.open(ConfirmDialogComponent, {
-      width: '550px',
-      data: {
-        title: `Realizar a exclusão do cargo: ${entity.nome}`,
-        message: 'Você tem certeza que deseja excluir este cargo?'
-      }
-    });
 
-    dialogRef$.afterClosed().subscribe(result => {
-      if (result) {
-        this.excluir(entity);
-      }
-    });
-  }
-
-  excluir(entity: Cargo) {
-    this.spinner.showUntilCompletedCascate(
-      this.cargoService.removerCargo(entity.id)
-    ).pipe(
-      switchMap(_ => {
-        return this.cargoService.buscarCargo(this.ctrlFiltro.value, this.page());
-      }),
-      catchError(err => {
-        this.notification.showError(err.message);
-        console.error('Erro ao executar chamada ao backend:', err);
-        return EMPTY;
-      })
-    ).subscribe({
-      next: (result) => {
-        this.cargos.set(result);
-        this.notification.showSuccess('Operação realizada com sucesso.');
-      }, error: (err) => {
-        this.notification.showError(err.message);
-        console.error('Erro ao recuperar dependentes:', err);
-      }
-    });
-  }
+    confirmarExclusao(entity: Turma) {
+      const dialogRef$ = this.dialog.open(ConfirmDialogComponent, {
+        width: '550px',
+        data: {
+          title: `Realizar a exclusão do turma: ${entity.nome}`,
+          message: 'Você tem certeza que deseja excluir este turma?'
+        }
+      });
+  
+      dialogRef$.afterClosed().subscribe(result => {
+        if (result) {
+          this.excluir(entity);
+        }
+      });
+    }
+  
+    excluir(entity: Turma) {
+      this.spinner.showUntilCompletedCascate(
+        this.turmaService.removerTurma(entity.id)
+      ).pipe(
+        switchMap(_ => {
+          return this.turmaService.buscarTurma(this.ctrlFiltro.value, this.page());
+        }),
+        catchError(err => {
+          this.notification.showError(err.message);
+          console.error('Erro ao executar chamada ao backend:', err);
+          return EMPTY;
+        })
+      ).subscribe({
+        next: (result) => {
+          this.turmas.set(result);
+          this.notification.showSuccess('Operação realizada com sucesso.');
+        }, error: (err) => {
+          this.notification.showError(err.message);
+          console.error('Erro ao recuperar dependentes:', err);
+        }
+      });
+    }
 
 }

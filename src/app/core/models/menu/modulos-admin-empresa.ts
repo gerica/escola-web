@@ -6,11 +6,14 @@ export const moduloCliente = 'cliente';
 export const moduloClienteNovo = 'cliente/novo';
 export const moduloClienteContrato = 'cliente/contrato';
 export const moduloAdminParametros = 'administrativo/parametros';
+export const moduloAdminCargo = 'administrativo/cargo';
+export const moduloAdminCurso = 'administrativo/curso';
+export const moduloAdminTurma = 'administrativo/turma';
 export const moduloAdminTipoDocumentosModelos = 'administrativo/modelos-documentos';
 export const moduloAdminTabelasAuxiliares = 'administrativo/tabelas-auxiliares';
 export const moduloAdminNotificacao = 'administrativo/notificacoes';
 export const moduloAdminAssinaturas = 'administrativo/assinaturas';
-export const moduloAdminEmpresa = 'empresa/manter/:id';
+export const moduloAdminEmpresa = 'administrativo/empresa/:id';
 
 export const modulosAdminEmpresa: MenuItem[] = [
   {
@@ -31,7 +34,7 @@ export const modulosAdminEmpresa: MenuItem[] = [
     icon: 'contract',
     name: ' Empresa',
     router: moduloAdminEmpresa,
-    parent: null,
+    parent: moduloAdmin,
     submenus: null,
   },
   {
@@ -39,6 +42,27 @@ export const modulosAdminEmpresa: MenuItem[] = [
     name: 'Contrato',
     router: moduloClienteContrato,
     parent: moduloCliente,
+    submenus: null,
+  },
+  {
+    icon: 'contract',
+    name: 'Cargo',
+    router: moduloAdminCargo,
+    parent: moduloAdmin,
+    submenus: null,
+  },
+  {
+    icon: 'contract',
+    name: 'Curso',
+    router: moduloAdminCurso,
+    parent: moduloAdmin,
+    submenus: null,
+  },
+  {
+    icon: 'contract',
+    name: 'Turma',
+    router: moduloAdminTurma,
+    parent: moduloAdmin,
     submenus: null,
   },
   {

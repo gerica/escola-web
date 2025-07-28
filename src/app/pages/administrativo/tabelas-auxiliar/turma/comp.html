@@ -1,4 +1,4 @@
-<app-innercard titulo="Cursos" [estiloCardTitulo]="{'padding': '1em',}">
+<app-innercard titulo="Turmas" [estiloCardTitulo]="{'padding': '1em',}">
   <form [formGroup]="form" (submit)="onSubmit()">
 
     <section class="containerLinha">
@@ -68,7 +68,7 @@
   </form>
   <!-- <mat-divider style="margin-top: 8px; margin-bottom: 8px;"></mat-divider> -->
 
-  <app-innercard titulo="Lista de Cursos" [estiloCardTitulo]="{'padding': '1em',}" [estiloCard]="{'margin-top': '1em'}">
+  <app-innercard titulo="Lista de turmas" [estiloCardTitulo]="{'padding': '1em',}" [estiloCard]="{'margin-top': '1em'}">
     <section class="containerControles">
       <mat-form-field appearance="outline">
         <mat-label>Filtrar por nome descrição e categoria </mat-label>
@@ -83,9 +83,9 @@
       </mat-form-field>
 
     </section>
-    @if(!cursos().empty){
+    @if(!turmas().empty){
     <section class="lista">
-      <table mat-table [dataSource]="cursos().content" matSort (matSortChange)="sortData($event)"
+      <table mat-table [dataSource]="turmas().content" matSort (matSortChange)="sortData($event)"
         class="mat-elevation-z8">
 
         <!-- Position Column -->
@@ -141,7 +141,7 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
 
-      <mat-paginator class="mat-elevation-z5" [length]="cursos().totalElements" [pageIndex]="cursos().number"
+      <mat-paginator class="mat-elevation-z5" [length]="turmas().totalElements" [pageIndex]="turmas().number"
         [pageSize]="pageSize" (page)="page.set({ page: $event.pageIndex, size: $event.pageSize }); buscar()"
         [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons />
     </section>

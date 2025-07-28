@@ -24,6 +24,7 @@ export class ToolbarComponent {
 
   onMenuClick(item: MenuItem): void {
     // Special handling for dynamic routes like 'empresa/manter/:id'
+    console.log(item.router);
     if (item.router.includes(':id')) {
       const empresaId = this.appUser()?.empresa?.id;
       if (empresaId) {

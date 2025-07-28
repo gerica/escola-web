@@ -20,6 +20,7 @@ import { InnercardComponent } from 'src/app/shared/components';
 import { Curso } from 'src/app/shared/models/curso';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
 import { AdministrativoService } from 'src/app/shared/services/admin.service';
+import { CursoService } from 'src/app/shared/services/curso.service';
 
 
 @Component({
@@ -46,7 +47,7 @@ export class CursoManterComp implements OnInit {
 
   private readonly notification = inject(NotificationService);
   private readonly spinner = inject(LoadingSpinnerService);
-  private readonly admService = inject(AdministrativoService);
+  private readonly cursoService = inject(CursoService);
   private readonly fb = inject(FormBuilder);
   private readonly dialog = inject(MatDialog);
 
@@ -94,10 +95,10 @@ export class CursoManterComp implements OnInit {
     }
 
     this.spinner.showUntilCompletedCascate(
-      this.admService.salvarCurso(this.form.value as Partial<Curso>)
+      this.cursoService.salvarCurso(this.form.value as Partial<Curso>)
     ).pipe(
       switchMap(_ => {
-        return this.admService.buscarCurso(this.ctrlFiltro.value, this.page());
+        return this.cursoService.buscarCurso(this.ctrlFiltro.value, this.page());
       }),
       catchError(err => {
         this.notification.showError(err.message);
@@ -124,7 +125,7 @@ export class CursoManterComp implements OnInit {
 
   buscar() {
     this.spinner
-      .showUntilCompleted(this.admService.buscarCurso(this.ctrlFiltro.value, this.page()))
+      .showUntilCompleted(this.cursoService.buscarCurso(this.ctrlFiltro.value, this.page()))
       .subscribe({
         next: (result) => {
           this.cursos.set(result);
@@ -160,10 +161,10 @@ export class CursoManterComp implements OnInit {
   
     excluir(entity: Curso) {
       this.spinner.showUntilCompletedCascate(
-        this.admService.removerCurso(entity.id)
+        this.cursoService.removerCurso(entity.id)
       ).pipe(
         switchMap(_ => {
-          return this.admService.buscarCurso(this.ctrlFiltro.value, this.page());
+          return this.cursoService.buscarCurso(this.ctrlFiltro.value, this.page());
         }),
         catchError(err => {
           this.notification.showError(err.message);

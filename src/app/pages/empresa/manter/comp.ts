@@ -72,7 +72,7 @@ export const MY_DATE_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }, // Apply custom date formats
   ]
 })
-export class ManterComp implements OnInit {
+export class EmpresaManterComp implements OnInit {
 
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);

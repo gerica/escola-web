@@ -5,9 +5,10 @@ import { Empresa } from 'src/app/shared/models/empresa';
 import { EmpresaService } from 'src/app/shared/services/empresa.service';
 import { NotFoundComponent } from '../not-found';
 import { ListComp } from './lista/comp';
-import { ManterComp } from './manter/comp';
+import { EmpresaManterComp } from './manter/comp';
 
 const localResolver: ResolveFn<Empresa> = route => {
+  console.log(route.paramMap);
   return inject(LoadingSpinnerService).showUntilCompleted(inject(EmpresaService).recuperarPorId(+route.paramMap.get('id')!));
 };
 
@@ -18,11 +19,11 @@ const routes: Routes = [
   },  
     {
     path: 'manter',
-    component: ManterComp,
+    component: EmpresaManterComp,
   },
   {
     path: 'manter/:id',
-    component: ManterComp,
+    component: EmpresaManterComp,
     resolve: { entity: localResolver },
   },
   { path: '**', component: NotFoundComponent },

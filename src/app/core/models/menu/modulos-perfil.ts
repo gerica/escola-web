@@ -1,4 +1,4 @@
-import { moduloAdminEmpresa, moduloAdminNotificacao, moduloAdminParametros, moduloAdminTabelasAuxiliares, moduloAdminTipoDocumentosModelos, moduloCliente, moduloClienteContrato, moduloClienteNovo } from "./modulos-admin-empresa";
+import { moduloAdminCargo, moduloAdminCurso, moduloAdminEmpresa, moduloAdminNotificacao, moduloAdminParametros, moduloAdminTabelasAuxiliares, moduloAdminTipoDocumentosModelos, moduloAdminTurma, moduloCliente, moduloClienteContrato, moduloClienteNovo } from "./modulos-admin-empresa";
 import { moduloInicial } from "./modulos-comum";
 import { moduloProfessor, moduloTurma } from "./modulos-coordenador";
 import { moduloAdmin, moduloAdminPerfil, moduloAminCamposFormularios, moduloSuperadminAssinaturas, moduloEmpresas, moduloSuperadminRelatorio, moduloSuperadminSistema, moduloUsuario } from "./modulos-superadmin";
@@ -20,9 +20,12 @@ export const modulosPorPerfil = {
     moduloCliente,
     moduloClienteNovo,
     moduloClienteContrato,
-    moduloUsuario,
-    moduloAdminEmpresa,
+    moduloUsuario,    
     moduloAdmin,
+    // moduloAdminCargo,
+    moduloAdminEmpresa,
+    moduloAdminCurso,
+    moduloAdminTurma,
     moduloAdminPerfil,
     moduloAdminParametros,
     moduloAdminTipoDocumentosModelos,
