@@ -10,9 +10,12 @@ import { APP_CONFIG, APP_TOKEN, APP_USER } from './core/models';
 import { AuthService } from './core/services';
 import { AppConfigService } from './core/services/app.config.service';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
-import { NgxMaskConfig, provideEnvironmentNgxMask } from 'ngx-mask';
+import { NgxMaskConfig, provideEnvironmentNgxMask, provideNgxMask } from 'ngx-mask';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatPaginatorIntlPtBr } from './core/mat-paginator-intl-ptBr';
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt'; // This provides the locale data
 
 const maskConfigFunction: () => Partial<NgxMaskConfig> = () => {
   return {
@@ -33,6 +36,58 @@ const createApollo = (httpLink: HttpLink) => {
     }),
   };
 };
+
+// Register the locale data for pt-BR
+registerLocaleData(localePt, 'pt-BR');
+
+// Define your custom date formats for display and parsing
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY', // For date pickers
+    timeInput: 'HH:mm',     // Essential for time pickers
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY', // For date pickers
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+    timeInput: 'HH:mm',     // Essential for time pickers
+    timeOptionLabel: 'HH:mm', // Essential for time pickers' options
+  },
+};
+
+export const MY_DATETIME_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',    
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY HH:mm', // Or just HH:mm if you only want time
+    monthInput: 'MM/YYYY',
+    timeInput: 'HH:mm',           // Crucial for just time
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',        
+  },
+};
+
+export const MY_TIMEPICKER_FORMATS = {
+  parse: {
+    timeInput: 'HH:mm',
+  },
+  display: {
+    timeInput: 'HH:mm',          // Formato de exibição principal
+    timeLabel: 'HH:mm',          // Rótulo do seletor de tempo
+    hourLabel: 'Hora',
+    minuteLabel: 'Minuto',
+    secondLabel: 'Segundo',
+    hourText: 'Horas',
+    minuteText: 'Minutos',
+    secondText: 'Segundos',
+    timeOptionLabel: 'HH:mm',    // Opções no dropdown
+  },
+};
+
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes), // <-- Use suas rotas aqui!
@@ -66,7 +121,12 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_USER,
       useFactory: () => inject(AuthService).loggedUser,
-    },
+    },    
+    provideNgxMask(),
+    provideNativeDateAdapter(),    
+    { provide: LOCALE_ID, useValue: 'pt-BR' }, // Set Angular's global locale
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }, // Set Material Datepicker's locale
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATETIME_FORMATS }, // Apply custom date formats
     { provide: MatPaginatorIntl, useClass: MatPaginatorIntlPtBr },
     // Provedores para o Locale e Moeda
     { provide: LOCALE_ID, useValue: 'pt-BR' }, // Define o locale padrão para 'pt-BR'

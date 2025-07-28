@@ -1,47 +1,27 @@
-import { CommonModule, registerLocaleData } from '@angular/common';
-import localePt from '@angular/common/locales/pt'; // This provides the locale data
-import { Component, inject, LOCALE_ID, OnInit, signal } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDivider } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { provideNgxMask } from 'ngx-mask';
-import { BehaviorSubject, finalize, forkJoin, map, Observable, startWith, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, finalize, forkJoin, switchMap, tap } from 'rxjs';
+import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
+import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operators';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { EditorComponent } from 'src/app/shared/components/editor/editor.component';
 import { Cidade } from 'src/app/shared/models/cidade';
-import { Estado } from 'src/app/shared/models/estado';
 import { CHAVE_CONTRATO_CIDADE_PADRAO, CHAVE_CONTRATO_MODELO_PADRAO, Parametro } from 'src/app/shared/models/parametro';
 import { AdministrativoService } from 'src/app/shared/services/admin.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
-import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operators';
 
-// Register the locale data for pt-BR
-registerLocaleData(localePt, 'pt-BR');
-
-// Define your custom date formats for display and parsing
-export const MY_DATE_FORMATS = {
-  parse: {
-    dateInput: 'DD/MM/YYYY', // How the date is parsed from the input
-  },
-  display: {
-    dateInput: 'DD/MM/YYYY', // How the date is displayed in the input
-    monthYearLabel: 'MMM YYYY', // e.g., "Jul 2025"
-    dateA11yLabel: 'LL', // for accessibility
-    monthYearA11yLabel: 'MMMM YYYY', // for accessibility
-  },
-};
 
 @Component({
   selector: 'app-contrato-manter',
@@ -62,14 +42,8 @@ export const MY_DATE_FORMATS = {
     MatDivider,
     MatProgressSpinner,
     EditorComponent
-  ],
-  providers: [
-    provideNativeDateAdapter(),
-    provideNgxMask(),
-    { provide: LOCALE_ID, useValue: 'pt-BR' }, // Set Angular's global locale
-    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }, // Set Material Datepicker's locale
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }, // Apply custom date formats
   ]
+  
 })
 export class ManterComp implements OnInit {
 

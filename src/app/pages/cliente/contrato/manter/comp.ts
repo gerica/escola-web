@@ -1,11 +1,9 @@
-import { CommonModule, registerLocaleData } from '@angular/common';
-import localePt from '@angular/common/locales/pt'; // This provides the locale data
-import { Component, inject, LOCALE_ID, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,7 +12,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { provideNgxMask } from 'ngx-mask';
 import { BehaviorSubject, finalize, Observable, switchMap, tap } from 'rxjs';
 import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operators';
@@ -30,22 +27,6 @@ import { ContratoService } from 'src/app/shared/services/contrato.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../../shared/components/innercard/innercard.component";
 import { ManterContratoComp } from '../modeloContrato/comp';
-
-// Register the locale data for pt-BR
-registerLocaleData(localePt, 'pt-BR');
-
-// Define your custom date formats for display and parsing
-export const MY_DATE_FORMATS = {
-  parse: {
-    dateInput: 'DD/MM/YYYY', // How the date is parsed from the input
-  },
-  display: {
-    dateInput: 'DD/MM/YYYY', // How the date is displayed in the input
-    monthYearLabel: 'MMM YYYY', // e.g., "Jul 2025"
-    dateA11yLabel: 'LL', // for accessibility
-    monthYearA11yLabel: 'MMMM YYYY', // for accessibility
-  },
-};
 
 @Component({
   selector: 'app-contrato-manter',
@@ -69,13 +50,6 @@ export const MY_DATE_FORMATS = {
     ManterContratoComp
 
   ],
-  providers: [
-    provideNativeDateAdapter(),
-    provideNgxMask(),
-    { provide: LOCALE_ID, useValue: 'pt-BR' }, // Set Angular's global locale
-    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }, // Set Material Datepicker's locale
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }, // Apply custom date formats
-  ]
 })
 export class ManterComp implements OnInit {
 

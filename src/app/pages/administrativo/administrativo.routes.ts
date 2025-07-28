@@ -11,7 +11,6 @@ import { EmpresaService } from 'src/app/shared/services/empresa.service';
 import { EmpresaManterComp } from '../empresa/manter/comp';
 
 const localResolver: ResolveFn<Empresa> = route => {
-  console.log(route.paramMap);
   return inject(LoadingSpinnerService).showUntilCompleted(inject(EmpresaService).recuperarPorId(+route.paramMap.get('id')!));
 };
 

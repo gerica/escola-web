@@ -1,11 +1,9 @@
-import { CommonModule, registerLocaleData } from '@angular/common';
-import localePt from '@angular/common/locales/pt'; // This provides the locale data
-import { Component, inject, LOCALE_ID, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,35 +12,17 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { distinctUntilChanged, Subject, switchMap, tap } from 'rxjs';
+import { APP_USER, emptyPage, firstPageAndSort, PageRequest, UserRole } from 'src/app/core/models';
+import { debounceDistinctUntilChanged } from 'src/app/core/rxjs-operators';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { Empresa } from 'src/app/shared/models/empresa';
-import { ClienteService } from 'src/app/shared/services/cliente.service';
-import { UtilsService } from 'src/app/shared/services/utils.service';
-import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
-import { EmpresaService } from 'src/app/shared/services/empresa.service';
 import { Usuario } from 'src/app/shared/models/usuario';
-import { debounceTime, distinctUntilChanged, finalize, Subject, switchMap, tap } from 'rxjs';
-import { APP_USER, emptyPage, firstPageAndSort, PageRequest, UserRole } from 'src/app/core/models';
-import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operators';
+import { EmpresaService } from 'src/app/shared/services/empresa.service';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
+import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
 
 
-// Register the locale data for pt-BR
-registerLocaleData(localePt, 'pt-BR');
-
-// Define your custom date formats for display and parsing
-export const MY_DATE_FORMATS = {
-  parse: {
-    dateInput: 'DD/MM/YYYY', // How the date is parsed from the input
-  },
-  display: {
-    dateInput: 'DD/MM/YYYY', // How the date is displayed in the input
-    monthYearLabel: 'MMM YYYY', // e.g., "Jul 2025"
-    dateA11yLabel: 'LL', // for accessibility
-    monthYearA11yLabel: 'MMMM YYYY', // for accessibility
-  },
-};
 
 @Component({
   selector: 'app-contrato-manter',
@@ -65,13 +45,7 @@ export const MY_DATE_FORMATS = {
     MatSelectModule,
 
   ],
-  providers: [
-    provideNativeDateAdapter(),
-    provideNgxMask(),
-    { provide: LOCALE_ID, useValue: 'pt-BR' }, // Set Angular's global locale
-    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }, // Set Material Datepicker's locale
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }, // Apply custom date formats
-  ]
+
 })
 export class ManterComp implements OnInit {
 

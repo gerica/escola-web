@@ -7,8 +7,7 @@ import { NotFoundComponent } from '../not-found';
 import { ListComp } from './lista/comp';
 import { EmpresaManterComp } from './manter/comp';
 
-const localResolver: ResolveFn<Empresa> = route => {
-  console.log(route.paramMap);
+const localResolver: ResolveFn<Empresa> = route => {  
   return inject(LoadingSpinnerService).showUntilCompleted(inject(EmpresaService).recuperarPorId(+route.paramMap.get('id')!));
 };
 

@@ -13,19 +13,27 @@
         </mat-error>
         }
       </mat-form-field>
+
       <mat-form-field appearance="outline">
-        <mat-label>Descrição</mat-label>
-        <input matInput placeholder="descricao" formControlName="descricao">
+        <mat-label>Código</mat-label>
+        <input matInput placeholder="codigo" formControlName="codigo">
+        <!-- Validação de campo obrigatório -->
+        @if(form.controls['codigo'].hasError('required') && (form.controls['codigo'].touched ||
+        form.controls['codigo'].dirty)){
+        <mat-error>
+          O código é <strong>obrigatório</strong>
+        </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Duração</mat-label>
-        <input matInput placeholder="duracao" formControlName="duracao">
+        <mat-label>Capacidade máxima</mat-label>
+        <input matInput placeholder="capacidadeMaxima" formControlName="capacidadeMaxima">
         <!-- Validação de campo obrigatório -->
-        @if(form.controls['duracao'].hasError('required') && (form.controls['duracao'].touched ||
-        form.controls['duracao'].dirty)){
+        @if(form.controls['capacidadeMaxima'].hasError('required') && (form.controls['capacidadeMaxima'].touched ||
+        form.controls['capacidadeMaxima'].dirty)){
         <mat-error>
-          A duração é <strong>obrigatório</strong>
+          A capacidade máxina é <strong>obrigatório</strong>
         </mat-error>
         }
       </mat-form-field>
@@ -33,31 +41,60 @@
 
     <section>
       <mat-form-field appearance="outline">
-        <mat-label>Categoria</mat-label>
-        <input matInput placeholder="categoria" formControlName="categoria">
+        <mat-label>Período</mat-label>
+        <input matInput placeholder="anoPeriodo" formControlName="anoPeriodo">
         <!-- Validação de campo obrigatório -->
-        @if(form.controls['categoria'].hasError('required') && (form.controls['categoria'].touched ||
-        form.controls['categoria'].dirty)){
+        @if(form.controls['anoPeriodo'].hasError('required') && (form.controls['anoPeriodo'].touched ||
+        form.controls['anoPeriodo'].dirty)){
         <mat-error>
-          A categoria é <strong>obrigatório</strong>
+          O período é <strong>obrigatório</strong>
         </mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Valor mensalidade</mat-label>
-        <input matInput placeholder="valorMensalidade" formControlName="valorMensalidade" type="number" step="0.01">
+        <mat-label>Professor(a)</mat-label>
+        <input matInput placeholder="professor" formControlName="professor">
         <!-- Validação de campo obrigatório -->
-        @if(form.controls['valorMensalidade'].hasError('required') && (form.controls['valorMensalidade'].touched ||
-        form.controls['valorMensalidade'].dirty)){
+        @if(form.controls['professor'].hasError('required') && (form.controls['professor'].touched ||
+        form.controls['professor'].dirty)){
         <mat-error>
-          O valor da mensalidade é <strong>obrigatório</strong>
+          Professor(a) é <strong>obrigatório</strong>
         </mat-error>
         }
       </mat-form-field>
 
-      <mat-checkbox formControlName="ativo">Ativo</mat-checkbox>
+      <mat-form-field appearance="outline">
+        <mat-label>Status turma</mat-label>
+        <mat-select formControlName="status">
+          @for (item of statusTurma; track item) {
+          <mat-option [value]="item">{{statusTurmaLabelMapping[item]}}</mat-option>
+          }
+        </mat-select>
+        @if(form.controls['status'].hasError('required') && (form.controls['status'].touched ||
+        form.controls['status'].dirty)){
+        <mat-error>
+          O status do turma é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
     </section>
+
+    <section>
+      <mat-form-field appearance="outline">
+        <mat-label>Hora início</mat-label>
+        <input matInput [matTimepicker]="pickerInicio" formControlName="horarioInicio" placeholder="Hora Inicio">
+        <mat-timepicker-toggle matIconSuffix [for]="pickerInicio" />
+        <mat-timepicker #pickerInicio />
+        @if(form.controls['horarioInicio'].hasError('required') && (form.controls['horarioInicio'].touched ||
+        form.controls['horarioInicio'].dirty)){
+        <mat-error>
+          O horário inicial é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+    </section>
+
     <section class="container">
       @if(this.form.get('id')?.value !== null){
       <button mat-raised-button color="secondary" type="button" (click)="novo()">Novo</button>
@@ -89,39 +126,39 @@
         class="mat-elevation-z8">
 
         <!-- Position Column -->
+        <ng-container matColumnDef="codigo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="codigo"> Código </th>
+          <td mat-cell *matCellDef="let element"> {{element.codigo}} </td>
+        </ng-container>
+
+        <!-- Position Column -->
         <ng-container matColumnDef="nome">
           <th mat-header-cell *matHeaderCellDef mat-sort-header="nome"> Nome </th>
           <td mat-cell *matCellDef="let element"> {{element.nome | primeiraMaiuscula}} </td>
         </ng-container>
 
         <!-- Position Column -->
-        <ng-container matColumnDef="descricao">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="descricao"> Descrição </th>
-          <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
+        <ng-container matColumnDef="curso">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="curso"> Curso </th>
+          <td mat-cell *matCellDef="let element"> {{element.curso.nome | primeiraMaiuscula}} </td>
         </ng-container>
 
         <!-- Position Column -->
-        <ng-container matColumnDef="duracao">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="duracao"> Duração </th>
-          <td mat-cell *matCellDef="let element"> {{element.duracao}} </td>
+        <ng-container matColumnDef="anoPeriodo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="anoPeriodo"> Periodo </th>
+          <td mat-cell *matCellDef="let element"> {{element.anoPeriodo}} </td>
         </ng-container>
 
         <!-- Position Column -->
-        <ng-container matColumnDef="categoria">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="categoria"> Categoria </th>
-          <td mat-cell *matCellDef="let element"> {{element.categoria}} </td>
-        </ng-container>
-
-        <!-- Position Column -->
-        <ng-container matColumnDef="valorMensalidade">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="valorMensalidade"> Valor </th>
-          <td mat-cell *matCellDef="let element"> {{element.valorMensalidade | currency : 'BRL'}} </td>
+        <ng-container matColumnDef="professor">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="professor"> Professor(a) </th>
+          <td mat-cell *matCellDef="let element"> {{element.professor}} </td>
         </ng-container>
 
         <!-- Symbol Column -->
-        <ng-container matColumnDef="ativo">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="ativo">Ativo </th>
-          <td mat-cell *matCellDef="let element"> {{element.ativo? 'Sim' : 'Não'}} </td>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="status">Status </th>
+          <td mat-cell *matCellDef="let element"> {{getStatusTurma(element.status)}} </td>
         </ng-container>
 
         <ng-container matColumnDef="acoes">
