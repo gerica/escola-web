@@ -6,6 +6,7 @@ import { TurmaService } from 'src/app/shared/services/turma.service';
 import { NotFoundComponent } from '../not-found';
 import { ListComp } from './lista/comp';
 import { ManterComp } from './manter/comp';
+import { InscricaoManterComp } from './inscricao/comp';
 
 
 const localResolver: ResolveFn<Turma> = route => {
@@ -24,6 +25,11 @@ const routes: Routes = [
   {
     path: 'manter/:id',
     component: ManterComp,
+    resolve: { entity: localResolver },
+  },
+  {
+    path: 'inscricao/:id',
+    component: InscricaoManterComp,
     resolve: { entity: localResolver },
   },
   { path: '**', component: NotFoundComponent },

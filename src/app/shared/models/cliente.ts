@@ -69,6 +69,35 @@ const FETCH_ALL_CLIENTES = gql`
   }
 `;
 
+const FETCH_ALL_ATIVOS_CLIENTES = gql`  
+  query fetchAllClientesAtivos($filtro: String, $page: Int, $size: Int, $sort: [SortRequest]) { 
+    fetchAllClientesAtivos(filtro: $filtro, page: $page, size: $size, sort: $sort) {    
+      number
+      size
+      totalElements
+      totalPages
+      first
+      last
+      empty
+      content {
+        cidadeDesc 
+        uf
+        codigoCidade
+        dataNascimento
+        docCPF
+        docRG
+        email
+        endereco
+        id
+        localTrabalho
+        nome
+        profissao
+        statusCliente
+      }
+    }
+  }
+`;
+
 const FETCH_CLIENTE_BY_ID = gql`
   query fetchByIdCliente($id: ID!) { # $id: ID! means the id is a required ID type
     fetchByIdCliente(id: $id) {
@@ -90,4 +119,9 @@ const FETCH_CLIENTE_BY_ID = gql`
 `;
 
 
-export { SAVE_CLIENTE, FETCH_ALL_CLIENTES, FETCH_CLIENTE_BY_ID };
+export {
+  SAVE_CLIENTE,
+  FETCH_ALL_CLIENTES,
+  FETCH_CLIENTE_BY_ID,
+  FETCH_ALL_ATIVOS_CLIENTES
+};

@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { map, Observable, tap } from 'rxjs';
-import Cliente, { FETCH_ALL_CLIENTES, FETCH_CLIENTE_BY_ID, SAVE_CLIENTE } from '../models/cliente';
+import Cliente, { FETCH_ALL_ATIVOS_CLIENTES, FETCH_ALL_CLIENTES, FETCH_CLIENTE_BY_ID, SAVE_CLIENTE } from '../models/cliente';
 import { DataUtils } from './data.service';
 import { Page, PageRequest } from 'src/app/core/models';
 import { URL_ADMIN } from '../common/constants';
@@ -11,7 +11,7 @@ export class ClienteService {
 
   private apollo = inject(Apollo);
 
-  salvar(id: number | undefined, cliente: Partial<Cliente>): Observable<Cliente> {    
+  salvar(id: number | undefined, cliente: Partial<Cliente>): Observable<Cliente> {
     return this.apollo.mutate<any>({
       mutation: SAVE_CLIENTE,
       variables: {
@@ -59,6 +59,25 @@ export class ClienteService {
     );
   }
 
+  buscarAtivos(filtro: string, pageRequest: PageRequest): Observable<Page<Cliente>> {
+    return this.apollo.query<any>({
+      query: FETCH_ALL_ATIVOS_CLIENTES,
+      variables: {
+        filtro: filtro,
+        page: pageRequest.page,
+        size: pageRequest.size,
+        sort: pageRequest.sorts || [],
+      },
+      context: { uri: URL_ADMIN },
+      fetchPolicy: 'network-only', // Or 'no-cache'      
+    }).pipe(
+      map(result => result.data.fetchAllClientesAtivos as Page<Cliente>),
+      // tap(value => {
+      //   console.log("Received GraphQL data:", value);
+      // }),
+    );
+  }
+
   recuperarPorId(id: number): Observable<Cliente> {
     return this.apollo.query<any>({
       query: FETCH_CLIENTE_BY_ID,
@@ -69,7 +88,7 @@ export class ClienteService {
       fetchPolicy: 'cache-first'
     }).pipe(
       map(result => {
-        const entity = result.data.fetchByIdCliente as Cliente        
+        const entity = result.data.fetchByIdCliente as Cliente
         return {
           ...entity,
           cidade: {

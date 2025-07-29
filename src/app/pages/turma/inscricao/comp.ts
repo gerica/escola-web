@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSortModule } from '@angular/material/sort';
+import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTimepickerModule } from '@angular/material/timepicker';
@@ -25,15 +25,16 @@ import { Curso } from 'src/app/shared/models/curso';
 import { DiasSemana, DiasSemanaLabelMapping } from 'src/app/shared/models/dias-semana.enum';
 import { StatusTurma, StatusTurmaLabelMapping } from 'src/app/shared/models/status-turma.enum';
 import { Turma } from 'src/app/shared/models/turma';
+import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
 import { CursoService } from 'src/app/shared/services/curso.service';
 import { DataUtils } from 'src/app/shared/services/data.service';
 import { TurmaService } from 'src/app/shared/services/turma.service';
-import { InscricaoManterComp } from "../inscricao/comp";
+import { IncricaoDialogComponent } from './inscricao.modal';
 
 @Component({
-  selector: 'app-turma-manter',
+  selector: 'app-turma-inscricao-manter',
   templateUrl: './comp.html',
-  styleUrls: ['./comp.scss'],
+  styleUrls: ['./comp.scss', '../../pages.component.scss'],
   imports: [
     CommonModule,
     RouterModule,
@@ -52,13 +53,10 @@ import { InscricaoManterComp } from "../inscricao/comp";
     MatProgressSpinnerModule,
     MatTabsModule,
     InnercardComponent,
-    InscricaoManterComp
-],
-  providers: [
-    provideNativeDateAdapter(), // necessário adicionar esse provider para o time picker apresentar no formato hh:mm    
-  ]
+    PrimeiraMaiusculaPipe
+  ],
 })
-export class ManterComp implements OnInit {
+export class InscricaoManterComp implements OnInit {
 
   private readonly route = inject(ActivatedRoute);
   private readonly notification = inject(NotificationService);
@@ -66,9 +64,11 @@ export class ManterComp implements OnInit {
   private readonly turmaService = inject(TurmaService);
   private readonly cursoSerivce = inject(CursoService);
   private readonly fb = inject(FormBuilder);
+  private readonly dialog = inject(MatDialog);
 
-  tabIndex = signal<number>(0);
-  turma = signal<Turma | null>(null);
+  @Input({ required: true }) turma!: Turma | null;
+
+  matriculas = signal(emptyPage<Turma>());
 
   srvTextSubject = new BehaviorSubject<string>('');
   cursos = signal(emptyPage<Curso>());
@@ -91,7 +91,6 @@ export class ManterComp implements OnInit {
   ngOnInit(): void {
     this._createForm();
     this._initForm();
-    this._initTab();
     this._observarCurso();
   }
 
@@ -118,20 +117,10 @@ export class ManterComp implements OnInit {
     });
   }
 
-  private _initTab() {
-    this.route.queryParams.subscribe(params => {
-      const tabParam = params['tab'];
-      if (tabParam !== undefined) {
-        // Convert the string parameter to a number
-        this.tabIndex.set(+tabParam);
-      }
-    });
-  }
-
   private _initForm() {
     const entity = this.route.snapshot.data['entity'] as Turma;
     if (entity) {
-      this.turma.set(entity);
+      this.turma = entity;
       this.form.patchValue({
         ...entity,
         // Garante que o time picker receba um objeto Date
@@ -192,5 +181,24 @@ export class ManterComp implements OnInit {
   }
 
   displayCurso = (item: Curso) => (!!item && `${item.nome}`) || '';
+
+  sortData(sort: Sort) {
+    this.page().sorts = [{ property: sort.active, direction: sort.direction }];
+    this.buscar();
+  }
+
+  buscar() {
+
+  }
+
+  abrirModalInscricao() {
+    const dialogRef$ = this.dialog.open(IncricaoDialogComponent, {
+      width: '750px',
+      // height: '400px',
+      data: {
+        title: `Realizar inscrição na turma: ${this.turma?.nome}`,        
+      }
+    });
+  }
 
 }

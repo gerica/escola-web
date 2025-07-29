@@ -1,0 +1,14 @@
+@use '../../../../scss/settings/palette';
+@use '@angular/material' as mat;
+@include mat.core();
+
+.details-container {
+    display: flex;
+    gap: 1rem;
+}
+
+.section-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}

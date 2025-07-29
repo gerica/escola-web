@@ -29,7 +29,7 @@ import { DataUtils } from 'src/app/shared/services/data.service';
 import { TurmaService } from 'src/app/shared/services/turma.service';
 
 @Component({
-  selector: 'app-tabela-auxiliar-turma-manter',
+  selector: 'app-turma-lista',
   templateUrl: './comp.html',
   styleUrls: ['./comp.scss', '../../pages.component.scss'],
   imports: [

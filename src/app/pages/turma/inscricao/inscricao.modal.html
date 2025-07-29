@@ -1,0 +1,48 @@
+<app-innercard [titulo]="data.title" [estiloCardTitulo]="{'padding': '1em',}">
+    <form [formGroup]="form" (submit)="onSubmit()">
+        <section>
+            <!-- contratante -->
+            <mat-form-field appearance="outline">
+                <mat-label>Cliente</mat-label>
+                <input #srvInput matInput type="text" formControlName="cliente" [matAutocomplete]="clienteAutoComplete"
+                    (input)="srvTextSubject.next(srvInput.value)" />
+                @if(form.controls['cliente'].hasError('required') && (form.controls['cliente'].touched ||
+                form.controls['cliente'].dirty)){
+                <mat-error> Cliente é <strong>obrigatório</strong> </mat-error>
+                }
+            </mat-form-field>
+
+            <!-- Autocomplete -->
+            <mat-autocomplete #clienteAutoComplete="matAutocomplete" requireSelection autoActiveFirstOption
+                [displayWith]="displayCliente">
+                <mat-option *ngIf="srvLoading()">
+                    <mat-spinner diameter="30" />
+                </mat-option>
+
+                <mat-option *ngIf="clientes().content.length ===0 && !srvLoading()">
+                    Nenhum registro encontrado
+                </mat-option>
+
+                <ng-container *ngIf="!srvLoading()">
+                    <mat-option *ngFor="let item of clientes().content" [value]="item">
+                        {{ item?.nome }}
+                    </mat-option>
+                </ng-container>
+            </mat-autocomplete>
+            <!-- final contratante -->
+            <button mat-raised-button color="primary" cdkFocusInitial type="button" (click)="novoClienteModal()">
+                Novo Cliene
+            </button>
+        </section>
+        <mat-divider></mat-divider>
+
+        <app-buttons-row style="margin-bottom: 4px;   display: flex;  justify-content: end;">
+            <button mat-button mat-dialog-close (click)="onDismiss()" type="button">
+                Cancelar
+            </button>
+            <button mat-raised-button color="primary" cdkFocusInitial type="submit">
+                Confirmar
+            </button>
+        </app-buttons-row>
+    </form>
+</app-innercard>
