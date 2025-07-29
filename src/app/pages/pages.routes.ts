@@ -24,6 +24,10 @@ const routes: Routes = [
         loadChildren: () => import('./cliente/cliente.routes').then(m => m.ClienteRoutes),
       },
       {
+        path: 'turma',
+        loadChildren: () => import('./turma/turma.routes').then(m => m.TurmaRoutes),
+      },
+      {
         path: 'administrativo',
         loadChildren: () => import('./administrativo/administrativo.routes').then(m => m.AdministrativoRoutes),
       },

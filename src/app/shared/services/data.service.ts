@@ -272,17 +272,18 @@ export class DataUtils {
     }
 
     // No seu componente Angular, ao enviar para o backend:
-    // const dataAssinaturaParaEnviar = MyDateUtil.formatDateToISOStringWithMillisUTC(someDateVariable);
-    // Isso enviará: "2025-06-22T00:00:00.000Z" (se a data do cliente for 21/06 21:00 -03, em UTC é 22/06 00:00)
+    static getDataAntesEDepois() {
+        const agora = new Date();
 
-    // No seu componente Angular, você chamaria:
-    // const dataAssinaturaParaEnviar = MyDateUtil.formatDateToISOString(someDateVariable);
+        // Get the full hour before (e.g., 14:00 if agora is 14:12)
+        const horaAntes = new Date(agora);
+        horaAntes.setMinutes(0, 0, 0); // Set minutes, seconds, and milliseconds to 0
 
-    static getDataAntesEDepois(): { horaAntes: Date, horaDepois: Date } {
-        const now = new Date();
-        const horaAntes = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 17, 0, 0); // 17:00:00
-        const horaDepois = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 18, 0, 0); // 18:00:00
+        // Get the full hour after (e.g., 15:00)
+        const horaDepois = new Date(horaAntes);
+        horaDepois.setHours(horaAntes.getHours() + 1);
         return { horaAntes, horaDepois };
+
     }
 
     static getDateHoursMinute(timeString: String) {

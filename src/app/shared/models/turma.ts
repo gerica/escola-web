@@ -73,3 +73,24 @@ export const DELETE_TURMA_BY_ID = gql`
     deleteTurmaById(id:$id)
   }
 `;
+
+export const FETCH_BY_ID = gql`
+  query fetchByIdTurma($id: ID!) { # $id: ID! means the id is a required ID type
+    fetchByIdTurma(id: $id) {
+      id
+      curso {
+        id
+        nome
+      }      
+      nome
+      codigo
+      capacidadeMaxima
+      status
+      anoPeriodo
+      horarioInicio
+      horarioFim
+      diasDaSemana
+      professor
+    }
+  }
+`;

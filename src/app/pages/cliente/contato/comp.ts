@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormControl, ReactiveFormsModule, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, inject, Input, OnInit, signal, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroupDirective, ReactiveFormsModule, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
@@ -52,6 +52,9 @@ export class ContatoComp implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly maskPipe = inject(NgxMaskPipe);
   private readonly fb = inject(FormBuilder);
+
+  @ViewChild(FormGroupDirective)
+  private formDir!: FormGroupDirective;
 
   @Input({ required: true }) cliente!: Cliente | null;
   form!: UntypedFormGroup;
@@ -170,10 +173,7 @@ export class ContatoComp implements OnInit {
     });
   }
 
-
   private limparForm() {
-    this.form.reset(''); // Reset all controls to empty string
-    this.form.markAsUntouched();
-    this.form.markAsPristine();
+    this.formDir.resetForm();
   }
 }

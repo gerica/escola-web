@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { map, Observable, tap } from 'rxjs';
 import { KEY_LOCAL_STORE_USUARIO, KEY_LOCAL_TOKEN, KEY_SUPER_ADMIN_TOKEN, KEY_SUPER_ADMIN_USER, URL_ADMIN } from 'src/app/shared/common/constants';
-import { IMPERSONATE_USER_MUTATION, ImpersonationResponse, LOGIN, Menu, MenuItem, User } from '../models';
+import { IMPERSONATE_USER_MUTATION, ImpersonationResponse, LOGIN, Menu, MenuItem, User, UserRole } from '../models';
 import { jwtDecode } from 'jwt-decode';
 
 
@@ -71,6 +71,14 @@ export class AuthService {
       this.logout();
       return false;
     }
+  }
+
+  isUserAdmin() {
+    const user = this.loggedUser();
+    if (!user) return false;
+    if (!user.roles) return false;
+
+    return user?.roles.includes(UserRole.ADMIN_EMPRESA);
   }
 
   isPrimeiroAcesso(): boolean {

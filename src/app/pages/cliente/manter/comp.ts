@@ -50,8 +50,7 @@ import { DependenteComp } from '../depentente/comp';
   ], 
 })
 export class ManterComp implements OnInit {
-
-  private readonly router = inject(Router);
+  
   private readonly route = inject(ActivatedRoute);
   private readonly notification = inject(NotificationService);
   private readonly spinner = inject(LoadingSpinnerService);

@@ -8,7 +8,7 @@ export const moduloClienteContrato = 'cliente/contrato';
 export const moduloAdminParametros = 'administrativo/parametros';
 export const moduloAdminCargo = 'administrativo/cargo';
 export const moduloAdminCurso = 'administrativo/curso';
-export const moduloAdminTurma = 'administrativo/turma';
+export const moduloTurma = 'turma';
 export const moduloAdminTipoDocumentosModelos = 'administrativo/modelos-documentos';
 export const moduloAdminTabelasAuxiliares = 'administrativo/tabelas-auxiliares';
 export const moduloAdminNotificacao = 'administrativo/notificacoes';
@@ -61,8 +61,8 @@ export const modulosAdminEmpresa: MenuItem[] = [
   {
     icon: 'contract',
     name: 'Turma',
-    router: moduloAdminTurma,
-    parent: moduloAdmin,
+    router: moduloTurma,
+    parent: null,
     submenus: null,
   },
   {

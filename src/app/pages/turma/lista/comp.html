@@ -1,0 +1,84 @@
+<app-innercard titulo="Lista de turmas" [estiloCardTitulo]="{'padding': '1em',}" [estiloCard]="{'margin-top': '1em'}">
+  <section class="containerControles">
+    <mat-form-field appearance="outline">
+      <mat-label>Filtrar por nome descrição e categoria </mat-label>
+      <input matInput [formControl]="ctrlFiltro" placeholder="nome descrição e categoria" (keydown.enter)="buscar()" />
+      <button *ngIf="ctrlFiltro.value" matSuffix mat-icon-button aria-label="Filtro" (click)="limparEbuscar()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <button *ngIf="ctrlFiltro.value" matSuffix mat-icon-button aria-label="Filtro" (click)="buscar()">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" routerLink="/turma/manter">Nova turma</button>
+
+  </section>
+  @if(!turmas().empty){
+  <section class="lista">
+    <table mat-table [dataSource]="turmas().content" matSort (matSortChange)="sortData($event)"
+      class="mat-elevation-z8">
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="codigo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="codigo"> Código </th>
+        <td mat-cell *matCellDef="let element"> {{element.codigo}} </td>
+      </ng-container>
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="nome"> Nome </th>
+        <td mat-cell *matCellDef="let element"> {{element.nome | primeiraMaiuscula}} </td>
+      </ng-container>
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="curso">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="curso"> Curso </th>
+        <td mat-cell *matCellDef="let element"> {{element.curso.nome | primeiraMaiuscula}} </td>
+      </ng-container>
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="anoPeriodo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="anoPeriodo"> Periodo </th>
+        <td mat-cell *matCellDef="let element"> {{element.anoPeriodo}} </td>
+      </ng-container>
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="professor">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="professor"> Professor(a) </th>
+        <td mat-cell *matCellDef="let element"> {{element.professor}} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="status">Status </th>
+        <td mat-cell *matCellDef="let element"> {{getStatusTurma(element.status)}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let element" class="cursorSelect">
+          <a matTooltip="Editar dados" aria-hidden="false" [routerLink]="['/turma/manter', element.id]">
+            <mat-icon color="primary">edit</mat-icon>
+          </a>
+          @if(authService.isUserAdmin()){
+          <a matTooltip="Remover" aria-hidden="false" (click)="confirmarExclusao(element)">
+            <mat-icon color="primary">delete</mat-icon>
+          </a>
+          }
+        </td>
+
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator class="mat-elevation-z5" [length]="turmas().totalElements" [pageIndex]="turmas().number"
+      [pageSize]="pageSize" (page)="page.set({ page: $event.pageIndex, size: $event.pageSize }); buscar()"
+      [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons />
+  </section>
+  } @else {
+  <span>Nenhum registro cadastrado</span>
+  }
+</app-innercard>

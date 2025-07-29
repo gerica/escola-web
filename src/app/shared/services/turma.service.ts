@@ -3,7 +3,7 @@ import { Apollo } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
 import { Page, PageRequest } from 'src/app/core/models';
 import { URL_ADMIN } from '../common/constants';
-import { DELETE_TURMA_BY_ID, FETCH_ALL_TURMAS, SAVE_TURMA, Turma } from '../models/turma';
+import { DELETE_TURMA_BY_ID, FETCH_ALL_TURMAS, FETCH_BY_ID, SAVE_TURMA, Turma } from '../models/turma';
 import { DataUtils } from './data.service';
 
 @Injectable({ providedIn: 'root' })
@@ -64,6 +64,21 @@ export class TurmaService {
             // tap(value => {
             //     console.log(value);
             // }),
+        );
+    }
+
+    recuperarPorId(id: number): Observable<Turma> {
+        return this.apollo.query<any>({
+            query: FETCH_BY_ID,
+            variables: { id: id },
+            context: { uri: URL_ADMIN },
+            fetchPolicy: 'cache-first'
+        }).pipe(
+            map(result => result.data.fetchByIdTurma as Turma),
+            // tap(value => {
+            //   console.log("Received GraphQL data (fetchByIdCliente):", value);
+            // }),
+            // map(result => result)
         );
     }
 
