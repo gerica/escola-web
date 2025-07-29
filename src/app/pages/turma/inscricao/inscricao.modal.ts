@@ -1,23 +1,34 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatDivider } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { BehaviorSubject, finalize, switchMap, tap } from 'rxjs';
-import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
+import { BehaviorSubject, finalize, map, switchMap, tap } from 'rxjs';
+import { emptyPage, firstPageAndSort, Page, PageRequest } from 'src/app/core/models';
 import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operators';
 import { ButtonsRowComponent, InnercardComponent } from 'src/app/shared/components';
 import Cliente from 'src/app/shared/models/cliente';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
 import { ClienteDialogComponent } from './cliente.modal';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 export interface InscricaoDialogData {
     title: string,
+}
+
+export interface AutocompleteItem {
+    id: number;
+    type: 'CLIENT' | 'DEPENDENT';
+    name: string;
+    parentId?: number; // If it's a dependent, store the client's ID
+    originalClient?: any; // You might want to pass the whole client object if needed
+    originalDependent?: any; // Or the whole dependent object
+    displayHtml: SafeHtml; // The pre-formatted HTML for display
 }
 
 @Component({
@@ -44,9 +55,11 @@ export class IncricaoDialogComponent implements OnInit {
     private readonly fb = inject(FormBuilder);
     private readonly clienteService = inject(ClienteService);
     private readonly dialog = inject(MatDialog);
+    private readonly sanitizer = inject(DomSanitizer);
 
     srvTextSubject = new BehaviorSubject<string>('');
-    clientes = signal(emptyPage<Cliente>());
+    itemsToDisplay = signal(emptyPage<AutocompleteItem>());
+
     srvLoading = signal(false);
     form!: FormGroup;
     pageSize = 10;
@@ -59,20 +72,27 @@ export class IncricaoDialogComponent implements OnInit {
 
     private _createForm() {
         this.form = this.fb.group({
-            cliente: new FormControl(null, [Validators.required]),
+            aluno: new FormControl(null, [Validators.required]),
 
         });
     }
 
     onSubmit(): void {
-        this.dialogRef.close(true);
+        console.log(this.form.value);
+        // this.dialogRef.close(true);
     }
 
     onDismiss(): void {
         this.dialogRef.close(false);
     }
 
-    displayCliente = (item: Cliente) => (!!item && `${item.nome}`) || '';
+    /**
+    * Formats the display of a Cliente object in the mat-autocomplete.
+    * If the client has dependents, their names will be listed nested under the client's name.
+    */
+    displayItem = (item: AutocompleteItem | null): string => {
+        return (!!item && `${item.name}`) || ''; // When selected, just show the name in the input
+    };
 
     private _observarClientes() {
         this.srvTextSubject.asObservable()
@@ -80,27 +100,74 @@ export class IncricaoDialogComponent implements OnInit {
                 debounceDistinctUntilChanged(400),
                 tap(() => this.srvLoading.set(true)),
                 switchMap((text) => {
-                    const clientes$ = this.clienteService.buscarAtivos(text, this.page());
+                    // Call your service to get the Cliente data
+                    const clientsObservable = this.clienteService.buscarAtivosComDependentes(text, this.page());
 
-                    return clientes$.pipe(
+                    return clientsObservable.pipe(
+                        // Transform the Cliente data into a flat list of AutocompleteItems
+                        map((pageOfClients: Page<Cliente>) => {
+                            const items: AutocompleteItem[] = [];
+                            pageOfClients.content.forEach(client => {
+                                // Add the client itself as an AutocompleteItem
+                                items.push({
+                                    id: client.id,
+                                    type: 'CLIENT',
+                                    name: client.nome,
+                                    originalClient: client, // Keep a reference to the original client object
+                                    // Sanitize the HTML here
+                                    displayHtml: this.sanitizer.bypassSecurityTrustHtml(`<strong>${client.nome}</strong>`)
+                                });
+
+                                // Add each dependent as an AutocompleteItem, associated with the client
+                                if (client.dependentes && client.dependentes.length > 0) {
+                                    client.dependentes.forEach(dependent => {
+                                        items.push({
+                                            id: dependent.id,
+                                            type: 'DEPENDENT',
+                                            name: dependent.nome,
+                                            parentId: client.id,
+                                            originalDependent: dependent, // Keep a reference to the original dependent object
+                                            displayHtml: this.sanitizer.bypassSecurityTrustHtml(`<span style="padding-left: 20px;">&mdash; ${dependent.nome} (${dependent.parentescoDescricao})</span>`)
+                                        });
+                                    });
+                                }
+                            });
+
+                            // Create a new Page object for AutocompleteItem
+                            return {
+                                ...pageOfClients, // Copy pagination info
+                                content: items    // Set the transformed content
+                            } as Page<AutocompleteItem>;
+                        }),
                         minTime(700),
                         finalize(() => this.srvLoading.set(false))
                     );
                 })
             ).subscribe({
                 next: (result) => {
-                    this.clientes.set(result);
+                    this.itemsToDisplay.set(result); // Update the signal with the new items
                 }
             });
     }
 
-    novoClienteModal() {
+    novoAlunoModal() {
         const dialogRef$ = this.dialog.open(ClienteDialogComponent, {
             width: '750px',
             // height: '400px',
             data: {
-                title: `Realizar cadastro de cliente`,
+                title: `Realizar cadastro de aluno`,
             }
         });
+    }
+
+    // Method to handle selection from the autocomplete
+    onItemSelected(event: MatAutocompleteSelectedEvent): void {
+        const selectedItem: AutocompleteItem = event.option.value;
+        if (selectedItem.type === 'CLIENT') {
+            // Do something with the selected client
+        } else if (selectedItem.type === 'DEPENDENT') {
+            // Do something with the selected dependent
+        }
+        // You can also emit an event or update a form control based on the selection
     }
 }

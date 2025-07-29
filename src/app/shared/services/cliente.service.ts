@@ -1,10 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { map, Observable, tap } from 'rxjs';
-import Cliente, { FETCH_ALL_ATIVOS_CLIENTES, FETCH_ALL_CLIENTES, FETCH_CLIENTE_BY_ID, SAVE_CLIENTE } from '../models/cliente';
+import Cliente, { FETCH_ALL_ATIVOS_CLIENTES, FETCH_ALL_ATIVOS_CLIENTES_COM_DEPENDENTES, FETCH_ALL_CLIENTES, FETCH_CLIENTE_BY_ID, SAVE_CLIENTE } from '../models/cliente';
 import { DataUtils } from './data.service';
 import { Page, PageRequest } from 'src/app/core/models';
 import { URL_ADMIN } from '../common/constants';
+import AlunoTurma from '../models/aluno';
 
 @Injectable({ providedIn: 'root' })
 export class ClienteService {
@@ -75,6 +76,47 @@ export class ClienteService {
       // tap(value => {
       //   console.log("Received GraphQL data:", value);
       // }),
+      // map(values => values)
+    );
+  }
+
+  buscarAtivosComDependentes(filtro: string, pageRequest: PageRequest): Observable<Page<Cliente>> {
+    return this.apollo.query<any>({
+      query: FETCH_ALL_ATIVOS_CLIENTES_COM_DEPENDENTES,
+      variables: {
+        filtro: filtro,
+        page: pageRequest.page,
+        size: pageRequest.size,
+        sort: pageRequest.sorts || [],
+      },
+      context: { uri: URL_ADMIN },
+      fetchPolicy: 'network-only', // Or 'no-cache'      
+    }).pipe(
+      map(result => result.data.fetchAllClientsByStatusAndFiltroWithDependents as Page<Cliente>),
+      // map(value => {
+      //   // console.log("Received GraphQL data:", value);
+      //   const contentNovo: AlunoTurma[] = [];
+      //   value.content.forEach(c => {
+      //     c.dependentes.forEach((d: any) => {
+      //       contentNovo.push({
+      //         idCliente: c.id,
+      //         idDependente: d.id,
+      //         nome: d.nome
+      //       });
+      //     })
+      //     contentNovo.push({
+      //       idCliente: c.id,
+      //       idDependente: null,
+      //       nome: c.nome
+      //     });
+      //   })
+      //   // console.log(contentNovo);
+      //   return {
+      //     ...value,
+      //     content: contentNovo
+      //   }
+      // }),
+      
     );
   }
 

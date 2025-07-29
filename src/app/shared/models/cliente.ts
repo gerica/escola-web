@@ -1,5 +1,6 @@
 import { gql } from "apollo-angular";
 import { Cidade } from "./cidade";
+import ClienteDependente from "./cliente-dependente";
 import { StatusCliente } from "./status-cliente.enum";
 
 export default interface Cliente {
@@ -16,7 +17,8 @@ export default interface Cliente {
   email: string,
   profissao: string,
   localTrabalho: string,
-  statusCliente: StatusCliente
+  statusCliente: StatusCliente,
+  dependentes: ClienteDependente[]
 }
 
 
@@ -98,6 +100,29 @@ const FETCH_ALL_ATIVOS_CLIENTES = gql`
   }
 `;
 
+const FETCH_ALL_ATIVOS_CLIENTES_COM_DEPENDENTES = gql`  
+  query fetchAllClientsByStatusAndFiltroWithDependents($filtro: String, $page: Int, $size: Int, $sort: [SortRequest]) { 
+    fetchAllClientsByStatusAndFiltroWithDependents(filtro: $filtro, page: $page, size: $size, sort: $sort) {    
+      number
+      size
+      totalElements
+      totalPages
+      first
+      last
+      empty
+      content {
+        id
+        nome
+        dependentes{
+          id
+          nome
+          parentescoDescricao
+        }
+      }
+    }
+  }
+`;
+
 const FETCH_CLIENTE_BY_ID = gql`
   query fetchByIdCliente($id: ID!) { # $id: ID! means the id is a required ID type
     fetchByIdCliente(id: $id) {
@@ -123,5 +148,6 @@ export {
   SAVE_CLIENTE,
   FETCH_ALL_CLIENTES,
   FETCH_CLIENTE_BY_ID,
-  FETCH_ALL_ATIVOS_CLIENTES
+  FETCH_ALL_ATIVOS_CLIENTES,
+  FETCH_ALL_ATIVOS_CLIENTES_COM_DEPENDENTES
 };
