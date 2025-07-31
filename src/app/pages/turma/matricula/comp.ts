@@ -25,7 +25,9 @@ import { StatusMatricula, StatusMatriculaLabelMapping } from 'src/app/shared/mod
 import { Turma } from 'src/app/shared/models/turma';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
 import { MatriculaService } from 'src/app/shared/services/matricula.service';
-import { MatriculaDialogComponent } from './matricula.modal';
+import { MatriculaDialogComponent } from './modal-matricula/matricula.modal';
+import { MatriculaDetalheDialog } from './detalhe/detalhe';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-turma-inscricao-manter',
@@ -47,7 +49,7 @@ import { MatriculaDialogComponent } from './matricula.modal';
     MatTimepickerModule,
     MatAutocompleteModule,
     MatProgressSpinnerModule,
-    MatTabsModule,
+    MatTooltipModule,
     InnercardComponent,
     PrimeiraMaiusculaPipe
   ],
@@ -65,7 +67,7 @@ export class MatriculaManterComp implements OnInit {
 
   matriculas = signal(emptyPage<Matricula>());
 
-  ctrlFiltro = new FormControl('', { nonNullable: true });
+  // ctrlFiltro = new FormControl('', { nonNullable: true });
   pageSize = 10;
   page = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'codigo', direction: 'asc' }));
   displayedColumns: string[] = ['codigo', 'nome', 'status', 'acoes'];
@@ -90,9 +92,7 @@ export class MatriculaManterComp implements OnInit {
   }
 
   salvar(value: Partial<Matricula>) {
-
     value.turma = this.turma!;
-
     this.spinner.showUntilCompletedCascate(
       this.matriculaService.salvar(value)
     ).pipe(
@@ -146,6 +146,31 @@ export class MatriculaManterComp implements OnInit {
     dialogRef$.afterClosed().subscribe(result => {
       if (result.salvar) {
         this.salvar(result.matricula);
+      }
+    });
+  }
+
+  visualizar(entity: Matricula) {
+    this.dialog.open(MatriculaDetalheDialog, {
+      width: '550px',
+      data: {
+        ...entity,
+      }
+    });
+  }
+
+  alterar(entity: Matricula) {
+    const dialogRef$ = this.dialog.open(MatriculaDetalheDialog, {
+      width: '550px',
+      data: {
+        ...entity,
+        editar: true
+      }
+    });
+
+    dialogRef$.afterClosed().subscribe(result => {
+      if (result) { // Se 'result' não for undefined (ou seja, o botão Salvar foi clicado)
+        this.salvar(result);
       }
     });
   }

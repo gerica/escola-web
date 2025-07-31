@@ -11,7 +11,7 @@ export interface Matricula {
   cliente: Cliente,
   clienteDependente: ClienteDependente,
   status: StatusMatricula,
-  observacoes: String,
+  observacoes: string,
   dataCadastro: Date,
   dataAtualizacao: Date, // Data e hora da última atualização do registro
 }
@@ -43,6 +43,7 @@ export const FETCH_ALL = gql`
         }
         status
         observacoes
+        dataCadastro
       }
     }
   }
@@ -50,9 +51,7 @@ export const FETCH_ALL = gql`
 
 export const SAVE = gql`
   mutation saveMatricula($request: MatriculaRequest!){  
-    saveMatricula(request:$request){
-        id        
-    }
+    saveMatricula(request:$request)
   }
 `;
 

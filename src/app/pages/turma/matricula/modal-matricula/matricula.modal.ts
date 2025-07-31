@@ -15,7 +15,7 @@ import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operato
 import { ButtonsRowComponent, InnercardComponent } from 'src/app/shared/components';
 import Cliente from 'src/app/shared/models/cliente';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
-import { ClienteDialogComponent } from './cliente.modal';
+import { ClienteDialogComponent } from '../novo-cliente/cliente.modal';
 import { Matricula } from 'src/app/shared/models/matricula';
 import { StatusMatricula } from 'src/app/shared/models/status-matricula.enum';
 

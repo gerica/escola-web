@@ -44,12 +44,10 @@
         <ng-container matColumnDef="acoes">
           <th mat-header-cell *matHeaderCellDef> </th>
           <td mat-cell *matCellDef="let element" class="cursorSelect">
-            <a matTooltip="Inscrições" aria-hidden="false" [routerLink]="['/turma/manter', element.id]"
-              [queryParams]="{tab: 1}">
-              <mat-icon color="primary">assignment</mat-icon>
+            <a matTooltip="Exibir dados" aria-hidden="false" (click)="visualizar(element)" matTooltip="Visualizar">
+              <mat-icon color="primary">topic</mat-icon>
             </a>
-            <a matTooltip="Editar dados" aria-hidden="false" [routerLink]="['/turma/manter', element.id]"
-              [queryParams]="{tab: 0}">
+            <a matTooltip="Alterar Matricula" aria-hidden="false" (click)="alterar(element)">
               <mat-icon color="primary">edit</mat-icon>
             </a>
           </td>
