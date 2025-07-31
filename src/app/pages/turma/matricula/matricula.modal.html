@@ -4,17 +4,17 @@
             <!-- contratante -->
             <mat-form-field appearance="outline">
                 <mat-label>Aluno</mat-label>
-                <input #srvInput matInput type="text" formControlName="aluno" [matAutocomplete]="alunoAutoComplete"
+                <input #srvInput matInput type="text" formControlName="matricula" [matAutocomplete]="alunoAutoComplete"
                     (input)="srvTextSubject.next(srvInput.value)" />
-                @if(form.controls['aluno'].hasError('required') && (form.controls['aluno'].touched ||
-                form.controls['aluno'].dirty)){
+                @if(form.controls['matricula'].hasError('required') && (form.controls['matricula'].touched ||
+                form.controls['matricula'].dirty)){
                 <mat-error> Aluno é <strong>obrigatório</strong> </mat-error>
                 }
             </mat-form-field>
 
             <!-- (optionSelected)="onItemSelected($event)" -->
             <mat-autocomplete #alunoAutoComplete="matAutocomplete" requireSelection autoActiveFirstOption
-                [displayWith]="displayItem" > <mat-option *ngIf="srvLoading()">
+                [displayWith]="displayItem"> <mat-option *ngIf="srvLoading()">
                     <mat-spinner diameter="30" />
                 </mat-option>
 
@@ -28,10 +28,20 @@
                     </mat-option>
                 </ng-container>
             </mat-autocomplete>
+
             <button mat-raised-button color="primary" cdkFocusInitial type="button" (click)="novoAlunoModal()">
                 Novo Aluno
             </button>
         </section>
+
+        <section>
+            <mat-form-field appearance="outline" class="mat-form-field-custom">
+                <mat-label>Observações</mat-label>
+                <textarea matInput formControlName="observacao" rows="3"
+                    placeholder="Digite os observações aqui..."></textarea>
+            </mat-form-field>
+        </section>
+
         <mat-divider></mat-divider>
 
         <app-buttons-row style="margin-bottom: 4px;   display: flex;  justify-content: end;">

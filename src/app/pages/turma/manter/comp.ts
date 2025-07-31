@@ -28,7 +28,7 @@ import { Turma } from 'src/app/shared/models/turma';
 import { CursoService } from 'src/app/shared/services/curso.service';
 import { DataUtils } from 'src/app/shared/services/data.service';
 import { TurmaService } from 'src/app/shared/services/turma.service';
-import { InscricaoManterComp } from "../inscricao/comp";
+import { MatriculaManterComp } from "../matricula/comp";
 
 @Component({
   selector: 'app-turma-manter',
@@ -52,7 +52,7 @@ import { InscricaoManterComp } from "../inscricao/comp";
     MatProgressSpinnerModule,
     MatTabsModule,
     InnercardComponent,
-    InscricaoManterComp
+    MatriculaManterComp
 ],
   providers: [
     provideNativeDateAdapter(), // necessário adicionar esse provider para o time picker apresentar no formato hh:mm    
