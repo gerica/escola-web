@@ -49,7 +49,7 @@
   <mat-divider></mat-divider>
 
   <app-buttons-row style="display: flex;  justify-content: end; gap:1em">
-    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Fechar</button>
+    <button mat-button (click)="cancelar()" cdkFocusInitial>Fechar</button>
     @if(data.editar){
     <button mat-raised-button color="primary" style="margin-left: 6px;" cdkFocusInitial type="button"
       (click)="salvar()">

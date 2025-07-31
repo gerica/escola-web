@@ -43,7 +43,6 @@ export class MatriculaDetalheDialog implements OnInit {
   statusMatriculaCtrl = new FormControl<StatusMatricula>(StatusMatricula.ATIVA, { nonNullable: true });
   observacaoCtrl = new FormControl('', { nonNullable: true });
 
-
   statusMatricula = Object.values(StatusMatricula);
   statusMatriculaLabelMapping = StatusMatriculaLabelMapping;
 

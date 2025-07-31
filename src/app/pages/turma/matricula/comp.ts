@@ -169,6 +169,7 @@ export class MatriculaManterComp implements OnInit {
     });
 
     dialogRef$.afterClosed().subscribe(result => {
+      console.log(result);
       if (result) { // Se 'result' não for undefined (ou seja, o botão Salvar foi clicado)
         this.salvar(result);
       }

@@ -14,7 +14,8 @@ export class AdministrativoService {
         return this.apollo.query<{ findByChave: Parametro }>({
             query: FIND_BY_CHAVE,
             variables: { chave },
-            context: { uri: URL_ADMIN }
+            context: { uri: URL_ADMIN },
+            fetchPolicy: 'network-only', // Or 'cache-first' network-only
         }).pipe(
             map(result => result.data.findByChave),
             // tap(result => {
@@ -47,7 +48,8 @@ export class AdministrativoService {
                     modeloContrato: entity.modeloContrato
                 },
             },
-            context: { uri: URL_ADMIN }
+            context: { uri: URL_ADMIN },
+            // fetchPolicy: 'network-only', // Or 'cache-first' network-only
         }).pipe(map(result => result.data.salvarParametro as Parametro)
         );
     }

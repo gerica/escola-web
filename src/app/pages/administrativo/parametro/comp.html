@@ -1,0 +1,19 @@
+<app-innercard titulo="Parâmetros Globais" [estiloCardTitulo]="{'padding': '1em',}">
+
+  <mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>receipt</mat-icon>
+        Contrato
+      </ng-template>     
+      <app-contrato-param-manter/>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>location_city</mat-icon>
+        Cidade
+      </ng-template>     
+    </mat-tab>
+  </mat-tab-group>
+
+</app-innercard>

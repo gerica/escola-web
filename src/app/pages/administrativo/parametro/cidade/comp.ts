@@ -20,13 +20,13 @@ import { Cidade } from 'src/app/shared/models/cidade';
 import { CHAVE_CONTRATO_CIDADE_PADRAO, CHAVE_CONTRATO_MODELO_PADRAO, Parametro } from 'src/app/shared/models/parametro';
 import { AdministrativoService } from 'src/app/shared/services/admin.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
-import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
+import { InnercardComponent } from "../../../../shared/components/innercard/innercard.component";
 
 
 @Component({
-  selector: 'app-contrato-manter',
+  selector: 'app-cidade-param-manter',
   templateUrl: './comp.html',
-  styleUrls: ['./comp.scss', '../../pages.component.scss'],
+  styleUrls: ['./comp.scss', '../../../pages.component.scss'],
   imports: [
     CommonModule,
     RouterModule,
@@ -45,7 +45,7 @@ import { InnercardComponent } from "../../../shared/components/innercard/innerca
   ]
   
 })
-export class ManterComp implements OnInit {
+export class CidadeParamManterComp implements OnInit {
 
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);

@@ -5,7 +5,7 @@ import { Empresa } from 'src/app/shared/models/empresa';
 import { EmpresaService } from 'src/app/shared/services/empresa.service';
 import { EmpresaManterComp } from '../empresa/manter/comp';
 import { NotFoundComponent } from '../not-found';
-import { ManterComp } from './manter/comp';
+import { ParametroManterComp } from './parametro/comp';
 import { AuxiliarManterComp } from './tabelas-auxiliar/comp';
 import { CursoManterComp } from './tabelas-auxiliar/curso/comp';
 
@@ -15,8 +15,8 @@ const localResolver: ResolveFn<Empresa> = route => {
 
 const routes: Routes = [
   {
-    path: '',
-    component: ManterComp,
+    path: 'parametros',
+    component: ParametroManterComp,
     // resolve: { cidadePadrao: localResolverCidadePadrao },
   },
   {
