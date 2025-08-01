@@ -1,20 +1,11 @@
-<app-innercard
-    [titulo]="'Contrado do Aluno: '+ (data.cliente!=null?data.cliente.nome:data.clienteDependente.nome | primeiraMaiuscula)"
-    [estiloCardTitulo]="{'padding': '1em',}">
+<app-modalcard (fechar)="onDismiss()" titulo="Contrato" [estiloCardTitulo]="{'padding': '1em',}">
+    <!-- <app-contrato-manter-contrato [contrato]="data.contrato"></app-contrato-manter-contrato> -->
+    <app-contrato-manter [contratoInput]="data.contrato" />
 
-    <form [formGroup]="form" (submit)="onSubmit()">
-        <section>
-            <app-contrato-manter-contrato [contrato]="contrato()" [contrato]="contrato()"></app-contrato-manter-contrato>
-        </section>
-        <mat-divider></mat-divider>
+    <mat-divider></mat-divider>
 
-        <app-buttons-row style="margin-bottom: 4px;   display: flex;  justify-content: end;">
-            <button mat-button mat-dialog-close (click)="onDismiss()" type="button">
-                Cancelar
-            </button>
-            <button mat-raised-button color="primary" cdkFocusInitial type="submit">
-                Confirmar
-            </button>
-        </app-buttons-row>
-    </form>
-</app-innercard>
+    <app-buttons-row style="margin-bottom: 4px;   display: flex;  justify-content: end;">
+        <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Fechar</button>
+    </app-buttons-row>
+
+</app-modalcard>

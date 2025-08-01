@@ -1,0 +1,14 @@
+<div class="card" [ngStyle]="estiloCard">
+  <!-- Botão de Fechar no canto superior direito -->
+  <!-- O (click) emite um evento 'fechar' para o componente pai -->
+  <button class="close-button" (click)="fechar.emit()">
+    &times;
+  </button>
+
+  @if(titulo){
+  <div class="card__titulo" [ngStyle]="estiloCardTitulo">{{ titulo }}</div>
+  }
+  <div class="card__conteudo" [ngStyle]="estiloCardConteudo">
+    <ng-content></ng-content>
+  </div>
+</div>

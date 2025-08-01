@@ -29,6 +29,8 @@ import { MatriculaDialogComponent } from './modal-matricula/matricula.modal';
 import { MatriculaDetalheDialog } from './detalhe/detalhe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ContratoDialogComponent } from './contrato/contrato.modal';
+import { ContratoService } from 'src/app/shared/services/contrato.service';
+import Contrato from 'src/app/shared/models/contrato';
 
 @Component({
   selector: 'app-turma-inscricao-manter',
@@ -61,7 +63,8 @@ export class MatriculaManterComp implements OnInit {
   private readonly notification = inject(NotificationService);
   private readonly spinner = inject(LoadingSpinnerService);
   private readonly matriculaService = inject(MatriculaService);
-  private readonly fb = inject(FormBuilder);
+  private readonly contratoService = inject(ContratoService);
+
   private readonly dialog = inject(MatDialog);
 
   @Input({ required: true }) turma!: Turma | null;
@@ -177,12 +180,25 @@ export class MatriculaManterComp implements OnInit {
     });
   }
 
-  contrato(entity: Matricula) {
+  abrirContrato(entity: Matricula) {
+    this.spinner.showUntilCompleted(this.contratoService.recuperarPorIdMatricula(entity.id))
+      .subscribe({
+        next: (result) => {
+          this.showModalContrato(entity, result);
+        },
+        error: (err) => { // <--- Add error handling
+          this.notification.showError(err.message);
+          console.error('Erro ao recuperar dependentes:', err);
+        }
+      });
+  }
+
+  showModalContrato(matricula: Matricula, contrato: Contrato) {
     const dialogRef$ = this.dialog.open(ContratoDialogComponent, {
-      width: '550px',
+      width: '80vw',
       data: {
-        ...entity,
-        editar: true
+        matricula,
+        contrato
       }
     });
 

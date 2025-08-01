@@ -1,0 +1,54 @@
+@use '../../../../scss/settings/palette';
+@use '@angular/material' as mat;
+@include mat.core();
+
+.card {
+  margin-bottom: 1px;
+  max-width: 100%;
+  //background-color: #FAFAFA;
+  background-color: white;
+  box-shadow:
+    0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+}
+
+.card__titulo {
+  padding: 0.6em;
+  background-color: mat.m2-get-color-from-palette(palette.$primarias, 50);
+  color: mat.m2-get-color-from-palette(palette.$primarias, 700);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+}
+
+.card__conteudo {
+  padding: 1em;
+}
+
+/* Estilização do botão de fechar */
+.close-button {
+  position: absolute;
+  /* Posicionamento absoluto em relação ao 'card' */
+  top: 10px;
+  /* 10px a partir do topo */
+  right: 15px;
+  /* 15px a partir da direita */
+  font-size: 24px;
+  font-weight: bold;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  color: #555;
+  transition: color 0.2s;
+}
+
+/* Efeito hover para o botão de fechar */
+.close-button:hover {
+  color: #000;
+}

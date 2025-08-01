@@ -7,6 +7,7 @@ import { DELETE_BY_ID, FETCH_ALL, FETCH_BY_ID, Matricula, SAVE } from '../models
 
 @Injectable({ providedIn: 'root' })
 export class MatriculaService {
+    
 
     private apollo = inject(Apollo);
 

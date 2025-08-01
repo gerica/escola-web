@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -43,14 +43,14 @@ import { ManterContratoComp } from '../modeloContrato/comp';
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    MatAutocompleteModule,    
+    MatAutocompleteModule,
     MatSelectModule,
     MatProgressSpinnerModule,
     ManterContratoComp
 
   ],
 })
-export class ManterComp implements OnInit {
+export class ContratoManterComp implements OnInit {
 
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -62,6 +62,9 @@ export class ManterComp implements OnInit {
   private readonly fb = inject(FormBuilder);
 
   form!: UntypedFormGroup;
+
+  @Input({ required: false }) contratoInput!: Contrato | null;
+  inModal = signal<boolean>(false);
 
   optionsEstados = signal<Estado[]>([]);
   filteredEstadosOptions: Observable<Estado[]>;
@@ -113,7 +116,7 @@ export class ManterComp implements OnInit {
     }
 
     this.spinner.showUntilCompleted(
-      this.contratoService.salvar(this.contrato()?.idContrato, this.form.value as Partial<Contrato>)).subscribe({
+      this.contratoService.salvar(this.contrato()?.id, this.form.value as Partial<Contrato>)).subscribe({
         next: (result) => {
           this.contrato.set(result);
           this.notification.showSuccess('Operação realizada com sucesso.');
@@ -124,24 +127,9 @@ export class ManterComp implements OnInit {
       });
   }
 
-  // carregarContrato() {
-  //   const contrato = this.contrato();
-  //   if (!contrato?.idContrato) {
-  //     return;
-  //   }
-  //   this.spinner.showUntilCompleted(
-  //     this.contratoService.carregarContrato(contrato.idContrato)).subscribe({
-  //       next: (result) => {
-  //         console.log(result);
-  //       },
-  //       error: (err) => {
-  //         this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
-  //       }
-  //     });
-  // }
 
-  titulocabecalho() {
-    if (this.contrato()?.idContrato) {
+  titulocabecalho() {    
+    if (this.contrato()?.id) {
       return `Contrato: ${this.contrato()?.numeroContrato} - ${this.contrato()?.nomeCliente}`;
     }
     return 'Novo contrato';
@@ -167,11 +155,17 @@ export class ManterComp implements OnInit {
 
     if (tempEntity) {
       this.contrato.set(tempEntity);
+      this.inModal.set(false);
+    } else if (this.contratoInput) {
+      this.contrato.set(this.contratoInput);
+      this.inModal.set(true);
+    }
+
+    if (this.contrato()) {
       this.spinner
         .showUntilCompleted(this.clienteService.recuperarPorId(this.contrato()?.idCliente as number))
         .subscribe(
           result => {
-
             this.form.patchValue({
               ...this.contrato(),
               cliente: result,

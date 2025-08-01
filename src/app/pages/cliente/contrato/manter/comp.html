@@ -8,10 +8,6 @@
           Dados
         </ng-template>
 
-        <!--
-        String ,
-        String contratoDoc -->
-
         <app-innercard class="cardInner">
           <section class="containerLinha">
 
@@ -176,18 +172,19 @@
           </section>
 
           <section class="container">
+            @if(!inModal()){
             <button mat-raised-button color="secondary" type="button" routerLink="/cliente/contrato">Voltar</button>
+            }
             <button mat-raised-button color="primary" type="submit">Salvar</button>
           </section>
         </app-innercard>
 
-
       </mat-tab>
 
-      @if(contrato()?.idContrato){
+      @if(contrato()?.id){
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon>call</mat-icon>
+          <mat-icon>receipt</mat-icon>
           Contrato
         </ng-template>
         <app-contrato-manter-contrato [contrato]="contrato()" [contrato]="contrato()"></app-contrato-manter-contrato>

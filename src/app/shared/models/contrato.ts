@@ -4,7 +4,7 @@ import { PeriodoPagamento } from "./periodos-pagamento.enum";
 import Cliente from "./cliente";
 
 export default interface Contrato {
-  idContrato: number,
+  id: number,
   idCliente: number,
   cliente: Cliente,
   nomeCliente: string,
@@ -26,7 +26,7 @@ export default interface Contrato {
 export const SAVE_CONTRATO = gql`
   mutation saveContrato($request: ContratoRequest!){  
     saveContrato(request:$request){
-        idContrato
+        id
         idCliente        
         numeroContrato
         dataInicio
@@ -55,7 +55,7 @@ export const FETCH_ALL_CONTRATOS = gql`
       last
       empty
       content {
-        idContrato
+        id
         idCliente
         numeroContrato
         nomeCliente
@@ -75,15 +75,38 @@ export const FETCH_ALL_CONTRATOS = gql`
 `;
 
 export const FETCH_CONTRATO_BY_ID = gql`
-  query fetchByIdContrato($id: ID!) { # $id: ID! means the id is a required ID type
-    fetchByIdContrato(id: $id) {
-        idContrato
+  query fetchById($id: ID!) { # $id: ID! means the id is a required ID type
+    fetchById(id: $id) {
+        id
         idCliente
         nomeCliente
         numeroContrato
         dataInicio
         dataFim
         valorTotal
+        statusContrato
+        descricao
+        termosCondicoes
+        dataAssinatura
+        periodoPagamento
+        dataProximoPagamento
+        observacoes
+        contratoDoc
+    }
+  }
+`;
+
+export const FETCH_CONTRATO_BY_ID_MATRICULA = gql`
+  query fetchContratoByIdMatricula($id: ID!) { # $id: ID! means the id is a required ID type
+    fetchContratoByIdMatricula(id: $id) {
+        id
+        idCliente
+        nomeCliente
+        numeroContrato
+        dataInicio
+        dataFim
+        valorTotal
+        desconto
         statusContrato
         descricao
         termosCondicoes

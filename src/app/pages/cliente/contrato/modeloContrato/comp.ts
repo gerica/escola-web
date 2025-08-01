@@ -78,7 +78,7 @@ export class ManterContratoComp implements OnInit {
 
     // 3. Chame o serviço com o objeto completo
     this.spinner.showUntilCompleted(
-      this.contratoService.salvar(this.contrato.idContrato, contratoParaSalvar)).subscribe({
+      this.contratoService.salvar(this.contrato.id, contratoParaSalvar)).subscribe({
         next: (result) => {
           this.notification.showSuccess('Operação realizada com sucesso.');
           // Opcional: Atualize o objeto contrato localmente após o sucesso, se necessário
@@ -91,11 +91,11 @@ export class ManterContratoComp implements OnInit {
   }
 
   carregarContrato() {
-    if (!this.contrato?.idContrato) {
+    if (!this.contrato?.id) {
       return;
     }
     this.spinner.showUntilCompleted(
-      this.contratoService.carregarContrato(this.contrato.idContrato)).subscribe({
+      this.contratoService.carregarContrato(this.contrato.id)).subscribe({
         next: (result) => {
           this._initForm(result.contratoDoc);
         },

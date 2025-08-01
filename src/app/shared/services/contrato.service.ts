@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { map, Observable, tap } from 'rxjs';
-import Contrato, { CARREGAR_CONTRATO, FETCH_ALL_CONTRATOS, FETCH_CONTRATO_BY_ID, SAVE_CONTRATO } from '../models/contrato';
+import Contrato, { CARREGAR_CONTRATO, FETCH_ALL_CONTRATOS, FETCH_CONTRATO_BY_ID, FETCH_CONTRATO_BY_ID_MATRICULA, SAVE_CONTRATO } from '../models/contrato';
 import { Page, PageRequest } from 'src/app/core/models';
 import { DataUtils } from './data.service';
 import { URL_ADMIN } from '../common/constants';
@@ -17,7 +17,7 @@ export class ContratoService {
       mutation: SAVE_CONTRATO,
       variables: {
         request: {
-          idContrato: id || undefined,
+          id: id || undefined,
           idCliente: entity.cliente?.id || entity.idCliente,
           numeroContrato: entity.numeroContrato,
           valorTotal: entity.valorTotal,
@@ -70,7 +70,7 @@ export class ContratoService {
       fetchPolicy: 'cache-first'
     }).pipe(
       map(result => {
-        const entity = result.data.fetchByIdContrato as Contrato
+        const entity = result.data.fetchById as Contrato
         return {
           ...entity,
         }
@@ -94,6 +94,17 @@ export class ContratoService {
       // tap(value => {
       //   console.log(value);
       // }),
+    );
+  }
+
+  recuperarPorIdMatricula(idMatricula: number): Observable<Contrato> {
+    return this.apollo.query<any>({
+      query: FETCH_CONTRATO_BY_ID_MATRICULA,
+      variables: { id: idMatricula },
+      context: { uri: URL_ADMIN },
+      fetchPolicy: 'cache-first'
+    }).pipe(
+      map(result => result.data.fetchContratoByIdMatricula as Contrato),      
     );
   }
 }
