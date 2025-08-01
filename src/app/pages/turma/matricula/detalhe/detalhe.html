@@ -1,4 +1,4 @@
-<app-innercard
+<app-modalcard (fechar)="onDismiss()" 
   [titulo]="'Aluno: '+ (data.cliente!=null?data.cliente.nome:data.clienteDependente.nome | primeiraMaiuscula)"
   [estiloCardTitulo]="{'padding': '1em',}">
 
@@ -49,7 +49,7 @@
   <mat-divider></mat-divider>
 
   <app-buttons-row style="display: flex;  justify-content: end; gap:1em">
-    <button mat-button (click)="cancelar()" cdkFocusInitial>Fechar</button>
+    <button mat-button (click)="onDismiss()" cdkFocusInitial>Fechar</button>
     @if(data.editar){
     <button mat-raised-button color="primary" style="margin-left: 6px;" cdkFocusInitial type="button"
       (click)="salvar()">
@@ -58,4 +58,4 @@
     }
   </app-buttons-row>
 
-</app-innercard>
+</app-modalcard>

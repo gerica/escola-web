@@ -5,6 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
 import { MatDivider } from '@angular/material/divider';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ButtonsRowComponent, InnercardComponent } from 'src/app/shared/components';
+import { ModalCardComponent } from 'src/app/shared/components/modalcard';
 
 export class ConfirmDialogModel {
   constructor(
@@ -21,7 +22,7 @@ export class ConfirmDialogModel {
     MatDialogModule,
     MatDivider,
     CommonModule,
-    InnercardComponent,
+    ModalCardComponent,
     ButtonsRowComponent
   ],
 })
@@ -37,7 +38,6 @@ export class ConfirmDialogComponent implements OnInit {
       this.safeMessageHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.message);
     }
   }
-
 
   onConfirm(): void {
     this.dialogRef.close(true);

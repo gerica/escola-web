@@ -1,4 +1,4 @@
-<app-innercard [titulo]="data.title" [estiloCardTitulo]="{'padding': '1em',}">
+<app-modalcard (fechar)="onDismiss()"  [titulo]="data.title" [estiloCardTitulo]="{'padding': '1em',}">
   <section style="margin-bottom: 16px;">
     @if(safeMessageHtml){
     <div [innerHTML]="safeMessageHtml"></div>
@@ -16,4 +16,4 @@
     </button>
   </app-buttons-row>
 
-</app-innercard>
+</app-modalcard>

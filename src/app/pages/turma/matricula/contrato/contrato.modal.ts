@@ -44,7 +44,6 @@ export interface ContratoDialogResult {
         ButtonsRowComponent,
         ContratoManterComp,
         ModalCardComponent,
-        PrimeiraMaiusculaPipe
     ],
 })
 export class ContratoDialogComponent {

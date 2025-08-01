@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ButtonsRowComponent, InnercardComponent } from 'src/app/shared/components';
+import { ModalCardComponent } from 'src/app/shared/components/modalcard';
 import { Matricula } from 'src/app/shared/models/matricula';
 import { StatusMatricula, StatusMatriculaLabelMapping } from 'src/app/shared/models/status-matricula.enum';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
@@ -33,7 +34,7 @@ export interface MatriculaDialogData extends Matricula {
     MatSelectModule,
     PrimeiraMaiusculaPipe,
     ButtonsRowComponent,
-    InnercardComponent
+    ModalCardComponent
   ]
 })
 export class MatriculaDetalheDialog implements OnInit {
@@ -75,7 +76,7 @@ export class MatriculaDetalheDialog implements OnInit {
   }
 
   // --- Método para cancelar (opcional) ---
-  cancelar() {
+  onDismiss() {
     this.dialogRef.close(); // Fecha o diálogo sem retornar nenhum dado (ou um valor 'undefined')
   }
 }
