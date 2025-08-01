@@ -12,6 +12,7 @@ export default interface Contrato {
   dataInicio: Date,
   dataFim: Date,
   valorTotal: number,
+  desconto: number,
   statusContrato: StatusContrato,
   descricao: string,
   termosCondicoes: string,
@@ -25,22 +26,7 @@ export default interface Contrato {
 
 export const SAVE_CONTRATO = gql`
   mutation saveContrato($request: ContratoRequest!){  
-    saveContrato(request:$request){
-        id
-        idCliente        
-        numeroContrato
-        dataInicio
-        dataFim
-        valorTotal
-        statusContrato
-        descricao
-        termosCondicoes
-        dataAssinatura
-        periodoPagamento
-        dataProximoPagamento
-        observacoes
-        contratoDoc
-    }
+    saveContrato(request:$request)
   }
 `;
 

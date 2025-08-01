@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -13,24 +13,24 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatTimepickerModule } from '@angular/material/timepicker';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { catchError, EMPTY, switchMap } from 'rxjs';
+import { ConfirmDialogComponent } from 'src/app/core/components';
 import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { InnercardComponent } from 'src/app/shared/components';
+import Contrato from 'src/app/shared/models/contrato';
 import { Matricula } from 'src/app/shared/models/matricula';
 import { StatusMatricula, StatusMatriculaLabelMapping } from 'src/app/shared/models/status-matricula.enum';
 import { Turma } from 'src/app/shared/models/turma';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
-import { MatriculaService } from 'src/app/shared/services/matricula.service';
-import { MatriculaDialogComponent } from './modal-matricula/matricula.modal';
-import { MatriculaDetalheDialog } from './detalhe/detalhe';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { ContratoDialogComponent } from './contrato/contrato.modal';
 import { ContratoService } from 'src/app/shared/services/contrato.service';
-import Contrato from 'src/app/shared/models/contrato';
+import { MatriculaService } from 'src/app/shared/services/matricula.service';
+import { ContratoDialogComponent } from './contrato/contrato.modal';
+import { MatriculaDetalheDialog } from './detalhe/detalhe';
+import { MatriculaDialogComponent } from './modal-matricula/matricula.modal';
 
 @Component({
   selector: 'app-turma-inscricao-manter',
@@ -76,6 +76,7 @@ export class MatriculaManterComp implements OnInit {
   page = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'codigo', direction: 'asc' }));
   displayedColumns: string[] = ['codigo', 'nome', 'status', 'acoes'];
 
+  statusAberto = StatusMatricula.ABERTA;
   statusMatricula = Object.values(StatusMatricula);
   statusMatriculaLabelMapping = StatusMatriculaLabelMapping;
 
@@ -173,7 +174,6 @@ export class MatriculaManterComp implements OnInit {
     });
 
     dialogRef$.afterClosed().subscribe(result => {
-      console.log(result);
       if (result) { // Se 'result' não for undefined (ou seja, o botão Salvar foi clicado)
         this.salvar(result);
       }
@@ -194,18 +194,50 @@ export class MatriculaManterComp implements OnInit {
   }
 
   showModalContrato(matricula: Matricula, contrato: Contrato) {
-    const dialogRef$ = this.dialog.open(ContratoDialogComponent, {
+    this.dialog.open(ContratoDialogComponent, {
       width: '80vw',
       data: {
         matricula,
         contrato
       }
     });
+  }
+
+  confirmarExclusao(entity: Matricula) {
+    const dialogRef$ = this.dialog.open(ConfirmDialogComponent, {
+      width: '550px',
+      data: {
+        title: `Realizar a exclusão da matricula: ${entity.codigo}`,
+        message: 'Você tem certeza que deseja excluir esta matricula?'
+      }
+    });
 
     dialogRef$.afterClosed().subscribe(result => {
-      console.log(result);
-      if (result) { // Se 'result' não for undefined (ou seja, o botão Salvar foi clicado)
-        // this.salvar(result);
+      if (result) {
+        this.excluir(entity);
+      }
+    });
+  }
+
+  excluir(entity: Matricula) {
+    this.spinner.showUntilCompletedCascate(
+      this.matriculaService.remover(entity.id)
+    ).pipe(
+      switchMap(_ => {
+        return this.matriculaService.buscar(this.turma!.id, this.page());
+      }),
+      catchError(err => {
+        this.notification.showError(err.message);
+        console.error('Erro ao executar chamada ao backend:', err);
+        return EMPTY;
+      })
+    ).subscribe({
+      next: (result) => {
+        this.matriculas.set(result);
+        this.notification.showSuccess('Operação realizada com sucesso.');
+      }, error: (err) => {
+        this.notification.showError(err.message);
+        console.error('Erro ao recuperar dependentes:', err);
       }
     });
   }

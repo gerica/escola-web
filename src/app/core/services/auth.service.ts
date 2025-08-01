@@ -138,9 +138,9 @@ export class AuthService {
       context: { uri: URL_ADMIN },
     }).pipe(
       map(result => result.data.resetPassword as string),
-      tap((result) => {
-        console.log(result);
-      }),
+      // tap((result) => {
+      //   console.log(result);
+      // }),
     );
   }
 

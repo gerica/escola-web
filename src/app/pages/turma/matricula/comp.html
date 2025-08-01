@@ -43,18 +43,23 @@
 
         <ng-container matColumnDef="acoes">
           <th mat-header-cell *matHeaderCellDef> </th>
-          <td mat-cell *matCellDef="let element" class="cursorSelect">
-            <a matTooltip="Exibir dados" aria-hidden="false" (click)="visualizar(element)" matTooltip="Visualizar">
+          <td mat-cell *matCellDef="let element">
+            <a matTooltip="Exibir dados" aria-hidden="false" (click)="visualizar(element)" matTooltip="Visualizar"
+              class="cursorSelect">
               <mat-icon color="primary">topic</mat-icon>
             </a>
-            <a matTooltip="Alterar Matricula" aria-hidden="false" (click)="alterar(element)">
+            <a matTooltip="Alterar Matricula" aria-hidden="false" (click)="alterar(element)" class="cursorSelect">
               <mat-icon color="primary">edit</mat-icon>
             </a>
-            <a matTooltip="Contrato" aria-hidden="false" (click)="abrirContrato(element)">
+            <a matTooltip="Contrato" aria-hidden="false" (click)="abrirContrato(element)" class="cursorSelect">
               <mat-icon color="primary">receipt</mat-icon>
             </a>
+            @if(element.status === statusAberto){
+              <a matTooltip="Remover" aria-hidden="false" (click)="confirmarExclusao(element)" class="cursorSelect">
+                <mat-icon color="primary">delete</mat-icon>
+              </a>
+            }
           </td>
-
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

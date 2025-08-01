@@ -27,6 +27,7 @@ import { ContratoService } from 'src/app/shared/services/contrato.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../../shared/components/innercard/innercard.component";
 import { ManterContratoComp } from '../modeloContrato/comp';
+import { Matricula } from 'src/app/shared/models/matricula';
 
 @Component({
   selector: 'app-contrato-manter',
@@ -64,6 +65,8 @@ export class ContratoManterComp implements OnInit {
   form!: UntypedFormGroup;
 
   @Input({ required: false }) contratoInput!: Contrato | null;
+  @Input({ required: false }) matriculaInput!: Matricula | null;
+
   inModal = signal<boolean>(false);
 
   optionsEstados = signal<Estado[]>([]);
@@ -113,12 +116,13 @@ export class ContratoManterComp implements OnInit {
       this.form.markAllAsTouched();
       this.form.markAsDirty();
       return;
-    }
+    }    
 
     this.spinner.showUntilCompleted(
       this.contratoService.salvar(this.contrato()?.id, this.form.value as Partial<Contrato>)).subscribe({
         next: (result) => {
-          this.contrato.set(result);
+          console.log(result);
+          // this.contrato.set(result);
           this.notification.showSuccess('Operação realizada com sucesso.');
         },
         error: (err) => {
@@ -142,6 +146,7 @@ export class ContratoManterComp implements OnInit {
       dataInicio: new FormControl('', [Validators.required]),
       dataFim: new FormControl('', [Validators.required]),
       valorTotal: new FormControl('', [Validators.required]),
+      desconto: new FormControl('', [Validators.required]),
       descricao: new FormControl('', []),
       statusContrato: new FormControl('', [Validators.required]),
       termosCondicoes: new FormControl('', [Validators.required]),

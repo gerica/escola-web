@@ -112,6 +112,16 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
+              <mat-label>Desconto</mat-label>
+              <input matInput formControlName="desconto" mask="separator.2" thousandSeparator="." decimalMarker=","
+                prefix="R$ ">
+              @if(form.controls['desconto'].hasError('required') && (form.controls['desconto'].touched ||
+              form.controls['desconto'].dirty)){
+              <mat-error> Desconto é <strong>obrigatório</strong> </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
               <mat-label>Status contrato</mat-label>
               <mat-select formControlName="statusContrato">
                 @for (item of statusContrato; track item) {

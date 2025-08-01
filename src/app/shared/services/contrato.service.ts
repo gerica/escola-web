@@ -21,6 +21,7 @@ export class ContratoService {
           idCliente: entity.cliente?.id || entity.idCliente,
           numeroContrato: entity.numeroContrato,
           valorTotal: entity.valorTotal,
+          desconto: entity.desconto,
           statusContrato: entity.statusContrato,
           descricao: entity.descricao,
           termosCondicoes: entity.termosCondicoes,
