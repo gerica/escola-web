@@ -16,6 +16,11 @@ export interface Matricula {
   dataAtualizacao: Date, // Data e hora da última atualização do registro
 }
 
+export interface MatriculaDialogResult {
+    salvar: boolean;
+    matricula: Partial<Matricula> | undefined;
+}
+
 export const FETCH_ALL = gql`  
   query fetchAllMatriculas($idTurma: ID!, $page: Int, $size: Int, $sort: [SortRequest]) { 
     fetchAllMatriculas(idTurma: $idTurma, page: $page, size: $size, sort: $sort) {    

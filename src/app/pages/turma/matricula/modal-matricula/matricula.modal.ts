@@ -16,7 +16,7 @@ import { ButtonsRowComponent, InnercardComponent } from 'src/app/shared/componen
 import Cliente from 'src/app/shared/models/cliente';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
 import { ClienteDialogComponent } from '../novo-cliente/cliente.modal';
-import { Matricula } from 'src/app/shared/models/matricula';
+import { Matricula, MatriculaDialogResult } from 'src/app/shared/models/matricula';
 import { StatusMatricula } from 'src/app/shared/models/status-matricula.enum';
 
 export interface MatriculaDialogData {
@@ -33,10 +33,6 @@ export interface AlunoItem {
     displayHtml: SafeHtml; // The pre-formatted HTML for display
 }
 
-export interface MatriculaDialogResult {
-    salvar: boolean;
-    matricula: Partial<Matricula> | undefined;
-}
 
 @Component({
     templateUrl: './matricula.modal.html',

@@ -28,6 +28,7 @@ import { MatriculaService } from 'src/app/shared/services/matricula.service';
 import { MatriculaDialogComponent } from './modal-matricula/matricula.modal';
 import { MatriculaDetalheDialog } from './detalhe/detalhe';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ContratoDialogComponent } from './contrato/contrato.modal';
 
 @Component({
   selector: 'app-turma-inscricao-manter',
@@ -172,6 +173,23 @@ export class MatriculaManterComp implements OnInit {
       console.log(result);
       if (result) { // Se 'result' não for undefined (ou seja, o botão Salvar foi clicado)
         this.salvar(result);
+      }
+    });
+  }
+
+  contrato(entity: Matricula) {
+    const dialogRef$ = this.dialog.open(ContratoDialogComponent, {
+      width: '550px',
+      data: {
+        ...entity,
+        editar: true
+      }
+    });
+
+    dialogRef$.afterClosed().subscribe(result => {
+      console.log(result);
+      if (result) { // Se 'result' não for undefined (ou seja, o botão Salvar foi clicado)
+        // this.salvar(result);
       }
     });
   }
