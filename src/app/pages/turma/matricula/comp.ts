@@ -149,7 +149,7 @@ export class MatriculaManterComp implements OnInit {
     });
 
     dialogRef$.afterClosed().subscribe(result => {
-      if (result.salvar) {
+      if (result && result.salvar) {
         this.salvar(result.matricula);
       }
     });

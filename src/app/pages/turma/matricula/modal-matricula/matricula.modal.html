@@ -1,4 +1,4 @@
-<app-innercard [titulo]="data.title" [estiloCardTitulo]="{'padding': '1em',}">
+<app-modalcard (fechar)="onDismiss()" [titulo]="data.title" [estiloCardTitulo]="{'padding': '1em',}">
     <form [formGroup]="form" (submit)="onSubmit()">
         <section>
             <!-- contratante -->
@@ -53,4 +53,4 @@
             </button>
         </app-buttons-row>
     </form>
-</app-innercard>
+</app-modalcard>

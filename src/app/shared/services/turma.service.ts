@@ -42,7 +42,9 @@ export class TurmaService {
                     horarioInicio: DataUtils.formatTimeForGraphQL(entity.horarioInicio),
                     horarioFim: DataUtils.formatTimeForGraphQL(entity.horarioFim),
                     diasDaSemana: entity.diasDaSemana,
-                    professor: entity.professor
+                    professor: entity.professor,
+                    dataInicio: DataUtils.formatDateToYYYYMMDD(entity.dataInicio),
+                    dataFim: DataUtils.formatDateToYYYYMMDD(entity.dataFim),
                 },
             },
             context: { uri: URL_ADMIN },

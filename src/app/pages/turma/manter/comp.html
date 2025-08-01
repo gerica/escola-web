@@ -163,11 +163,35 @@
               </mat-error>
               }
             </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Data incio</mat-label>
+              <input matInput [matDatepicker]="pickerDtInicio" formControlName="dataInicio">
+              <mat-datepicker-toggle matIconSuffix [for]="pickerDtInicio"></mat-datepicker-toggle>
+              <mat-datepicker #pickerDtInicio></mat-datepicker>
+              @if(form.controls['dataInicio'].hasError('required')){
+              <mat-error>
+                A data início é <strong>obrigatório</strong>
+              </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Data Final</mat-label>
+              <input matInput [matDatepicker]="pickerDtFinal" formControlName="dataFim">
+              <mat-datepicker-toggle matIconSuffix [for]="pickerDtFinal"></mat-datepicker-toggle>
+              <mat-datepicker #pickerDtFinal></mat-datepicker>
+              @if(form.controls['dataFim'].hasError('required')){
+              <mat-error>
+                A data final é <strong>obrigatório</strong>
+              </mat-error>
+              }
+            </mat-form-field>
           </section>
 
           <section class="container">
             <button mat-raised-button color="secondary" type="button" routerLink="/turma">Voltar</button>
             <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Salvar</button>
+            <!-- <button mat-raised-button color="primary" type="submit" >Salvar</button> -->
           </section>
 
         </form>
@@ -175,15 +199,11 @@
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
-        <mat-icon></mat-icon>
+        <mat-icon>receipt</mat-icon>
         Inscrições
       </ng-template>
       <app-turma-inscricao-manter [turma]="turma()"></app-turma-inscricao-manter>
 
     </mat-tab>
   </mat-tab-group>
-
-
-
-
 </app-innercard>

@@ -17,6 +17,8 @@ export interface Turma {
   horarioFim: Date,
   diasDaSemana: DiasSemana[]
   professor: String,
+  dataInicio: Date,
+  dataFim: Date, // Data e hora da última atualização do registro
   dataCadastro: Date,
   dataAtualizacao: Date, // Data e hora da última atualização do registro
 }
@@ -91,6 +93,8 @@ export const FETCH_BY_ID = gql`
       horarioFim
       diasDaSemana
       professor
+      dataInicio
+      dataFim
     }
   }
 `;

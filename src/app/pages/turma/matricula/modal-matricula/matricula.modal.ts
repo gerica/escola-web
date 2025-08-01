@@ -18,6 +18,7 @@ import { ClienteService } from 'src/app/shared/services/cliente.service';
 import { ClienteDialogComponent } from '../novo-cliente/cliente.modal';
 import { Matricula, MatriculaDialogResult } from 'src/app/shared/models/matricula';
 import { StatusMatricula } from 'src/app/shared/models/status-matricula.enum';
+import { ModalCardComponent } from "src/app/shared/components/modalcard";
 
 export interface MatriculaDialogData {
     title: string,
@@ -39,18 +40,19 @@ export interface AlunoItem {
     styleUrls: ['./matricula.modal.scss'],
     standalone: true,
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatDialogModule,
-        MatDivider,
-        MatAutocompleteModule,
-        MatProgressSpinnerModule,
-        InnercardComponent,
-        ButtonsRowComponent
-    ],
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatDivider,
+    MatAutocompleteModule,
+    MatProgressSpinnerModule,
+    ModalCardComponent,
+    ButtonsRowComponent,
+    ModalCardComponent
+],
 })
 export class MatriculaDialogComponent implements OnInit {
     public readonly dialogRef = inject<MatDialogRef<MatriculaDialogComponent, MatriculaDialogResult>>(MatDialogRef);

@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import { MAT_DATE_FORMATS, provideNativeDateAdapter } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -29,6 +29,8 @@ import { CursoService } from 'src/app/shared/services/curso.service';
 import { DataUtils } from 'src/app/shared/services/data.service';
 import { TurmaService } from 'src/app/shared/services/turma.service';
 import { MatriculaManterComp } from "../matricula/comp";
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MY_DATE_FORMATS } from 'src/app/app.config';
 
 @Component({
   selector: 'app-turma-manter',
@@ -52,8 +54,9 @@ import { MatriculaManterComp } from "../matricula/comp";
     MatProgressSpinnerModule,
     MatTabsModule,
     InnercardComponent,
-    MatriculaManterComp
-],
+    MatDatepickerModule,
+    MatriculaManterComp,
+  ],
   providers: [
     provideNativeDateAdapter(), // necessário adicionar esse provider para o time picker apresentar no formato hh:mm    
   ]
@@ -115,6 +118,8 @@ export class ManterComp implements OnInit {
       horarioFim: [horaDepois, Validators.required],   // Agora é um Date object
       diasDaSemana: [null, Validators.required], // Use null para select/multiple
       professor: ['', Validators.required],
+      dataInicio: [null, Validators.required],
+      dataFim: [null, Validators.required],
     });
   }
 
@@ -141,7 +146,28 @@ export class ManterComp implements OnInit {
     }
   }
 
+  private _observarCurso() {
+    this.srvTextSubject.asObservable()
+      .pipe(
+        debounceDistinctUntilChanged(400),
+        tap(() => this.srvLoading.set(true)),
+        switchMap((text) => {
+          const clientes$ = this.cursoSerivce.buscarCurso(text, this.page());
+
+          return clientes$.pipe(
+            minTime(700),
+            finalize(() => this.srvLoading.set(false))
+          );
+        })
+      ).subscribe({
+        next: (result) => {
+          this.cursos.set(result);
+        }
+      });
+  }
+
   onSubmit() {
+    console.log(this.form.value);
     if (!this.form.valid) {
       this.notification.showError('Informe todos os campos obrigatórios.');
       this.form.markAllAsTouched();
@@ -169,26 +195,6 @@ export class ManterComp implements OnInit {
         console.error('Erro ao recuperar dependentes:', err);
       }
     });
-  }
-
-  private _observarCurso() {
-    this.srvTextSubject.asObservable()
-      .pipe(
-        debounceDistinctUntilChanged(400),
-        tap(() => this.srvLoading.set(true)),
-        switchMap((text) => {
-          const clientes$ = this.cursoSerivce.buscarCurso(text, this.page());
-
-          return clientes$.pipe(
-            minTime(700),
-            finalize(() => this.srvLoading.set(false))
-          );
-        })
-      ).subscribe({
-        next: (result) => {
-          this.cursos.set(result);
-        }
-      });
   }
 
   displayCurso = (item: Curso) => (!!item && `${item.nome}`) || '';
