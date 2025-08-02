@@ -1,11 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
-import { map, Observable, tap } from 'rxjs';
-import Cliente, { FETCH_ALL_ATIVOS_CLIENTES, FETCH_ALL_ATIVOS_CLIENTES_COM_DEPENDENTES, FETCH_ALL_CLIENTES, FETCH_CLIENTE_BY_ID, SAVE_CLIENTE } from '../models/cliente';
-import { DataUtils } from './data.service';
+import { map, Observable } from 'rxjs';
 import { Page, PageRequest } from 'src/app/core/models';
 import { URL_ADMIN } from '../common/constants';
-import AlunoTurma from '../models/aluno';
+import Cliente, { DELETE_BY_ID, FETCH_ALL_ATIVOS_CLIENTES, FETCH_ALL_ATIVOS_CLIENTES_COM_DEPENDENTES, FETCH_ALL_CLIENTES, FETCH_CLIENTE_BY_ID, SAVE_CLIENTE } from '../models/cliente';
+import { DataUtils } from './data.service';
 
 @Injectable({ providedIn: 'root' })
 export class ClienteService {
@@ -116,7 +115,7 @@ export class ClienteService {
       //     content: contentNovo
       //   }
       // }),
-      
+
     );
   }
 
@@ -145,6 +144,16 @@ export class ClienteService {
       //   console.log("Received GraphQL data (fetchByIdCliente):", value);
       // }),
       // map(result => result)
+    );
+  }
+
+  remover(id: number): Observable<String> {
+    return this.apollo.mutate<any>({
+      mutation: DELETE_BY_ID,
+      variables: { id: id },
+      context: { uri: URL_ADMIN },
+    }).pipe(
+      map(result => result.data.deleteCursoById as String),
     );
   }
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -47,16 +47,18 @@ import { DependenteComp } from '../depentente/comp';
     ContatoComp,
     DependenteComp,
 
-  ], 
+  ],
 })
-export class ManterComp implements OnInit {
-  
+export class ClienteManterComp implements OnInit {
+
   private readonly route = inject(ActivatedRoute);
   private readonly notification = inject(NotificationService);
   private readonly spinner = inject(LoadingSpinnerService);
   private readonly clienteService = inject(ClienteService);
   private readonly utilService = inject(UtilsService);
   private readonly fb = inject(FormBuilder);
+
+  @Input({ required: false }) cadastroModal = false;
 
   form!: UntypedFormGroup;
   cliente = signal<Cliente | null>(null);
@@ -86,7 +88,7 @@ export class ManterComp implements OnInit {
       endereco: new UntypedFormControl('', [Validators.required]),
       email: new UntypedFormControl('', [Validators.email, Validators.required]),
       statusCliente: new FormControl<string | null>(StatusCliente.ATIVO, { validators: [Validators.required] }),
-      
+
       profissao: new UntypedFormControl(''),
       localTrabalho: new UntypedFormControl(''),
     });
@@ -134,6 +136,10 @@ export class ManterComp implements OnInit {
         next: (result) => {
           this.cliente.set(result);
           this.notification.showSuccess('Operação realizada com sucesso.');
+        },
+        error: (err) => {
+          this.notification.showError(err.message);
+          console.error('Erro ao recuperar dependentes:', err);
         }
       });
   }

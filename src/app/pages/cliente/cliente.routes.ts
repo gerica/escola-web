@@ -5,7 +5,7 @@ import Cliente from 'src/app/shared/models/cliente';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
 import { NotFoundComponent } from '../not-found';
 import { ListComp } from './lista/comp';
-import { ManterComp } from './manter/comp';
+import { ClienteManterComp } from './manter/comp';
 
 const localResolver: ResolveFn<Cliente> = route => {
   return inject(LoadingSpinnerService).showUntilCompleted(inject(ClienteService).recuperarPorId(+route.paramMap.get('id')!));
@@ -18,11 +18,11 @@ const routes: Routes = [
   },
   {
     path: 'manter',
-    component: ManterComp,
+    component: ClienteManterComp,
   },
   {
     path: 'manter/:id',
-    component: ManterComp,
+    component: ClienteManterComp,
     resolve: { entity: localResolver },
   },
   {

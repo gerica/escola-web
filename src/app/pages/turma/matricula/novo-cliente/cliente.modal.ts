@@ -9,7 +9,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { firstPageAndSort, PageRequest } from 'src/app/core/models';
+import { ClienteManterComp } from 'src/app/pages/cliente/manter/comp';
 import { ButtonsRowComponent, InnercardComponent } from 'src/app/shared/components';
+import { ModalCardComponent } from 'src/app/shared/components/modalcard';
 
 export interface InscricaoDialogData {
     title: string,
@@ -29,8 +31,9 @@ export interface InscricaoDialogData {
         MatDivider,
         MatAutocompleteModule,
         MatProgressSpinnerModule,
-        InnercardComponent,
-        ButtonsRowComponent
+        ModalCardComponent,
+        ButtonsRowComponent,
+        ClienteManterComp
     ],
 })
 export class ClienteDialogComponent implements OnInit {

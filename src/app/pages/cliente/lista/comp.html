@@ -68,6 +68,9 @@
             <a matTooltip="Editar dados" aria-hidden="false" [routerLink]="['/cliente/manter', element.id]">
               <mat-icon color="primary">edit</mat-icon>
             </a>
+            <a matTooltip="Remover" aria-hidden="false" (click)="confirmarExclusao(element)" class="cursorSelect">
+                <mat-icon color="primary">delete</mat-icon>
+              </a>
           </td>
 
         </ng-container>

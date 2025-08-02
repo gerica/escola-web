@@ -160,7 +160,7 @@ export class MatriculaDialogComponent implements OnInit {
 
     novoAlunoModal() {
         const dialogRef$ = this.dialog.open(ClienteDialogComponent, {
-            width: '750px',
+            width: '80vw',
             // height: '400px',
             data: {
                 title: `Realizar cadastro de aluno`,

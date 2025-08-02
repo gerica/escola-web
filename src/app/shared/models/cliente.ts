@@ -143,6 +143,11 @@ const FETCH_CLIENTE_BY_ID = gql`
   }
 `;
 
+export const DELETE_BY_ID = gql`
+  mutation deleteClienteById($id: ID!){  
+    deleteClienteById(id:$id)
+  }
+`;
 
 export {
   SAVE_CLIENTE,

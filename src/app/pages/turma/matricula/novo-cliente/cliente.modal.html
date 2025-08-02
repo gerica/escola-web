@@ -1,17 +1,13 @@
-<app-innercard [titulo]="data.title" [estiloCardTitulo]="{'padding': '1em',}">
-    <form [formGroup]="form" (submit)="onSubmit()">
-        <section>
-            implementar
-        </section>
-        <mat-divider></mat-divider>
+<app-modalcard (fechar)="onDismiss()" [titulo]="data.title" [estiloCardTitulo]="{'padding': '1em',}">
 
-        <app-buttons-row style="margin-bottom: 4px;   display: flex;  justify-content: end;">
-            <button mat-button mat-dialog-close (click)="onDismiss()" type="button">
-                Cancelar
-            </button>
-            <button mat-raised-button color="primary" cdkFocusInitial type="submit">
-                Confirmar
-            </button>
-        </app-buttons-row>
-    </form>
-</app-innercard>
+    <app-contrato-manter [cadastroModal]="true" />
+
+    <mat-divider></mat-divider>
+
+    <app-buttons-row style="margin-bottom: 4px;   display: flex;  justify-content: end;">
+        <button mat-button mat-dialog-close (click)="onDismiss()" type="button">
+            Cancelar
+        </button>
+    </app-buttons-row>
+
+</app-modalcard>

@@ -11,15 +11,16 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { emptyPage, firstPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
-import { LoadingSpinnerService } from 'src/app/core/services';
+import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import Cliente from 'src/app/shared/models/cliente';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
 import { ClienteDetalheDialog } from './detalhe';
-import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, EMPTY, Subject, switchMap, takeUntil } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { StatusCliente, StatusClienteLabelMapping } from 'src/app/shared/models/status-cliente.enum';
+import { ConfirmDialogComponent } from 'src/app/core/components';
 
 @Component({
   selector: 'app-cliente-list',
@@ -45,7 +46,7 @@ import { StatusCliente, StatusClienteLabelMapping } from 'src/app/shared/models/
 export class ListComp implements OnInit, OnDestroy {
 
   // private readonly router = inject(Router);  
-  // private readonly notification = inject(NotificationService);
+  private readonly notification = inject(NotificationService);
   private readonly spinner = inject(LoadingSpinnerService);
   private readonly clienteService = inject(ClienteService);
   private readonly dialog = inject(MatDialog);
@@ -143,5 +144,44 @@ export class ListComp implements OnInit, OnDestroy {
   isStatusPendente(status: StatusCliente): boolean {
     return status === StatusCliente.PENDENTE_APROVACAO;
   }
+
+  confirmarExclusao(entity: Cliente) {
+      const dialogRef$ = this.dialog.open(ConfirmDialogComponent, {
+        width: '550px',
+        data: {
+          title: `Realizar a exclusão do cliente: ${entity.nome}`,
+          message: 'Você tem certeza que deseja excluir este cliente?'
+        }
+      });
+  
+      dialogRef$.afterClosed().subscribe(result => {
+        if (result) {
+          this.excluir(entity);
+        }
+      });
+    }
+  
+    excluir(entity: Cliente) {
+      this.spinner.showUntilCompletedCascate(
+        this.clienteService.remover(entity.id)
+      ).pipe(
+        switchMap(_ => {
+          return this.clienteService.buscar(this.ctrlFiltro.value, this.page());
+        }),
+        catchError(err => {
+          this.notification.showError(err.message);
+          console.error('Erro ao executar chamada ao backend:', err);
+          return EMPTY;
+        })
+      ).subscribe({
+        next: (result) => {
+          this.clientes.set(result);
+          this.notification.showSuccess('Operação realizada com sucesso.');
+        }, error: (err) => {
+          this.notification.showError(err.message);
+          console.error('Erro ao recuperar dependentes:', err);
+        }
+      });
+    }
 
 }

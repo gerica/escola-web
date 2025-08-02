@@ -1,4 +1,4 @@
-<app-innercard titulo="Manter Contrato" [estiloCardTitulo]="{'padding': '1em',}">
+<app-innercard titulo="Manter Cliente" [estiloCardTitulo]="{'padding': '1em',}">
 
   <form [formGroup]="form" (submit)="onSubmit()">
     <mat-tab-group>
@@ -11,8 +11,8 @@
         <app-innercard class="cardInner">
           <section class="containerLinha">
             <mat-form-field appearance="outline">
-              <mat-label>Contratante</mat-label>
-              <input id="nomeInput" matInput placeholder="Contratante" formControlName="nome">
+              <mat-label>Nome</mat-label>
+              <input id="nomeInput" matInput placeholder="Nome" formControlName="nome">
               @if(form.controls['nome'].hasError('required')){
               <mat-error id="requiredEmailError">
                 O nome é <strong>obrigatório</strong>
@@ -21,7 +21,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Data do contrato</mat-label>
+              <mat-label>Data de nascimento</mat-label>
               <input matInput [matDatepicker]="picker" formControlName="dataNascimento">
               <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
@@ -120,7 +120,9 @@
 
 
           <section class="container">
+            @if(!cadastroModal){
             <button mat-raised-button color="secondary" type="button" routerLink="/cliente/novo">Voltar</button>
+            }
             <button mat-raised-button color="primary" type="submit">Salvar</button>
           </section>
         </app-innercard>
