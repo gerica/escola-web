@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { map, Observable, tap } from 'rxjs';
-import Contrato, { CARREGAR_CONTRATO, FETCH_ALL_CONTRATOS, FETCH_CONTRATO_BY_ID, FETCH_CONTRATO_BY_ID_MATRICULA, SAVE_CONTRATO } from '../models/contrato';
+import Contrato, { CARREGAR_CONTRATO, FETCH_ALL_CONTRATOS, FETCH_CONTRATO_BY_ID, FETCH_CONTRATO_BY_ID_MATRICULA, SAVE_CONTRATO, SAVE_CONTRATO_MODELO } from '../models/contrato';
 import { Page, PageRequest } from 'src/app/core/models';
 import { DataUtils } from './data.service';
 import { URL_ADMIN } from '../common/constants';
@@ -39,6 +39,21 @@ export class ContratoService {
       // tap(value => {
       //   console.log(value);
       // }),
+    );
+  }
+
+  salvarModelo(id: number | undefined, modelo: String): Observable<Contrato> {
+    return this.apollo.mutate<any>({
+      mutation: SAVE_CONTRATO_MODELO,
+      variables: {
+        request: {
+          id: id || undefined,
+          contratoDoc: modelo,
+        },
+      },
+      context: { uri: URL_ADMIN },
+    }).pipe(
+      map(result => result.data.saveContratoModelo as Contrato),      
     );
   }
 
@@ -103,9 +118,9 @@ export class ContratoService {
       query: FETCH_CONTRATO_BY_ID_MATRICULA,
       variables: { id: idMatricula },
       context: { uri: URL_ADMIN },
-      fetchPolicy: 'cache-first'
+      fetchPolicy: 'network-only'
     }).pipe(
-      map(result => result.data.fetchContratoByIdMatricula as Contrato),      
+      map(result => result.data.fetchContratoByIdMatricula as Contrato),
     );
   }
 }

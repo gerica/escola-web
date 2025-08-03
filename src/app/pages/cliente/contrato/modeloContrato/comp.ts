@@ -14,6 +14,8 @@ import { EditorComponent } from 'src/app/shared/components/editor/editor.compone
 import Contrato from 'src/app/shared/models/contrato';
 import { ContratoService } from 'src/app/shared/services/contrato.service';
 import { InnercardComponent } from "../../../../shared/components/innercard/innercard.component";
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from 'src/app/core/components';
 
 
 @Component({
@@ -43,6 +45,7 @@ export class ManterContratoComp implements OnInit {
   private readonly spinner = inject(LoadingSpinnerService);
   private readonly contratoService = inject(ContratoService);
   private readonly fb = inject(FormBuilder);
+  private readonly dialog = inject(MatDialog);
 
   form!: UntypedFormGroup;
   @Input({ required: true }) contrato!: Contrato | null;
@@ -78,7 +81,7 @@ export class ManterContratoComp implements OnInit {
 
     // 3. Chame o serviço com o objeto completo
     this.spinner.showUntilCompleted(
-      this.contratoService.salvar(this.contrato.id, contratoParaSalvar)).subscribe({
+      this.contratoService.salvarModelo(this.contrato.id, updatedContratoDoc)).subscribe({
         next: (result) => {
           this.notification.showSuccess('Operação realizada com sucesso.');
           // Opcional: Atualize o objeto contrato localmente após o sucesso, se necessário
@@ -88,6 +91,22 @@ export class ManterContratoComp implements OnInit {
           this.notification.showError('Erro ao salvar contrato: ' + (err.message || 'Erro desconhecido.'));
         }
       });
+  }
+
+  confirmCarregarContrato() {
+    const dialogRef$ = this.dialog.open(ConfirmDialogComponent, {
+      width: '550px',
+      data: {
+        title: `Realizar o carregamento do contrato`,
+        message: 'Você tem certeza que carregar o modelo do contrato, isso irá substituir o autl?'
+      }
+    });
+
+    dialogRef$.afterClosed().subscribe(result => {
+      if (result) {
+        this.carregarContrato();
+      }
+    });
   }
 
   carregarContrato() {

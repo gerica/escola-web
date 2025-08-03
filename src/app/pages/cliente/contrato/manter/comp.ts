@@ -116,13 +116,11 @@ export class ContratoManterComp implements OnInit {
       this.form.markAllAsTouched();
       this.form.markAsDirty();
       return;
-    }    
+    }
 
     this.spinner.showUntilCompleted(
       this.contratoService.salvar(this.contrato()?.id, this.form.value as Partial<Contrato>)).subscribe({
-        next: (result) => {
-          console.log(result);
-          // this.contrato.set(result);
+        next: _ => {
           this.notification.showSuccess('Operação realizada com sucesso.');
         },
         error: (err) => {
@@ -132,7 +130,7 @@ export class ContratoManterComp implements OnInit {
   }
 
 
-  titulocabecalho() {    
+  titulocabecalho() {
     if (this.contrato()?.id) {
       return `Contrato: ${this.contrato()?.numeroContrato} - ${this.contrato()?.nomeCliente}`;
     }

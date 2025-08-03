@@ -6,6 +6,10 @@
     <p><strong>Curso:</strong> {{ turma.curso.nome }}</p>
     <p><strong>Capacidade máxima:</strong> {{ turma.capacidadeMaxima }}</p>
   </div>
+  <div class="details-container">
+    <p><strong>Data de início:</strong> {{ turma.dataInicio | date: 'dd/MM/yyyy' }}</p>
+    <p><strong>Data de fim:</strong> {{ turma.dataFim| date: 'dd/MM/yyyy' }}</p>    
+  </div>
   } @else {
   <p>Carregando detalhes da turma...</p>
   }
@@ -55,9 +59,9 @@
               <mat-icon color="primary">receipt</mat-icon>
             </a>
             @if(element.status === statusAberto){
-              <a matTooltip="Remover" aria-hidden="false" (click)="confirmarExclusao(element)" class="cursorSelect">
-                <mat-icon color="primary">delete</mat-icon>
-              </a>
+            <a matTooltip="Remover" aria-hidden="false" (click)="confirmarExclusao(element)" class="cursorSelect">
+              <mat-icon color="primary">delete</mat-icon>
+            </a>
             }
           </td>
         </ng-container>

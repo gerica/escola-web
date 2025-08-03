@@ -30,6 +30,12 @@ export const SAVE_CONTRATO = gql`
   }
 `;
 
+export const SAVE_CONTRATO_MODELO = gql`
+  mutation saveContratoModelo($request: ContratoModeloRequest!){  
+    saveContratoModelo(request:$request)
+  }
+`;
+
 export const FETCH_ALL_CONTRATOS = gql`  
   query fetchAllContratos($filtro: String, $page: Int, $size: Int, $sort: [SortRequest]) { 
     fetchAllContratos(filtro: $filtro, page: $page, size: $size, sort: $sort) {    
@@ -70,6 +76,7 @@ export const FETCH_CONTRATO_BY_ID = gql`
         dataInicio
         dataFim
         valorTotal
+        desconto
         statusContrato
         descricao
         termosCondicoes

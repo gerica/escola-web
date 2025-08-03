@@ -64,7 +64,6 @@ export class MatriculaManterComp implements OnInit {
   private readonly spinner = inject(LoadingSpinnerService);
   private readonly matriculaService = inject(MatriculaService);
   private readonly contratoService = inject(ContratoService);
-
   private readonly dialog = inject(MatDialog);
 
   @Input({ required: true }) turma!: Turma | null;
