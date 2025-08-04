@@ -1,0 +1,51 @@
+<form [formGroup]="form" (ngSubmit)="onUpload()">
+  <app-innercard>
+    <div class="header-container">
+      <h2>Anexar arquivos</h2>
+      <div class="file-upload-container">
+        <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none;" />
+        <button mat-raised-button color="primary" type="button" (click)="fileInput.click()">
+          <mat-icon>cloud_upload</mat-icon>
+          <span>Selecione um Arquivo</span>
+        </button>
+      </div>
+    </div>
+    <mat-progress-bar *ngIf="loading" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+    <section class="container">
+      <app-innercard titulo="Anexos">
+        @if(anexos().length === 0){
+        <p class="no-anexos-text">Nenhum anexo encontrado.</p>
+        }@else {
+
+        <table mat-table [dataSource]="anexos()" matSort class="mat-elevation-z8">
+
+          <!-- Position Column -->
+          <ng-container matColumnDef="nomeArquivo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="nomeArquivo">Nome do Arquivo</th>
+            <td mat-cell *matCellDef="let element"> {{element.nomeArquivo}} </td>
+          </ng-container>
+
+
+          <ng-container matColumnDef="acoes">
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let element" class="cursorSelect">
+              <a matTooltip="Baixar anexo" aria-hidden="false" (click)="baixarAnexo(element)">
+                <mat-icon color="primary">arrow_circle_down</mat-icon>
+              </a>
+              <a matTooltip="Apagar anexo" aria-hidden="false" (click)="confirmarExclusao(element)">
+                <mat-icon color="primary">delete</mat-icon>
+              </a>
+            </td>
+
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (dblclick)="baixarAnexo(row)"></tr>
+        </table>
+        }
+
+      </app-innercard>
+
+    </section>
+  </app-innercard>
+</form>

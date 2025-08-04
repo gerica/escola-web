@@ -28,6 +28,7 @@ import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../../shared/components/innercard/innercard.component";
 import { ManterContratoComp } from '../modeloContrato/comp';
 import { Matricula } from 'src/app/shared/models/matricula';
+import { AnexosContratoComp } from '../anexos/comp';
 
 @Component({
   selector: 'app-contrato-manter',
@@ -47,7 +48,8 @@ import { Matricula } from 'src/app/shared/models/matricula';
     MatAutocompleteModule,
     MatSelectModule,
     MatProgressSpinnerModule,
-    ManterContratoComp
+    ManterContratoComp,
+    AnexosContratoComp
 
   ],
 })

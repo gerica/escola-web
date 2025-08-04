@@ -21,7 +21,6 @@ export default interface Contrato {
   dataProximoPagamento: Date,
   observacoes: string,
   contratoDoc: string,
-
 }
 
 export const SAVE_CONTRATO = gql`
