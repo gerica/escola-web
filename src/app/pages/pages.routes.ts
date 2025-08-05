@@ -39,6 +39,10 @@ const routes: Routes = [
         path: 'usuario',
         loadChildren: () => import('./usuario/usuario.routes').then(m => m.CompRoutes),
       },
+      {
+        path: 'conta',
+        loadChildren: () => import('./financeiro/financeiro.routes').then(m => m.FinanceiroRoutes),
+      },
       { path: '**', component: NotFoundComponent },
     ],
   },

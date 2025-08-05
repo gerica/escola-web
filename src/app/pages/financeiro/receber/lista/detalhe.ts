@@ -11,7 +11,7 @@ import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pi
 
 
 @Component({
-  selector: 'contrato-detalhe-dialog',
+  selector: 'conta-receber-detalhe-dialog',
   templateUrl: './detalhe.html',
   styleUrl: '../../../entity-detalhe.scss',
   standalone: true,
@@ -25,7 +25,7 @@ import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pi
     InnercardComponent
   ]
 })
-export class ContratoDetalheDialog {
+export class ContratoContasReceberDetalheDialog {
   public readonly data: Contrato = inject(MAT_DIALOG_DATA);
   statusContratoLabelMapping = StatusContratoLabelMapping;
   periodosPagamentoLabelMapping = PeriodoPagamentoLabelMapping;

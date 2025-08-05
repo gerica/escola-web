@@ -1,6 +1,7 @@
 import { MenuItem } from "./menu-item";
 import { modulosAdminEmpresa } from "./modulos-admin-empresa";
 import { modulosCoordenador } from "./modulos-coordenador";
+import { modulosFinanceiro } from "./modulos-financeiro";
 import { modulosSuperadmin } from "./modulos-superadmin";
 
 export const moduloInicial = 'inicio';
@@ -13,6 +14,7 @@ export const modulos: MenuItem[] = [
     parent: null,
     submenus: null,
   },
+  ...modulosFinanceiro,
   ...modulosCoordenador,
   ...modulosAdminEmpresa,
   ...modulosSuperadmin,
