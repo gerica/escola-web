@@ -29,3 +29,6 @@ export const URL_ADMIN = '/admin/graphql';
 
 export const TYPE_PDF = 'pdf';
 export const TYPE_CSV = 'csv';
+
+
+export const MSG_SUCESS = 'Operação realizada com sucesso.';

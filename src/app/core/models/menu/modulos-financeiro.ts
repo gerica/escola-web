@@ -14,14 +14,14 @@ export const modulosFinanceiro: MenuItem[] = [
   },
   {
     icon: 'contract',
-    name: 'Recener',
+    name: 'Receber',
     router: moduloContaReceber,
     parent: moduloConta,
     submenus: null,
   },
   {
     icon: 'contract',
-    name: ' Empresa',
+    name: ' Pagar',
     router: moduloContaPagar,
     parent: moduloConta,
     submenus: null,

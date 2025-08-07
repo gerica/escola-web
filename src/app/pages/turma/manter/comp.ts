@@ -191,8 +191,8 @@ export class ManterComp implements OnInit {
         this.turmas.set(result);
         this.notification.showSuccess('Operação realizada com sucesso.');
       }, error: (err) => {
-        this.notification.showError(err.message);
-        console.error('Erro ao recuperar dependentes:', err);
+        this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+            console.error('Erro ao recuperar dados:', err);
       }
     });
   }

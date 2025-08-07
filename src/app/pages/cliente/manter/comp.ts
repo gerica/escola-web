@@ -138,8 +138,8 @@ export class ClienteManterComp implements OnInit {
           this.notification.showSuccess('Operação realizada com sucesso.');
         },
         error: (err) => {
-          this.notification.showError(err.message);
-          console.error('Erro ao recuperar dependentes:', err);
+          this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+          console.error('Erro ao recuperar dados:', err);
         }
       });
   }

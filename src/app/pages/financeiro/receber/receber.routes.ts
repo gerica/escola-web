@@ -1,11 +1,15 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { inject, NgModule } from '@angular/core';
+import { ResolveFn, RouterModule, Routes } from '@angular/router';
 import { ListComp } from './lista/comp';
 import { NotFoundComponent } from '../../not-found';
+import { ContaReceberManterComp } from './manter/comp';
+import Contrato from 'src/app/shared/models/contrato';
+import { LoadingSpinnerService } from 'src/app/core/services';
+import { ContratoService } from 'src/app/shared/services/contrato.service';
 
-// const localResolver: ResolveFn<Usuario> = route => {
-//   return inject(LoadingSpinnerService).showUntilCompleted(inject(UsuarioService).recuperarPorId(+route.paramMap.get('id')!));
-// };
+const localResolver: ResolveFn<Contrato> = route => {
+  return inject(LoadingSpinnerService).showUntilCompleted(inject(ContratoService).recuperarPorId(+route.paramMap.get('id')!));
+};
 
 const routes: Routes = [
   {
@@ -16,11 +20,11 @@ const routes: Routes = [
   //   path: 'manter',
   //   component: ManterComp,
   // },
-  // {
-  //   path: 'manter/:id',
-  //   component: ManterComp,
-  //   resolve: { entity: localResolver },
-  // },
+  {
+    path: 'contrato/:id',
+    component: ContaReceberManterComp,
+    resolve: { entity: localResolver },
+  },
   { path: '**', component: NotFoundComponent },
 ];
 

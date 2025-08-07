@@ -89,8 +89,8 @@ export class ListComp implements OnInit, OnDestroy {
           this.usuarios.set(result);
         },
         error: (err) => { // <--- Add error handling
-          this.notification.showError(err.message);
-          console.error('Erro ao recuperar dependentes:', err);
+          this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+          console.error('Erro ao recuperar dados:', err);
         }
       });
   }
@@ -104,8 +104,8 @@ export class ListComp implements OnInit, OnDestroy {
           this.usuarios.set(result);
         },
         error: (err) => { // <--- Add error handling
-          this.notification.showError(err.message);
-          console.error('Erro ao recuperar dependentes:', err);
+          this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+          console.error('Erro ao recuperar dados:', err);
         }
       });
   }

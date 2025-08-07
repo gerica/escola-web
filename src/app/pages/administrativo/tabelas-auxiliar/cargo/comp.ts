@@ -107,7 +107,7 @@ export class CargoManterComp implements OnInit {
         this.notification.showSuccess('Operação realizada com sucesso.');
       }, error: (err) => {
         this.notification.showError(err.message);
-        console.error('Erro ao recuperar dependentes:', err);
+        console.error('Erro ao recuperar dados:', err);
       }
     });
 
@@ -128,7 +128,7 @@ export class CargoManterComp implements OnInit {
         },
         error: (err) => { // <--- Add error handling
           this.notification.showError(err.message);
-          console.error('Erro ao recuperar dependentes:', err);
+          console.error('Erro ao recuperar dados:', err);
         }
       });
   }
@@ -172,7 +172,7 @@ export class CargoManterComp implements OnInit {
         this.notification.showSuccess('Operação realizada com sucesso.');
       }, error: (err) => {
         this.notification.showError(err.message);
-        console.error('Erro ao recuperar dependentes:', err);
+        console.error('Erro ao recuperar dados:', err);
       }
     });
   }

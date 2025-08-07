@@ -1,0 +1,27 @@
+<app-innercard titulo="Contrato" [estiloCard]="{'padding': '0em',}">
+  @if (contrato()) {
+  <div class="details-container">
+    <p><strong>Contrato:</strong> {{ contrato()?.numeroContrato }}</p>
+    <p><strong>Cliente:</strong> {{ contrato()?.nomeCliente }}</p>
+    <p><strong>Status:</strong> {{ contrato()?.statusContrato }}</p>
+    <p><strong>Valor:</strong> {{ contrato()?.valorTotal | currency: 'BRL' }}</p>
+  </div>
+  <div class="details-container">
+    <p><strong>Descrição:</strong> {{ contrato()?.descricao }}</p>
+    <p><strong>Data de início:</strong> {{ contrato()?.dataInicio| date: 'dd/MM/yyyy' }}</p>
+    <p><strong>Data de fim:</strong> {{ contrato()?.dataFim| date: 'dd/MM/yyyy' }}</p>
+  </div>
+  } @else {
+  <p>Carregando detalhes da turma...</p>
+  }
+
+
+  <section class="section-actions">
+    <button mat-raised-button color="secondary" routerLink="/conta/receber">Voltar</button>
+    <button mat-raised-button color="primary" (click)="criarContas()">Criar Contas</button>
+  </section>
+
+  <app-innercard titulo="Contas" [estiloCard]="{'padding': '0em','margin-top': '1em'}">
+    teste
+  </app-innercard>
+</app-innercard>

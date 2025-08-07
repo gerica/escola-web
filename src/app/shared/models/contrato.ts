@@ -8,7 +8,7 @@ export default interface Contrato {
   idCliente: number,
   cliente: Cliente,
   nomeCliente: string,
-  numeroContrato: number,
+  numeroContrato: string,
   dataInicio: Date,
   dataFim: Date,
   valorTotal: number,

@@ -2,11 +2,12 @@ import { inject, NgModule } from '@angular/core';
 import { ResolveFn, RouterModule, Routes } from '@angular/router';
 import { LoadingSpinnerService } from 'src/app/core/services';
 import { NotFoundComponent } from '../../not-found';
-import { ListComp } from './lista/comp';
+
 
 import Contrato from 'src/app/shared/models/contrato';
 import { ContratoService } from 'src/app/shared/services/contrato.service';
 import { ContratoManterComp } from './manter/comp';
+import { ContratoListComp } from './lista/comp';
 
 const localResolver: ResolveFn<Contrato> = route => {
   return inject(LoadingSpinnerService).showUntilCompleted(inject(ContratoService).recuperarPorId(+route.paramMap.get('id')!));
@@ -15,7 +16,7 @@ const localResolver: ResolveFn<Contrato> = route => {
 const routes: Routes = [
   {
     path: '',
-    component: ListComp,
+    component: ContratoListComp,
   },
   {
     path: 'manter',

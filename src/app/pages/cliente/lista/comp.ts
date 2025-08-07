@@ -125,7 +125,7 @@ export class ListComp implements OnInit, OnDestroy {
     }
   }
 
-  getStatusClienteDesc(status: StatusCliente){
+  getStatusClienteDesc(status: StatusCliente) {
     return this.statusClienteLabelMapping[status];
   }
 
@@ -146,42 +146,42 @@ export class ListComp implements OnInit, OnDestroy {
   }
 
   confirmarExclusao(entity: Cliente) {
-      const dialogRef$ = this.dialog.open(ConfirmDialogComponent, {
-        width: '550px',
-        data: {
-          title: `Realizar a exclusão do cliente: ${entity.nome}`,
-          message: 'Você tem certeza que deseja excluir este cliente?'
-        }
-      });
-  
-      dialogRef$.afterClosed().subscribe(result => {
-        if (result) {
-          this.excluir(entity);
-        }
-      });
-    }
-  
-    excluir(entity: Cliente) {
-      this.spinner.showUntilCompletedCascate(
-        this.clienteService.remover(entity.id)
-      ).pipe(
-        switchMap(_ => {
-          return this.clienteService.buscar(this.ctrlFiltro.value, this.page());
-        }),
-        catchError(err => {
-          this.notification.showError(err.message);
-          console.error('Erro ao executar chamada ao backend:', err);
-          return EMPTY;
-        })
-      ).subscribe({
-        next: (result) => {
-          this.clientes.set(result);
-          this.notification.showSuccess('Operação realizada com sucesso.');
-        }, error: (err) => {
-          this.notification.showError(err.message);
-          console.error('Erro ao recuperar dependentes:', err);
-        }
-      });
-    }
+    const dialogRef$ = this.dialog.open(ConfirmDialogComponent, {
+      width: '550px',
+      data: {
+        title: `Realizar a exclusão do cliente: ${entity.nome}`,
+        message: 'Você tem certeza que deseja excluir este cliente?'
+      }
+    });
+
+    dialogRef$.afterClosed().subscribe(result => {
+      if (result) {
+        this.excluir(entity);
+      }
+    });
+  }
+
+  excluir(entity: Cliente) {
+    this.spinner.showUntilCompletedCascate(
+      this.clienteService.remover(entity.id)
+    ).pipe(
+      switchMap(_ => {
+        return this.clienteService.buscar(this.ctrlFiltro.value, this.page());
+      }),
+      catchError(err => {
+        this.notification.showError(err.message);
+        console.error('Erro ao executar chamada ao backend:', err);
+        return EMPTY;
+      })
+    ).subscribe({
+      next: (result) => {
+        this.clientes.set(result);
+        this.notification.showSuccess('Operação realizada com sucesso.');
+      }, error: (err) => {
+        this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+        console.error('Erro ao recuperar dados:', err);
+      }
+    });
+  }
 
 }

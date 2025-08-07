@@ -103,7 +103,7 @@ export class ListComp implements OnInit {
   }
 
   novo() {
-    const { horaAntes, horaDepois } = DataUtils.getDataAntesEDepois();    
+    const { horaAntes, horaDepois } = DataUtils.getDataAntesEDepois();
     this.form.patchValue({ horarioInicio: horaAntes, horarioFim: horaDepois }, { emitEvent: true });
   }
 
@@ -132,8 +132,8 @@ export class ListComp implements OnInit {
         this.notification.showSuccess('Operação realizada com sucesso.');
         this.novo();
       }, error: (err) => {
-        this.notification.showError(err.message);
-        console.error('Erro ao recuperar dependentes:', err);
+        this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+        console.error('Erro ao recuperar dados:', err);
       }
     });
   }
@@ -151,8 +151,8 @@ export class ListComp implements OnInit {
           this.turmas.set(result);
         },
         error: (err) => { // <--- Add error handling
-          this.notification.showError(err.message);
-          console.error('Erro ao recuperar dependentes:', err);
+          this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+          console.error('Erro ao recuperar dados:', err);
         }
       });
   }
@@ -195,8 +195,8 @@ export class ListComp implements OnInit {
         this.turmas.set(result);
         this.notification.showSuccess('Operação realizada com sucesso.');
       }, error: (err) => {
-        this.notification.showError(err.message);
-        console.error('Erro ao recuperar dependentes:', err);
+        this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+        console.error('Erro ao recuperar dados:', err);
       }
     });
   }

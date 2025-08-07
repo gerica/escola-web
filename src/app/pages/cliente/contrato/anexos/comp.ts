@@ -76,7 +76,7 @@ export class AnexosContratoComp implements OnInit {
       },
       error: (err) => {
         this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
-        console.error('Erro ao recuperar dependentes:', err);
+        console.error('Erro ao recuperar dados:', err);
       }
     });
   }

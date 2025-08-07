@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -21,7 +21,7 @@ import { InnercardComponent } from "../../../../shared/components/innercard/inne
 import { ContratoDetalheDialog } from './detalhe';
 
 @Component({
-  selector: 'app-cliente-list',
+  selector: 'app-contratos-list',
   templateUrl: './comp.html',
   styleUrls: ['./comp.scss', '../../../pages.component.scss'],
   imports: [
@@ -41,13 +41,19 @@ import { ContratoDetalheDialog } from './detalhe';
     InnercardComponent,
   ]
 })
-export class ListComp implements OnInit, OnDestroy {
+export class ContratoListComp implements OnInit, OnDestroy {
 
   // private readonly router = inject(Router);  
   // private readonly notification = inject(NotificationService);
   private readonly spinner = inject(LoadingSpinnerService);
   private readonly contratosService = inject(ContratoService);
   private readonly dialog = inject(MatDialog);
+
+  moduloAdmin = signal<boolean>(true);
+  moduloFinanceiro = signal<boolean>(false);
+
+  @Input({ required: false }) isModuloFinanceiro = false;
+
 
   contratos = signal(emptyPage<Contrato>());
   ctrlFiltro = new FormControl('', { nonNullable: true });
@@ -58,6 +64,10 @@ export class ListComp implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
+    if (this.isModuloFinanceiro) {
+      this.moduloFinanceiro.set(true);
+      this.moduloAdmin.set(false);
+    }
     this.buscarContratos();
     // Set up debouncing for the filter control
     this.ctrlFiltro.valueChanges.pipe(

@@ -66,7 +66,7 @@ export class DependenteComp implements OnInit {
 
   tiposParentesco = Object.values(TipoParentesco);
   tipoParentescoLabelMapping = TipoParentescoLabelMapping;
-  
+
 
   ngOnInit(): void {
     this._createForm();
@@ -81,8 +81,8 @@ export class DependenteComp implements OnInit {
             this.dependentesCliente.set(result);
           },
           error: (err) => { // <--- Add error handling
-            this.notification.showError('Erro ao recuperar dependentes.');
-            console.error('Erro ao recuperar dependentes:', err);
+            this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+            console.error('Erro ao recuperar dados:', err);
             this.dependentesCliente.set([]); // Clear contacts on error
           }
         });
@@ -98,7 +98,7 @@ export class DependenteComp implements OnInit {
       sexo: new FormControl<string | null>('', { validators: [Validators.required] }),
       docCPF: new FormControl<string | null>('', { validators: [Validators.required] }),
       parentesco: new FormControl<string | null>('', { validators: [Validators.required] }),
-      dataNascimento: new FormControl<string | null>('', { validators: [Validators.required] }),      
+      dataNascimento: new FormControl<string | null>('', { validators: [Validators.required] }),
     });
   }
 
@@ -140,7 +140,7 @@ export class DependenteComp implements OnInit {
     this.limparForm();
   }
 
-  apagar(entity: ClienteDependente) {    
+  apagar(entity: ClienteDependente) {
     const dialogRef$ = this.dialog.open(ConfirmDialogComponent, {
       width: '550px',
       data: {

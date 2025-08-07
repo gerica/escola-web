@@ -113,8 +113,8 @@ export class MatriculaManterComp implements OnInit {
         this.matriculas.set(result);
         this.notification.showSuccess('Operação realizada com sucesso.');
       }, error: (err) => {
-        this.notification.showError(err.message);
-        console.error('Erro ao recuperar dependentes:', err);
+        this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+        console.error('Erro ao recuperar dados:', err);
       }
     });
   }
@@ -132,8 +132,8 @@ export class MatriculaManterComp implements OnInit {
           this.matriculas.set(result);
         },
         error: (err) => { // <--- Add error handling
-          this.notification.showError(err.message);
-          console.error('Erro ao recuperar dependentes:', err);
+          this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+          console.error('Erro ao recuperar dados:', err);
         }
       });
   }
@@ -186,8 +186,8 @@ export class MatriculaManterComp implements OnInit {
           this.showModalContrato(entity, result);
         },
         error: (err) => { // <--- Add error handling
-          this.notification.showError(err.message);
-          console.error('Erro ao recuperar dependentes:', err);
+          this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+          console.error('Erro ao recuperar dados:', err);
         }
       });
   }
@@ -235,8 +235,8 @@ export class MatriculaManterComp implements OnInit {
         this.matriculas.set(result);
         this.notification.showSuccess('Operação realizada com sucesso.');
       }, error: (err) => {
-        this.notification.showError(err.message);
-        console.error('Erro ao recuperar dependentes:', err);
+        this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+        console.error('Erro ao recuperar dados:', err);
       }
     });
   }
