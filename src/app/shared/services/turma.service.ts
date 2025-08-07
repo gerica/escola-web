@@ -62,7 +62,7 @@ export class TurmaService {
             variables: { id: id },
             context: { uri: URL_ADMIN },
         }).pipe(
-            map(result => result.data.deleteCursoById as String),
+            map(result => result.data.deleteTurmaById as String),
             // tap(value => {
             //     console.log(value);
             // }),

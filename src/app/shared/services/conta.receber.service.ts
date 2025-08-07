@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
 import { URL_ADMIN } from '../common/constants';
-import { ContaReceber, CRIAR_CONTA_RECEBER, FETCH_ALL_CONTAS_RECEBER_BY_CONTRATO } from '../models/conta-receber';
+import { ContaReceber, CRIAR_CONTA_RECEBER, DELETE_CONTA_RECEBER_BY_ID, FETCH_ALL_CONTAS_RECEBER_BY_CONTRATO } from '../models/conta-receber';
 import { Page, PageRequest } from 'src/app/core/models';
 
 @Injectable({ providedIn: 'root' })
@@ -49,7 +49,7 @@ export class ContaReceberService {
       context: { uri: URL_ADMIN },
       fetchPolicy: 'network-only', // Or 'no-cache'      
     }).pipe(
-      map(result => result.data.fetchAllContaRecebers as ContaReceber[]),
+      map(result => result.data.fetchAllContasReceber as ContaReceber[]),
       // tap(value => {
       //   console.log("Received GraphQL data:", value);
       // }),
@@ -93,14 +93,18 @@ export class ContaReceberService {
   //   );
   // }
 
-  // recuperarPorIdMatricula(idMatricula: number): Observable<Contrato> {
-  //   return this.apollo.query<any>({
-  //     query: FETCH_CONTRATO_BY_ID_MATRICULA,
-  //     variables: { id: idMatricula },
-  //     context: { uri: URL_ADMIN },
-  //     fetchPolicy: 'network-only'
-  //   }).pipe(
-  //     map(result => result.data.fetchContratoByIdMatricula as Contrato),
-  //   );
-  // }
+  remover(id: number): Observable<String> {
+    return this.apollo.mutate<any>({
+      mutation: DELETE_CONTA_RECEBER_BY_ID,
+      variables: {
+        id: id
+      },
+      context: { uri: URL_ADMIN },
+    }).pipe(
+      map(result => result.data.apagarContaReceber as String),
+      // tap(value => {
+      //     console.log(value);
+      // }),
+    );
+  }
 }

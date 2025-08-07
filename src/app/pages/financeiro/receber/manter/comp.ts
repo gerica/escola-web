@@ -25,6 +25,7 @@ import { InnercardComponent } from 'src/app/shared/components';
 import { ContaReceber } from 'src/app/shared/models/conta-receber';
 import Contrato from 'src/app/shared/models/contrato';
 import { Matricula } from 'src/app/shared/models/matricula';
+import { StatusContaReceber, StatusContaReceberLabelMapping } from 'src/app/shared/models/status-conta-receber.enum';
 import { StatusMatricula, StatusMatriculaLabelMapping } from 'src/app/shared/models/status-matricula.enum';
 import { Turma } from 'src/app/shared/models/turma';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
@@ -53,27 +54,25 @@ import { MatriculaService } from 'src/app/shared/services/matricula.service';
     MatAutocompleteModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    InnercardComponent,
-    PrimeiraMaiusculaPipe
+    InnercardComponent
   ],
 })
 export class ContaReceberManterComp implements OnInit {
 
   private readonly route = inject(ActivatedRoute);
   private readonly notification = inject(NotificationService);
-  private readonly spinner = inject(LoadingSpinnerService);
-  private readonly matriculaService = inject(MatriculaService);
+  private readonly spinner = inject(LoadingSpinnerService);  
   private readonly contaReceberService = inject(ContaReceberService);
   private readonly dialog = inject(MatDialog);
-
+  
   contrato = signal<Contrato | null>(null);
   contasReceber = signal<ContaReceber[]>([]);
 
-  displayedColumns: string[] = ['codigo', 'nome', 'status', 'acoes'];
+  displayedColumns: string[] = ['dataVencimento', 'valorTotal', 'desconto', 'valorPago', 'dataPagamento', 'status', 'acoes'];
 
-  statusAberto = StatusMatricula.ABERTA;
-  statusMatricula = Object.values(StatusMatricula);
-  statusMatriculaLabelMapping = StatusMatriculaLabelMapping;
+
+  statusContaReceber = Object.values(StatusContaReceber);
+  statusContaReceberLabelMapping = StatusContaReceberLabelMapping;
 
   ngOnInit(): void {
     this._initForm();
@@ -93,13 +92,14 @@ export class ContaReceberManterComp implements OnInit {
     if (this.contrato()) {
       this.spinner.showUntilCompleted(this.contaReceberService.criar(this.contrato()!.id)).subscribe({
         next: _ => this.notification.showSuccess(MSG_SUCESS),
-        error: (err) => this.notification.showError('Erro ao salvar contrato: ' + (err.message || 'Erro desconhecido.'))
+        error: (err) => this.notification.showError('Erro ao salvar contrato: ' + (err.message || 'Erro desconhecido.')),
+        complete: () => this.buscar()
       })
     }
   }
 
-  getStatus(status: StatusMatricula) {
-    return this.statusMatriculaLabelMapping[status];
+  getStatus(status: StatusContaReceber) {
+    return this.statusContaReceberLabelMapping[status];
   }
 
   salvar(value: Partial<Matricula>) {
@@ -127,8 +127,52 @@ export class ContaReceberManterComp implements OnInit {
   }
 
   sortData(sort: Sort) {
-    // this.page().sorts = [{ property: sort.active, direction: sort.direction }];
-    this.buscar();
+    const data = this.contasReceber();
+
+    if (!sort.active || sort.direction === '') {
+      this.buscar();
+      return;
+    }
+
+    const sortedData = [...data].sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+
+      let valA: any;
+      let valB: any;
+
+      switch (sort.active) {
+        case 'dataVencimento':
+          valA = a.dataVencimento ? new Date(a.dataVencimento).getTime() : null;
+          valB = b.dataVencimento ? new Date(b.dataVencimento).getTime() : null;
+          break;
+        case 'valorTotal':
+          valA = a.valorTotal;
+          valB = b.valorTotal;
+          break;
+        case 'desconto':
+          valA = a.desconto;
+          valB = b.desconto;
+          break;
+        case 'valorPago':
+          valA = a.valorPago;
+          valB = b.valorPago;
+          break;
+        case 'dataPagamento':
+          valA = a.dataPagamento ? new Date(a.dataPagamento).getTime() : null;
+          valB = b.dataPagamento ? new Date(b.dataPagamento).getTime() : null;
+          break;
+        case 'status':
+          valA = a.status;
+          valB = b.status;
+          break;
+        default:
+          return 0;
+      }
+
+      return this.compare(valA, valB, isAsc);
+    });
+
+    this.contasReceber.set(sortedData);
   }
 
   buscar() {
@@ -209,12 +253,12 @@ export class ContaReceberManterComp implements OnInit {
   //   });
   // }
 
-  confirmarExclusao(entity: Matricula) {
+  confirmarExclusao(entity: ContaReceber) {
     const dialogRef$ = this.dialog.open(ConfirmDialogComponent, {
       width: '550px',
       data: {
-        title: `Realizar a exclusão da matricula: ${entity.codigo}`,
-        message: 'Você tem certeza que deseja excluir esta matricula?'
+        title: `Realizar a exclusão da conta`,
+        message: 'Você tem certeza que deseja excluir esta conta?'
       }
     });
 
@@ -225,27 +269,42 @@ export class ContaReceberManterComp implements OnInit {
     });
   }
 
-  excluir(entity: Matricula) {
-    // this.spinner.showUntilCompletedCascate(
-    //   this.matriculaService.remover(entity.id)
-    // ).pipe(
-    //   switchMap(_ => {
-    //     return this.matriculaService.buscar(this.turma!.id, this.page());
-    //   }),
-    //   catchError(err => {
-    //     this.notification.showError(err.message);
-    //     console.error('Erro ao executar chamada ao backend:', err);
-    //     return EMPTY;
-    //   })
-    // ).subscribe({
-    //   next: (result) => {
-    //     this.matriculas.set(result);
-    //     this.notification.showSuccess('Operação realizada com sucesso.');
-    //   }, error: (err) => {
-    //     this.notification.showError(err.message);
-    //     console.error('Erro ao recuperar dependentes:', err);
-    //   }
-    // });
+  excluir(entity: ContaReceber) {
+    this.spinner.showUntilCompletedCascate(
+      this.contaReceberService.remover(entity.id)
+    ).pipe(
+      switchMap(_ => {
+        return this.contaReceberService.buscar(this.contrato()!.id);
+      }),
+      catchError(err => {
+        this.notification.showError(err.message);
+        console.error('Erro ao executar chamada ao backend:', err);
+        return EMPTY;
+      })
+    ).subscribe({
+      next: (result) => {
+        this.contasReceber.set(result);
+        this.notification.showSuccess('Operação realizada com sucesso.');
+      }, error: (err) => {
+        this.notification.showError(err.message);
+        console.error('Erro ao recuperar dependentes:', err);
+      }
+    });
+  }
+
+  private compare(a: any, b: any, isAsc: boolean): number {
+    let comparison = 0;
+    // nulls/undefined go to the end
+    if (a === null || a === undefined) {
+      comparison = (b === null || b === undefined) ? 0 : 1;
+    } else if (b === null || b === undefined) {
+      comparison = -1;
+    } else if (a > b) {
+      comparison = 1;
+    } else if (a < b) {
+      comparison = -1;
+    }
+    return comparison * (isAsc ? 1 : -1);
   }
 
 }

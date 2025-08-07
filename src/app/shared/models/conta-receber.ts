@@ -1,11 +1,11 @@
 import { gql } from "apollo-angular";
-import Contrato from "./contrato";
+import { StatusContaReceber } from "./status-conta-receber.enum";
 
 export interface ContaReceber {
   id: number,
-  contrato: Contrato,
   valorTotal: number,
   desconto: number,
+  status: StatusContaReceber,
   valorPago: number,
   dataVencimento: Date
   dataPagamento: Date
@@ -20,15 +20,12 @@ export const CRIAR_CONTA_RECEBER = gql`
 
 
 export const FETCH_ALL_CONTAS_RECEBER_BY_CONTRATO = gql`  
-  query FetchAllContasReceber($idContrato:ID!) { 
+  query FetchAllContasReceber($idContrato: ID!) { 
     fetchAllContasReceber(idContrato:$idContrato) {      
-      id
-      contrato {
-        id
-        numeroContrato
-      }
+      id      
       valorTotal
       desconto
+      status
       valorPago
       dataVencimento
       dataPagamento
@@ -40,12 +37,10 @@ export const FETCH_ALL_CONTAS_RECEBER_BY_CONTRATO = gql`
 export const FETCH_CONTA_RECEBER_BY_ID = gql`
   query FetchByIdContaReceber($id: ID!) { # $id: ID! means the id is a required ID type
     fetchByIdContaReceber(id: $id) {
-        id
-        contrato {
-          id
-        }
+        id        
         valorTotal
         desconto
+        status
         valorPago
         dataVencimento
         dataPagamento
@@ -54,8 +49,8 @@ export const FETCH_CONTA_RECEBER_BY_ID = gql`
   }
 `;
 
-export const DELETE_CANTA_RECEBER_BY_ID = gql`
+export const DELETE_CONTA_RECEBER_BY_ID = gql`
   mutation ApagarContaReceber($id: ID!){  
-    apagarContaReceber(id:$id)
+    apagarContaReceber(id: $id)
   }
 `;
