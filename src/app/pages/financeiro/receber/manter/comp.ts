@@ -32,6 +32,7 @@ import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pi
 import { ContaReceberService } from 'src/app/shared/services/conta.receber.service';
 import { ContratoService } from 'src/app/shared/services/contrato.service';
 import { MatriculaService } from 'src/app/shared/services/matricula.service';
+import { ContaReceberDetalheDialog } from './detalhe/detalhe';
 
 @Component({
   selector: 'app-conta-receber-manter',
@@ -61,10 +62,10 @@ export class ContaReceberManterComp implements OnInit {
 
   private readonly route = inject(ActivatedRoute);
   private readonly notification = inject(NotificationService);
-  private readonly spinner = inject(LoadingSpinnerService);  
+  private readonly spinner = inject(LoadingSpinnerService);
   private readonly contaReceberService = inject(ContaReceberService);
   private readonly dialog = inject(MatDialog);
-  
+
   contrato = signal<Contrato | null>(null);
   contasReceber = signal<ContaReceber[]>([]);
 
@@ -102,28 +103,28 @@ export class ContaReceberManterComp implements OnInit {
     return this.statusContaReceberLabelMapping[status];
   }
 
-  salvar(value: Partial<Matricula>) {
-    // value.turma = this.turma!;
-    // this.spinner.showUntilCompletedCascate(
-    //   this.matriculaService.salvar(value)
-    // ).pipe(
-    //   switchMap(_ => {
-    //     return this.matriculaService.buscar(this.turma!.id, this.page());
-    //   }),
-    //   catchError(err => {
-    //     this.notification.showError(err.message);
-    //     console.error('Erro ao executar chamada ao backend:', err);
-    //     return EMPTY;
-    //   })
-    // ).subscribe({
-    //   next: (result) => {
-    //     this.matriculas.set(result);
-    //     this.notification.showSuccess('Operação realizada com sucesso.');
-    //   }, error: (err) => {
-    //     this.notification.showError(err.message);
-    //     console.error('Erro ao recuperar dependentes:', err);
-    //   }
-    // });
+  salvar(value: Partial<ContaReceber>) {
+
+    this.spinner.showUntilCompletedCascate(
+      this.contaReceberService.salvar(value, this.contrato()!.id)
+    ).pipe(
+      switchMap(_ => {
+        return this.contaReceberService.buscar(this.contrato()!.id);
+      }),
+      catchError(err => {
+        this.notification.showError(err.message);
+        console.error('Erro ao executar chamada ao backend:', err);
+        return EMPTY;
+      })
+    ).subscribe({
+      next: (result) => {
+        this.contasReceber.set(result);
+        this.notification.showSuccess('Operação realizada com sucesso.');
+      }, error: (err) => {
+        this.notification.showError(err.message);
+        console.error('Erro ao recuperar dependentes:', err);
+      }
+    });
   }
 
   sortData(sort: Sort) {
@@ -189,69 +190,31 @@ export class ContaReceberManterComp implements OnInit {
       });
   }
 
-  // abrirModalInscricao() {
-  //   const dialogRef$ = this.dialog.open(MatriculaDialogComponent, {
-  //     width: '750px',
-  //     // height: '400px',
-  //     data: {
-  //       title: `Realizar inscrição na turma: ${this.turma?.nome}`,
-  //     }
-  //   });
+  visualizar(entity: ContaReceber) {
+    this.dialog.open(ContaReceberDetalheDialog, {
+      width: '550px',
+      data: {
+        ...entity,
+      }
+    });
+  }
 
-  //   dialogRef$.afterClosed().subscribe(result => {
-  //     if (result && result.salvar) {
-  //       this.salvar(result.matricula);
-  //     }
-  //   });
-  // }
+  alterar(entity: ContaReceber) {
+    const dialogRef$ = this.dialog.open(ContaReceberDetalheDialog, {
+      width: '550px',
+      data: {
+        ...entity,
+        editar: true
+      }
+    });
 
-  // visualizar(entity: Matricula) {
-  //   this.dialog.open(MatriculaDetalheDialog, {
-  //     width: '550px',
-  //     data: {
-  //       ...entity,
-  //     }
-  //   });
-  // }
+    dialogRef$.afterClosed().subscribe(result => {
+      if (result) { // Se 'result' não for undefined (ou seja, o botão Salvar foi clicado)
+        this.salvar(result);
+      }
+    });
+  }
 
-  // alterar(entity: Matricula) {
-  //   const dialogRef$ = this.dialog.open(MatriculaDetalheDialog, {
-  //     width: '550px',
-  //     data: {
-  //       ...entity,
-  //       editar: true
-  //     }
-  //   });
-
-  //   dialogRef$.afterClosed().subscribe(result => {
-  //     if (result) { // Se 'result' não for undefined (ou seja, o botão Salvar foi clicado)
-  //       this.salvar(result);
-  //     }
-  //   });
-  // }
-
-  // abrirContrato(entity: Matricula) {
-  //   this.spinner.showUntilCompleted(this.contratoService.recuperarPorIdMatricula(entity.id))
-  //     .subscribe({
-  //       next: (result) => {
-  //         this.showModalContrato(entity, result);
-  //       },
-  //       error: (err) => { // <--- Add error handling
-  //         this.notification.showError(err.message);
-  //         console.error('Erro ao recuperar dependentes:', err);
-  //       }
-  //     });
-  // }
-
-  // showModalContrato(matricula: Matricula, contrato: Contrato) {
-  //   this.dialog.open(ContratoDialogComponent, {
-  //     width: '80vw',
-  //     data: {
-  //       matricula,
-  //       contrato
-  //     }
-  //   });
-  // }
 
   confirmarExclusao(entity: ContaReceber) {
     const dialogRef$ = this.dialog.open(ConfirmDialogComponent, {

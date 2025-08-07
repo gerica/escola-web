@@ -2,8 +2,9 @@ import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
 import { URL_ADMIN } from '../common/constants';
-import { ContaReceber, CRIAR_CONTA_RECEBER, DELETE_CONTA_RECEBER_BY_ID, FETCH_ALL_CONTAS_RECEBER_BY_CONTRATO } from '../models/conta-receber';
+import { ContaReceber, CRIAR_CONTA_RECEBER, DELETE_CONTA_RECEBER_BY_ID, FETCH_ALL_CONTAS_RECEBER_BY_CONTRATO, SAVE_CONTA_RECEBER } from '../models/conta-receber';
 import { Page, PageRequest } from 'src/app/core/models';
+import { DataUtils } from './data.service';
 
 @Injectable({ providedIn: 'root' })
 export class ContaReceberService {
@@ -25,20 +26,30 @@ export class ContaReceberService {
     );
   }
 
-  // salvarModelo(id: number | undefined, modelo: String): Observable<Contrato> {
-  //   return this.apollo.mutate<any>({
-  //     mutation: SAVE_CONTRATO_MODELO,
-  //     variables: {
-  //       request: {
-  //         id: id || undefined,
-  //         contratoDoc: modelo,
-  //       },
-  //     },
-  //     context: { uri: URL_ADMIN },
-  //   }).pipe(
-  //     map(result => result.data.saveContratoModelo as Contrato),      
-  //   );
-  // }
+  salvar(entity: Partial<ContaReceber>, idContrato: number): Observable<String> {
+    return this.apollo.mutate<any>({
+      mutation: SAVE_CONTA_RECEBER,
+      variables: {
+        request: {
+          id: entity.id || undefined,
+          idContrato: idContrato,
+          valorTotal: entity.valorTotal !== null ? parseFloat(entity.valorTotal as any) : null,
+          desconto: entity.desconto !== null ? parseFloat(entity.desconto as any) : null,
+          status: entity.status,
+          valorPago: entity.valorPago !== null ? parseFloat(entity.valorPago as any) : null,
+          dataVencimento: entity.dataVencimento != null ? DataUtils.formatDateToYYYYMMDD(entity.dataVencimento) : null,
+          dataPagamento: entity.dataPagamento != null ? DataUtils.formatDateToYYYYMMDD(entity.dataPagamento) : null,
+          observacoes: entity.observacoes
+        },
+      },
+      context: { uri: URL_ADMIN },
+    }).pipe(
+      map(result => result.data.saveContaReceber as String),
+      // tap(value => {
+      //   console.log(value);
+      // }),
+    );
+  }
 
   buscar(idContrato: number): Observable<ContaReceber[]> {
     return this.apollo.query<any>({

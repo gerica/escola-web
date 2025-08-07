@@ -32,6 +32,10 @@ export const modulosPorPerfil = {
     moduloAdminTipoDocumentosModelos,
     moduloAdminTabelasAuxiliares,
     moduloAdminNotificacao,
+    // financeiro
+    moduloConta,
+    moduloContaReceber,
+    moduloContaPagar
   ],
   COORDENADOR: [
     moduloInicial,

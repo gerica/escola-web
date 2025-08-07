@@ -9,7 +9,8 @@ export interface ContaReceber {
   valorPago: number,
   dataVencimento: Date
   dataPagamento: Date
-  observacoes: String
+  observacoes: string
+  dataCadastro: Date
 }
 
 export const CRIAR_CONTA_RECEBER = gql`
@@ -18,6 +19,11 @@ export const CRIAR_CONTA_RECEBER = gql`
   }
 `;
 
+export const SAVE_CONTA_RECEBER = gql`
+  mutation SaveContaReceber($request: ContaReceberRequest!){  
+    saveContaReceber(request:$request)
+  }
+`;
 
 export const FETCH_ALL_CONTAS_RECEBER_BY_CONTRATO = gql`  
   query FetchAllContasReceber($idContrato: ID!) { 
@@ -29,7 +35,8 @@ export const FETCH_ALL_CONTAS_RECEBER_BY_CONTRATO = gql`
       valorPago
       dataVencimento
       dataPagamento
-      observacoes      
+      observacoes
+      dataCadastro  
     }
   }
 `;

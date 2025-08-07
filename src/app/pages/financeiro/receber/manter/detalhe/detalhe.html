@@ -1,0 +1,61 @@
+<app-modalcard (fechar)="onDismiss()" [titulo]="'Data: '+ (data.dataVencimento | date: 'dd/MM/yyyy')"
+  [estiloCardTitulo]="{'padding': '1em',}">
+
+  <div class="containerOut">
+    <div class="containerInner">
+      <span>Valor :</span>
+      <span>{{data.valorTotal | currency: 'BRL' }}</span>
+    </div>
+
+
+    <div class="containerInner">
+      <span>Status :</span>
+      @if(data.editar){
+      <mat-form-field appearance="outline">
+        <mat-label>Status matricula</mat-label>
+        <mat-select [formControl]="statusContaReceberCtrl">
+          @for (item of statusContaReceber; track item) {
+          <mat-option [value]="item">{{statusContaReceberLabelMapping[item]}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      }@else {
+      <span>{{statusContaReceberLabelMapping[data.status]}}</span>
+      }
+    </div>
+
+    <div class="containerInner">
+      <span>Observação :</span>
+      @if(data.editar){
+      <mat-form-field appearance="outline" class="mat-form-field-custom">
+        <mat-label>Observações</mat-label>
+        <textarea matInput [formControl]="observacaoCtrl" rows="3"
+          placeholder="Digite os observações aqui..."></textarea>
+      </mat-form-field>
+      }@else {
+      <span>{{data.observacoes}}</span>
+
+      }
+    </div>
+
+
+    <div class="containerInner">
+      <span>Data de Cadastro:</span>
+      <span>{{data.dataCadastro | date: 'dd/MM/yyyy'}}</span>
+    </div>
+
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <app-buttons-row style="display: flex;  justify-content: end; gap:1em">
+    <button mat-button (click)="onDismiss()" cdkFocusInitial>Fechar</button>
+    @if(data.editar){
+    <button mat-raised-button color="primary" style="margin-left: 6px;" cdkFocusInitial type="button"
+      (click)="salvar()">
+      Confirmar
+    </button>
+    }
+  </app-buttons-row>
+
+</app-modalcard>

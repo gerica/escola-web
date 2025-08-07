@@ -62,7 +62,11 @@
         <ng-container matColumnDef="acoes">
           <th mat-header-cell *matHeaderCellDef> </th>
           <td mat-cell *matCellDef="let element" class="cursorSelect">
-            <a matTooltip="Editar dados" aria-hidden="false" [routerLink]="['/cliente/manter', element.id]">
+            <a matTooltip="Exibir dados" aria-hidden="false" (click)="visualizar(element)" matTooltip="Visualizar"
+              class="cursorSelect">
+              <mat-icon color="primary">topic</mat-icon>
+            </a>
+            <a matTooltip="Alterar Matricula" aria-hidden="false" (click)="alterar(element)" class="cursorSelect">
               <mat-icon color="primary">edit</mat-icon>
             </a>
             <a matTooltip="Remover" aria-hidden="false" (click)="confirmarExclusao(element)" class="cursorSelect">
