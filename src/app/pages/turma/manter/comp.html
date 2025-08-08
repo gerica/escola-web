@@ -197,13 +197,14 @@
         </form>
       </app-innercard>
     </mat-tab>
+    @if(turma()?.id){
     <mat-tab>
       <ng-template mat-tab-label>
         <mat-icon>receipt</mat-icon>
         Inscrições
       </ng-template>
       <app-turma-inscricao-manter [turma]="turma()"></app-turma-inscricao-manter>
-
     </mat-tab>
+    }
   </mat-tab-group>
 </app-innercard>

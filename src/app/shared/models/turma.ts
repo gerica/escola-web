@@ -66,6 +66,9 @@ export const SAVE_TURMA = gql`
         horarioFim
         diasDaSemana
         professor
+        curso{
+          nome
+        }
     }
   }
 `;

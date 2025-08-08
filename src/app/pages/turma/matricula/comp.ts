@@ -96,7 +96,6 @@ export class MatriculaManterComp implements OnInit {
   }
 
   salvar(value: Partial<Matricula>) {
-    value.turma = this.turma!;
     this.spinner.showUntilCompletedCascate(
       this.matriculaService.salvar(value)
     ).pipe(
@@ -149,7 +148,7 @@ export class MatriculaManterComp implements OnInit {
 
     dialogRef$.afterClosed().subscribe(result => {
       if (result && result.salvar) {
-        this.salvar(result.matricula);
+        this.salvar({ ...result.matricula, turma: this.turma });
       }
     });
   }

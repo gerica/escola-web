@@ -4,7 +4,8 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MAT_DATE_FORMATS, provideNativeDateAdapter } from '@angular/material/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -16,7 +17,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { BehaviorSubject, catchError, EMPTY, finalize, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, finalize, switchMap, tap } from 'rxjs';
 import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operators';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
@@ -29,8 +30,6 @@ import { CursoService } from 'src/app/shared/services/curso.service';
 import { DataUtils } from 'src/app/shared/services/data.service';
 import { TurmaService } from 'src/app/shared/services/turma.service';
 import { MatriculaManterComp } from "../matricula/comp";
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MY_DATE_FORMATS } from 'src/app/app.config';
 
 @Component({
   selector: 'app-turma-manter',
@@ -78,7 +77,6 @@ export class ManterComp implements OnInit {
   srvLoading = signal(false);
 
   form!: FormGroup;
-  turmas = signal(emptyPage<Turma>());
 
   ctrlFiltro = new FormControl('', { nonNullable: true });
   pageSize = 10;
@@ -167,7 +165,6 @@ export class ManterComp implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.form.value);
     if (!this.form.valid) {
       this.notification.showError('Informe todos os campos obrigatórios.');
       this.form.markAllAsTouched();
@@ -175,24 +172,14 @@ export class ManterComp implements OnInit {
       return;
     }
 
-    this.spinner.showUntilCompletedCascate(
-      this.turmaService.salvarTurma(this.form.value as Partial<Turma>)
-    ).pipe(
-      switchMap(_ => {
-        return this.turmaService.buscarTurma(this.ctrlFiltro.value, this.page());
-      }),
-      catchError(err => {
-        this.notification.showError(err.message);
-        console.error('Erro ao executar chamada ao backend:', err);
-        return EMPTY;
-      })
-    ).subscribe({
-      next: (result) => {
-        this.turmas.set(result);
+    this.spinner.showUntilCompleted(this.turmaService.salvarTurma(this.form.value as Partial<Turma>)).subscribe({
+      next: (turma) => {
+        this.turma.set(turma);
         this.notification.showSuccess('Operação realizada com sucesso.');
-      }, error: (err) => {
+      },
+      error: (err) => { // <--- Add error handling
         this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
-            console.error('Erro ao recuperar dados:', err);
+        console.error('Erro ao recuperar dados:', err);
       }
     });
   }
