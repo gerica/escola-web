@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
@@ -16,10 +17,8 @@ import { ConfirmDialogComponent } from 'src/app/core/components';
 import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { InnercardComponent } from 'src/app/shared/components';
-
-import { Curso } from 'src/app/shared/models/curso';
+import { Curso, DuracaoUnidadeLabelMapping } from 'src/app/shared/models/curso';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
-import { AdministrativoService } from 'src/app/shared/services/admin.service';
 import { CursoService } from 'src/app/shared/services/curso.service';
 
 
@@ -41,6 +40,7 @@ import { CursoService } from 'src/app/shared/services/curso.service';
     PrimeiraMaiusculaPipe,
     MatSortModule,
     InnercardComponent,
+    MatSelectModule,
   ],
 })
 export class CursoManterComp implements OnInit {
@@ -50,6 +50,8 @@ export class CursoManterComp implements OnInit {
   private readonly cursoService = inject(CursoService);
   private readonly fb = inject(FormBuilder);
   private readonly dialog = inject(MatDialog);
+  @ViewChild(FormGroupDirective)
+  private formDir!: FormGroupDirective;
 
   form!: FormGroup;
   cursos = signal(emptyPage<Curso>());
@@ -57,8 +59,10 @@ export class CursoManterComp implements OnInit {
   ctrlFiltro = new FormControl('', { nonNullable: true });
   pageSize = 10;
   page = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'nome', direction: 'asc' }));
-  displayedColumns: string[] = ['nome', 'descricao','duracao','categoria','valorMensalidade', 'ativo', 'acoes'];
+  displayedColumns: string[] = ['nome', 'descricao', 'duracao', 'categoria', 'valorMensalidade', 'ativo', 'acoes'];
 
+  duracaoUnidades = Object.keys(DuracaoUnidadeLabelMapping);
+  duracaoUnidadeLabelMapping = DuracaoUnidadeLabelMapping;
 
   ngOnInit(): void {
     this._createForm();
@@ -70,7 +74,8 @@ export class CursoManterComp implements OnInit {
       id: [null],
       nome: ['', Validators.required],
       descricao: [''],
-      duracao: ['', Validators.required],
+      duracaoValor: [null, [Validators.required, Validators.min(1)]],
+      duracaoUnidade: ['MESES', Validators.required],
       categoria: ['', Validators.required],
       valorMensalidade: ['', Validators.required],
       ativo: [true],
@@ -78,12 +83,15 @@ export class CursoManterComp implements OnInit {
   }
 
   novo() {
-    this.form.reset();
-    this.form.patchValue({ ativo: true }, { emitEvent: true });
+    this.formDir.resetForm();
   }
 
   preEditar(entity: Curso) {
-    this.form.patchValue({ ...entity }, { emitEvent: true });
+    this.form.patchValue({ ...entity, duracaoUnidade: entity.duracaoUnidade.toUpperCase() || 'MESES' }, { emitEvent: true });
+  }
+
+  getDuracaoUnidadeLabel(unidade: string): string {
+    return this.duracaoUnidadeLabelMapping[unidade] || unidade;
   }
 
   onSubmit() {
@@ -143,43 +151,43 @@ export class CursoManterComp implements OnInit {
   }
 
 
-    confirmarExclusao(entity: Curso) {
-      const dialogRef$ = this.dialog.open(ConfirmDialogComponent, {
-        width: '550px',
-        data: {
-          title: `Realizar a exclusão do curso: ${entity.nome}`,
-          message: 'Você tem certeza que deseja excluir este curso?'
-        }
-      });
-  
-      dialogRef$.afterClosed().subscribe(result => {
-        if (result) {
-          this.excluir(entity);
-        }
-      });
-    }
-  
-    excluir(entity: Curso) {
-      this.spinner.showUntilCompletedCascate(
-        this.cursoService.removerCurso(entity.id)
-      ).pipe(
-        switchMap(_ => {
-          return this.cursoService.buscarCurso(this.ctrlFiltro.value, this.page());
-        }),
-        catchError(err => {
-          this.notification.showError(err.message);
-          console.error('Erro ao executar chamada ao backend:', err);
-          return EMPTY;
-        })
-      ).subscribe({
-        next: (result) => {
-          this.cursos.set(result);
-          this.notification.showSuccess('Operação realizada com sucesso.');
-        }, error: (err) => {
-          this.notification.showError(err.message);
-          console.error('Erro ao recuperar dados:', err);
-        }
-      });
-    }
+  confirmarExclusao(entity: Curso) {
+    const dialogRef$ = this.dialog.open(ConfirmDialogComponent, {
+      width: '550px',
+      data: {
+        title: `Realizar a exclusão do curso: ${entity.nome}`,
+        message: 'Você tem certeza que deseja excluir este curso?'
+      }
+    });
+
+    dialogRef$.afterClosed().subscribe(result => {
+      if (result) {
+        this.excluir(entity);
+      }
+    });
+  }
+
+  excluir(entity: Curso) {
+    this.spinner.showUntilCompletedCascate(
+      this.cursoService.removerCurso(entity.id)
+    ).pipe(
+      switchMap(_ => {
+        return this.cursoService.buscarCurso(this.ctrlFiltro.value, this.page());
+      }),
+      catchError(err => {
+        this.notification.showError(err.message);
+        console.error('Erro ao executar chamada ao backend:', err);
+        return EMPTY;
+      })
+    ).subscribe({
+      next: (result) => {
+        this.cursos.set(result);
+        this.notification.showSuccess('Operação realizada com sucesso.');
+      }, error: (err) => {
+        this.notification.showError(err.message);
+        console.error('Erro ao recuperar dados:', err);
+      }
+    });
+  }
 
 }

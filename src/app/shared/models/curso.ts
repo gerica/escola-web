@@ -4,15 +4,23 @@ import { Empresa } from "./empresa";
 export interface Curso {
   id: number,
   empresa: Empresa,
-  nome: String,
-  descricao: String,
-  duracao: String,
-  categoria: String,
+  nome: string,
+  descricao: string,
+  duracaoValor: number,
+  duracaoUnidade: string,
+  categoria: string,
   valorMensalidade: number,
   ativo: boolean,
   dataCadastro: Date,
   dataAtualizacao: Date, // Data e hora da última atualização do registro
 }
+
+export const DuracaoUnidadeLabelMapping: Record<string, string> = {
+  DIAS: 'Dias',
+  SEMANAS: 'Semanas',
+  MESES: 'Meses',
+  ANOS: 'Anos',
+};
 
 export const FETCH_ALL_CURSOS = gql`  
   query fetchAllCursos($filtro: String, $page: Int, $size: Int, $sort: [SortRequest]) { 
@@ -29,7 +37,8 @@ export const FETCH_ALL_CURSOS = gql`
         nome
         descricao
         ativo    
-        duracao
+        duracaoValor
+        duracaoUnidade
         categoria
         valorMensalidade
       }
@@ -44,7 +53,8 @@ export const SAVE_CURSO = gql`
         nome
         descricao
         ativo    
-        duracao
+        duracaoValor
+        duracaoUnidade
         categoria
         valorMensalidade
     }

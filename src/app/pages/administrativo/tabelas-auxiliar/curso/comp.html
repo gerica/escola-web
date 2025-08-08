@@ -13,25 +13,12 @@
         </mat-error>
         }
       </mat-form-field>
+
       <mat-form-field appearance="outline">
         <mat-label>Descrição</mat-label>
         <input matInput placeholder="descricao" formControlName="descricao">
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Duração</mat-label>
-        <input matInput placeholder="duracao" formControlName="duracao">
-        <!-- Validação de campo obrigatório -->
-        @if(form.controls['duracao'].hasError('required') && (form.controls['duracao'].touched ||
-        form.controls['duracao'].dirty)){
-        <mat-error>
-          A duração é <strong>obrigatório</strong>
-        </mat-error>
-        }
-      </mat-form-field>
-    </section>
-
-    <section>
       <mat-form-field appearance="outline">
         <mat-label>Categoria</mat-label>
         <input matInput placeholder="categoria" formControlName="categoria">
@@ -41,6 +28,37 @@
         <mat-error>
           A categoria é <strong>obrigatório</strong>
         </mat-error>
+        }
+      </mat-form-field>
+    </section>
+
+    <section>
+      <mat-form-field appearance="outline">
+        <mat-label>Duração</mat-label>
+        <input matInput type="number" placeholder="Ex: 6" formControlName="duracaoValor">
+        <!-- Validação de campo obrigatório -->
+        @if(form.controls['duracaoValor'].hasError('required') && (form.controls['duracaoValor'].touched ||
+        form.controls['duracaoValor'].dirty)){
+        <mat-error>
+          A duração é <strong>obrigatório</strong>
+        </mat-error>
+        }
+        @if(form.controls['duracaoValor'].hasError('min')){
+        <mat-error>
+          A duração deve ser maior que <strong>0</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Unidade</mat-label>
+        <mat-select formControlName="duracaoUnidade">
+          @for (unidade of duracaoUnidades; track unidade) {
+          <mat-option [value]="unidade">{{duracaoUnidadeLabelMapping[unidade]}}</mat-option>
+          }
+        </mat-select>
+        @if(form.controls['duracaoUnidade'].hasError('required')){
+        <mat-error> A unidade é <strong>obrigatória</strong> </mat-error>
         }
       </mat-form-field>
 
@@ -56,8 +74,12 @@
         }
       </mat-form-field>
 
+    </section>
+
+    <section>
       <mat-checkbox formControlName="ativo">Ativo</mat-checkbox>
     </section>
+
     <section class="container">
       @if(this.form.get('id')?.value !== null){
       <button mat-raised-button color="secondary" type="button" (click)="novo()">Novo</button>
@@ -102,8 +124,9 @@
 
         <!-- Position Column -->
         <ng-container matColumnDef="duracao">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="duracao"> Duração </th>
-          <td mat-cell *matCellDef="let element"> {{element.duracao}} </td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="duracaoValor"> Duração </th>
+          <td mat-cell *matCellDef="let element"> {{element.duracaoValor}}
+            {{getDuracaoUnidadeLabel(element.duracaoUnidade) | lowercase}} </td>
         </ng-container>
 
         <!-- Position Column -->

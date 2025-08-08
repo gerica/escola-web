@@ -35,7 +35,8 @@ export class CursoService {
                     nome: entity.nome,
                     descricao: entity.descricao,
                     ativo: entity.ativo,
-                    duracao: entity.duracao,
+                    duracaoValor: entity.duracaoValor,
+                    duracaoUnidade: entity.duracaoUnidade,
                     categoria: entity.categoria,
                     valorMensalidade: parseFloat(entity.valorMensalidade as any)
                 },
