@@ -83,6 +83,7 @@ export const FETCH_BY_ID = gql`
       curso {
         id
         nome
+        valorMensalidade
       }      
       nome
       codigo

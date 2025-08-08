@@ -9,6 +9,7 @@
   <div class="details-container">
     <p><strong>Data de início:</strong> {{ turma.dataInicio | date: 'dd/MM/yyyy' }}</p>
     <p><strong>Data de fim:</strong> {{ turma.dataFim| date: 'dd/MM/yyyy' }}</p>    
+    <p><strong>Valor mensalidade:</strong> {{ turma.curso.valorMensalidade | currency: 'BRL' }}</p>    
   </div>
   } @else {
   <p>Carregando detalhes da turma...</p>
