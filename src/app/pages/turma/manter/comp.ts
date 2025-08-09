@@ -17,7 +17,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { BehaviorSubject, finalize, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, finalize, switchMap, tap } from 'rxjs';
 import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operators';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
@@ -94,6 +94,7 @@ export class ManterComp implements OnInit {
     this._initForm();
     this._initTab();
     this._observarCurso();
+    this._observarMudancasParaCalcularDataFim();
   }
 
   getStatusTurma(status: StatusTurma) {
@@ -117,7 +118,7 @@ export class ManterComp implements OnInit {
       diasDaSemana: [null, Validators.required], // Use null para select/multiple
       professor: ['', Validators.required],
       dataInicio: [null, Validators.required],
-      dataFim: [null, Validators.required],
+      dataFim: [{ value: null, disabled: false }, Validators.required],
     });
   }
 
@@ -185,5 +186,51 @@ export class ManterComp implements OnInit {
   }
 
   displayCurso = (item: Curso) => (!!item && `${item.nome}`) || '';
+
+  private _observarMudancasParaCalcularDataFim() {
+    const curso$ = this.form.get('curso')!.valueChanges;
+    const dataInicio$ = this.form.get('dataInicio')!.valueChanges;
+
+    combineLatest([curso$, dataInicio$]).pipe(
+      // Prosseguimos apenas se tivermos um objeto de curso válido e uma data de início
+      filter(([curso, dataInicio]) =>
+        curso && typeof curso === 'object' && 'id' in curso && dataInicio
+      ),
+    ).subscribe(([curso, dataInicio]) => {
+      this._calcularEAtualizarDataFim(curso as Curso, dataInicio as Date);
+    });
+  }
+
+  private _calcularEAtualizarDataFim(curso: Curso, dataInicio: Date) {
+    if (!curso?.duracaoValor || !curso?.duracaoUnidade || !dataInicio) {
+      this.form.get('dataFim')?.patchValue(null, { emitEvent: false });
+      return;
+    }
+
+    const dataFim = new Date(dataInicio);
+    // const valor = curso.duracaoValor;
+    const valor = Number(curso.duracaoValor); // Garante que o valor seja numérico
+    const unidade = curso.duracaoUnidade.toUpperCase();
+
+    switch (unidade) {
+      case 'DIAS':
+        dataFim.setDate(dataFim.getDate() + valor);
+        break;
+      case 'SEMANAS':
+        dataFim.setDate(dataFim.getDate() + (valor * 7)); // O operador * já faria a conversão, mas é bom ser explícito.
+        break;
+      case 'MESES':
+        console.log(unidade);
+        dataFim.setMonth(dataFim.getMonth() + valor);
+        break;
+      case 'ANOS':
+        dataFim.setFullYear(dataFim.getFullYear() + valor);
+        break;
+    }
+    console.log(valor);
+    console.log(dataFim);
+    this.form.get('dataFim')?.patchValue(dataFim, { emitEvent: false });
+  }
+
 
 }

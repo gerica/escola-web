@@ -179,12 +179,7 @@
               <mat-label>Data Final</mat-label>
               <input matInput [matDatepicker]="pickerDtFinal" formControlName="dataFim">
               <mat-datepicker-toggle matIconSuffix [for]="pickerDtFinal"></mat-datepicker-toggle>
-              <mat-datepicker #pickerDtFinal></mat-datepicker>
-              @if(form.controls['dataFim'].hasError('required')){
-              <mat-error>
-                A data final é <strong>obrigatório</strong>
-              </mat-error>
-              }
+              <mat-datepicker #pickerDtFinal></mat-datepicker>             
             </mat-form-field>
           </section>
 
