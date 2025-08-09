@@ -5,6 +5,7 @@ import Contrato, { CARREGAR_CONTRATO, FETCH_ALL_CONTRATOS, FETCH_CONTRATO_BY_ID,
 import { Page, PageRequest } from 'src/app/core/models';
 import { DataUtils } from './data.service';
 import { URL_ADMIN } from '../common/constants';
+import { StatusContrato } from '../models/status-contrato.enum';
 
 @Injectable({ providedIn: 'root' })
 export class ContratoService {
@@ -29,7 +30,7 @@ export class ContratoService {
           observacoes: entity.observacoes,
           contratoDoc: entity.contratoDoc,
           dataInicio: DataUtils.formatDateToYYYYMMDD(entity.dataInicio),
-          dataFim: DataUtils.formatDateToYYYYMMDD(entity.dataInicio),
+          dataFim: DataUtils.formatDateToYYYYMMDD(entity.dataFim),
           dataProximoPagamento: DataUtils.formatDateToYYYYMMDD(entity.dataProximoPagamento),
         },
       },
@@ -53,15 +54,16 @@ export class ContratoService {
       },
       context: { uri: URL_ADMIN },
     }).pipe(
-      map(result => result.data.saveContratoModelo as Contrato),      
+      map(result => result.data.saveContratoModelo as Contrato),
     );
   }
 
-  buscar(filtro: string, pageRequest: PageRequest): Observable<Page<Contrato>> {
+  buscar(filtro: string, status: StatusContrato, pageRequest: PageRequest): Observable<Page<Contrato>> {
     return this.apollo.query<any>({
       query: FETCH_ALL_CONTRATOS,
       variables: {
         filtro: filtro,
+        statusContrato: status === StatusContrato.TODOS ? null : status,
         page: pageRequest.page,
         size: pageRequest.size,
         sort: pageRequest.sorts || [],

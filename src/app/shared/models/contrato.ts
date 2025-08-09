@@ -36,8 +36,8 @@ export const SAVE_CONTRATO_MODELO = gql`
 `;
 
 export const FETCH_ALL_CONTRATOS = gql`  
-  query fetchAllContratos($filtro: String, $page: Int, $size: Int, $sort: [SortRequest]) { 
-    fetchAllContratos(filtro: $filtro, page: $page, size: $size, sort: $sort) {    
+  query fetchAllContratos($filtro: String, $statusContrato: StatusContrato, $page: Int, $size: Int, $sort: [SortRequest]) { 
+    fetchAllContratos(filtro: $filtro, statusContrato:$statusContrato, page: $page, size: $size, sort: $sort) {    
       number
       size
       totalElements

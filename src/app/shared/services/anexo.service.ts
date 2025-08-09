@@ -9,7 +9,6 @@ import { Anexo, AnexoBase64, DELETE_ANEXO, DOWNLOAD_ANEXO, FETCH_ANEXOS, UPLOAD_
 export class AnexoService {
     private apollo = inject(Apollo);
     getAnexos(idContrato: number): Observable<Anexo[]> {
-        console.log(`Buscando anexos para o contrato #${idContrato} via GraphQL`);
         return this.apollo.query<{ anexosDoContrato: Anexo[] }>({
             query: FETCH_ANEXOS,
             variables: { idContrato },

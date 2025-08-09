@@ -19,6 +19,8 @@ import Contrato from 'src/app/shared/models/contrato';
 import { ContratoService } from 'src/app/shared/services/contrato.service';
 import { InnercardComponent } from "../../../../shared/components/innercard/innercard.component";
 import { ContratoDetalheDialog } from './detalhe';
+import { StatusContrato, StatusContratoLabelMapping } from 'src/app/shared/models/status-contrato.enum';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-contratos-list',
@@ -39,6 +41,7 @@ import { ContratoDetalheDialog } from './detalhe';
     MatInputModule,
     ReactiveFormsModule,
     InnercardComponent,
+    MatSelectModule,
   ]
 })
 export class ContratoListComp implements OnInit, OnDestroy {
@@ -54,14 +57,16 @@ export class ContratoListComp implements OnInit, OnDestroy {
 
   @Input({ required: false }) isModuloFinanceiro = false;
 
-
   contratos = signal(emptyPage<Contrato>());
   ctrlFiltro = new FormControl('', { nonNullable: true });
+  ctrlStatusContrato = new FormControl(StatusContrato.ATIVO, { nonNullable: true });
   pageSize = 10;
   page = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'numeroContrato', direction: 'asc' }));
-  displayedColumns: string[] = ['numeroContrato', 'cliente', 'dataInicio', 'dataFim', 'valorTotal', 'acoes'];
+  displayedColumns: string[] = ['numeroContrato', 'cliente', 'dataInicio', 'dataFim', 'valorTotal', 'status', 'acoes'];
   // Subject to emit a signal when the component is destroyed, for RxJS cleanup
   private destroy$ = new Subject<void>();
+  statusContrato = Object.values(StatusContrato);
+  statusContratoLabelMapping = StatusContratoLabelMapping;
 
   ngOnInit(): void {
     if (this.isModuloFinanceiro) {
@@ -77,6 +82,12 @@ export class ContratoListComp implements OnInit, OnDestroy {
     ).subscribe(() => {
       this.buscarContratos(); // Perform the search after debounce time
     });
+
+    this.ctrlStatusContrato.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.buscarContratos();
+    });
   }
 
   ngOnDestroy(): void {
@@ -87,7 +98,7 @@ export class ContratoListComp implements OnInit, OnDestroy {
 
   buscarContratos() {
     this.spinner
-      .showUntilCompleted(this.contratosService.buscar(this.ctrlFiltro.value, this.page()))
+      .showUntilCompleted(this.contratosService.buscar(this.ctrlFiltro.value, this.ctrlStatusContrato.value, this.page()))
       .subscribe(result => {
         this.contratos.set(result);
       });
@@ -96,7 +107,7 @@ export class ContratoListComp implements OnInit, OnDestroy {
   sortData(sort: Sort) {
     this.page().sorts = [{ property: sort.active, direction: sort.direction }];
     this.spinner
-      .showUntilCompleted(this.contratosService.buscar(this.ctrlFiltro.value, this.page()))
+      .showUntilCompleted(this.contratosService.buscar(this.ctrlFiltro.value, this.ctrlStatusContrato.value, this.page()))
       .subscribe(result => {
         // this.contratos.set(result);
       });
@@ -104,6 +115,10 @@ export class ContratoListComp implements OnInit, OnDestroy {
 
   visualizar(entity: Contrato) {
     this.dialog.open(ContratoDetalheDialog, { width: '550px', data: entity });
+  }
+
+  getStatus(status: StatusContrato){
+    return StatusContratoLabelMapping[status];
   }
 
 }
