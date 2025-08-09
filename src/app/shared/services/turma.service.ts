@@ -11,7 +11,7 @@ export class TurmaService {
 
     private apollo = inject(Apollo);
 
-    buscarTurma(filtro: string, pageRequest: PageRequest): Observable<Page<Turma>> {
+    buscarTurma(filtro: string, pageRequest: PageRequest): Observable<Page<Turma>> {        
         return this.apollo.query<any>({
             query: FETCH_ALL_TURMAS,
             variables: {

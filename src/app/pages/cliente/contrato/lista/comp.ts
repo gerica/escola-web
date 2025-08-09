@@ -105,19 +105,19 @@ export class ContratoListComp implements OnInit, OnDestroy {
   }
 
   sortData(sort: Sort) {
-    this.page().sorts = [{ property: sort.active, direction: sort.direction }];
-    this.spinner
-      .showUntilCompleted(this.contratosService.buscar(this.ctrlFiltro.value, this.ctrlStatusContrato.value, this.page()))
-      .subscribe(result => {
-        // this.contratos.set(result);
-      });
+    if (sort.direction === "") {
+      this.page().sorts = [];
+    } else {
+      this.page().sorts = [{ property: sort.active, direction: sort.direction }];
+    }
+    this.buscarContratos();
   }
 
   visualizar(entity: Contrato) {
     this.dialog.open(ContratoDetalheDialog, { width: '550px', data: entity });
   }
 
-  getStatus(status: StatusContrato){
+  getStatus(status: StatusContrato) {
     return StatusContratoLabelMapping[status];
   }
 

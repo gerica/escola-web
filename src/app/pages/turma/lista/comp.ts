@@ -158,7 +158,11 @@ export class ListComp implements OnInit {
   }
 
   sortData(sort: Sort) {
-    this.page().sorts = [{ property: sort.active, direction: sort.direction }];
+    if (sort.direction === "") {
+      this.page().sorts = [];
+    } else {
+      this.page().sorts = [{ property: sort.active, direction: sort.direction }];
+    }
     this.buscar();
   }
 

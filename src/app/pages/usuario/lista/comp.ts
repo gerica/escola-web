@@ -96,18 +96,12 @@ export class ListComp implements OnInit, OnDestroy {
   }
 
   sortData(sort: Sort) {
-    this.page().sorts = [{ property: sort.active, direction: sort.direction }];
-    this.spinner
-      .showUntilCompleted(this.usuarioService.buscar(this.ctrlFiltro.value, this.page()))
-      .subscribe({
-        next: (result) => {
-          this.usuarios.set(result);
-        },
-        error: (err) => { // <--- Add error handling
-          this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
-          console.error('Erro ao recuperar dados:', err);
-        }
-      });
+    if (sort.direction === "") {
+      this.page().sorts = [];
+    } else {
+      this.page().sorts = [{ property: sort.active, direction: sort.direction }];
+    }
+    this.buscarUsuarios();
   }
 
   visualizar(entity: Usuario) {

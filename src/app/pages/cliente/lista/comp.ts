@@ -88,12 +88,12 @@ export class ListComp implements OnInit, OnDestroy {
   }
 
   sortData(sort: Sort) {
-    this.page().sorts = [{ property: sort.active, direction: sort.direction }];
-    this.spinner
-      .showUntilCompleted(this.clienteService.buscar(this.ctrlFiltro.value, this.page()))
-      .subscribe(result => {
-        this.clientes.set(result);
-      });
+    if (sort.direction === "") {
+      this.page().sorts = [];
+    } else {
+      this.page().sorts = [{ property: sort.active, direction: sort.direction }];
+    }
+    this.buscarClientes();
   }
 
   visualizar(entity: Cliente) {
