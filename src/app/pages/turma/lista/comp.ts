@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -17,7 +18,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { catchError, EMPTY, switchMap } from 'rxjs';
+import { catchError, EMPTY, Subject, switchMap, takeUntil } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/core/components';
 import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { AuthService, LoadingSpinnerService, NotificationService } from 'src/app/core/services';
@@ -51,12 +52,13 @@ import { TurmaService } from 'src/app/shared/services/turma.service';
     MatTooltipModule,
     PrimeiraMaiusculaPipe,
     InnercardComponent,
+    MatDividerModule,
   ],
   providers: [
     provideNativeDateAdapter(), // necessário adicionar esse provider para o time picker apresentar no formato hh:mm    
   ]
 })
-export class ListComp implements OnInit {
+export class ListComp implements OnInit, OnDestroy {
 
   private readonly notification = inject(NotificationService);
   private readonly spinner = inject(LoadingSpinnerService);
@@ -64,21 +66,46 @@ export class ListComp implements OnInit {
   authService = inject(AuthService);
   private readonly fb = inject(FormBuilder);
   private readonly dialog = inject(MatDialog);
+  private destroy$ = new Subject<void>();
 
   form!: FormGroup;
   turmas = signal(emptyPage<Turma>());
 
   ctrlFiltro = new FormControl('', { nonNullable: true });
+  ctrlStatusTurma = new FormControl<StatusTurma[]>([], { nonNullable: true });
   pageSize = 10;
   page = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'nome', direction: 'asc' }));
   displayedColumns: string[] = ['codigo', 'nome', 'curso', 'anoPeriodo', 'professor', 'status', 'acoes'];
 
+  statusTurma = Object.values(StatusTurma);
   statusTurmaLabelMapping = StatusTurmaLabelMapping;
 
   ngOnInit(): void {
     this._createForm();
     this.buscar();
+    this.ctrlStatusTurma.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.buscar();
+    });
   }
+
+  ngOnDestroy(): void {
+    // Emit a signal to complete all subscriptions that use takeUntil(this.destroy$)
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  // Propriedade para verificar se todos os checkboxes estão selecionados
+  get todosSelecionados(): boolean {
+    return this.ctrlFiltro.value.length === this.statusTurma.length;
+  }
+
+  // Propriedade para verificar se algum (mas não todos) estão selecionados
+  get algumSelecionado(): boolean {
+    return this.ctrlFiltro.value.length > 0 && !this.todosSelecionados;
+  }
+
 
   getStatusTurma(status: StatusTurma) {
     return this.statusTurmaLabelMapping[status];
@@ -119,7 +146,7 @@ export class ListComp implements OnInit {
       this.turmaService.salvarTurma(this.form.value as Partial<Turma>)
     ).pipe(
       switchMap(_ => {
-        return this.turmaService.buscarTurma(this.ctrlFiltro.value, this.page());
+        return this.turmaService.buscarTurma(this.ctrlFiltro.value, this.ctrlStatusTurma.value, this.page());
       }),
       catchError(err => {
         this.notification.showError(err.message);
@@ -143,9 +170,9 @@ export class ListComp implements OnInit {
     this.buscar();
   }
 
-  buscar() {
+  buscar() {    
     this.spinner
-      .showUntilCompleted(this.turmaService.buscarTurma(this.ctrlFiltro.value, this.page()))
+      .showUntilCompleted(this.turmaService.buscarTurma(this.ctrlFiltro.value, this.ctrlStatusTurma.value, this.page()))
       .subscribe({
         next: (result) => {
           this.turmas.set(result);
@@ -187,7 +214,7 @@ export class ListComp implements OnInit {
       this.turmaService.removerTurma(entity.id)
     ).pipe(
       switchMap(_ => {
-        return this.turmaService.buscarTurma(this.ctrlFiltro.value, this.page());
+        return this.turmaService.buscarTurma(this.ctrlFiltro.value, this.ctrlStatusTurma.value, this.page());
       }),
       catchError(err => {
         this.notification.showError(err.message);
@@ -204,5 +231,6 @@ export class ListComp implements OnInit {
       }
     });
   }
+
 
 }

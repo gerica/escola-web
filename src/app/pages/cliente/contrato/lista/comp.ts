@@ -59,7 +59,7 @@ export class ContratoListComp implements OnInit, OnDestroy {
 
   contratos = signal(emptyPage<Contrato>());
   ctrlFiltro = new FormControl('', { nonNullable: true });
-  ctrlStatusContrato = new FormControl(StatusContrato.ATIVO, { nonNullable: true });
+  ctrlStatusContrato = new FormControl<StatusContrato[]>([], { nonNullable: true });
   pageSize = 10;
   page = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'numeroContrato', direction: 'asc' }));
   displayedColumns: string[] = ['numeroContrato', 'cliente', 'dataInicio', 'dataFim', 'valorTotal', 'status', 'acoes'];

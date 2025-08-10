@@ -4,6 +4,7 @@ export enum StatusTurma {
     LOTADA = 'LOTADA',
     EM_FORMACAO = 'EM_FORMACAO',
     CANCELADA = 'CANCELADA',
+    CONCLUIDA = 'CONCLUIDA',
 }
 
 export const StatusTurmaLabelMapping: Record<StatusTurma, string> = {
@@ -12,4 +13,5 @@ export const StatusTurmaLabelMapping: Record<StatusTurma, string> = {
     [StatusTurma.LOTADA]: 'Lotada',
     [StatusTurma.EM_FORMACAO]: 'Em Formação',
     [StatusTurma.CANCELADA]: 'Cancelada',
+    [StatusTurma.CONCLUIDA]: 'Concluída',
 };

@@ -85,7 +85,8 @@ export class ContratoManterComp implements OnInit {
   cidades = signal(emptyPage<Cidade>());
   srvCidadeLoading = signal(false);
 
-  statusContrato = Object.values(StatusContrato).filter(s => s !== StatusContrato.TODOS);
+  // statusContrato = Object.values(StatusContrato).filter(s => s !== StatusContrato.TODOS);
+  statusContrato = Object.values(StatusContrato);
   statusContratoLabelMapping = StatusContratoLabelMapping;
   periodosPagamento = Object.values(PeriodoPagamento);
   periodosPagamentoLabelMapping = PeriodoPagamentoLabelMapping;

@@ -5,17 +5,19 @@ import { Page, PageRequest } from 'src/app/core/models';
 import { URL_ADMIN } from '../common/constants';
 import { DELETE_TURMA_BY_ID, FETCH_ALL_TURMAS, FETCH_BY_ID, SAVE_TURMA, Turma } from '../models/turma';
 import { DataUtils } from './data.service';
+import { StatusTurma } from '../models/status-turma.enum';
 
 @Injectable({ providedIn: 'root' })
 export class TurmaService {
 
     private apollo = inject(Apollo);
 
-    buscarTurma(filtro: string, pageRequest: PageRequest): Observable<Page<Turma>> {        
+    buscarTurma(filtro: string, status: StatusTurma[], pageRequest: PageRequest): Observable<Page<Turma>> {
         return this.apollo.query<any>({
             query: FETCH_ALL_TURMAS,
             variables: {
                 filtro: filtro,
+                status: status,
                 page: pageRequest.page,
                 size: pageRequest.size,
                 sort: pageRequest.sorts || [],

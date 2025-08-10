@@ -24,8 +24,8 @@ export interface Turma {
 }
 
 export const FETCH_ALL_TURMAS = gql`  
-  query fetchAllTurmas($filtro: String, $page: Int, $size: Int, $sort: [SortRequest]) { 
-    fetchAllTurmas(filtro: $filtro, page: $page, size: $size, sort: $sort) {    
+  query fetchAllTurmas($filtro: String, $status: [StatusTurma] , $page: Int, $size: Int, $sort: [SortRequest]) { 
+    fetchAllTurmas(filtro: $filtro, status: $status, page: $page, size: $size, sort: $sort) {    
       number
       size
       totalElements

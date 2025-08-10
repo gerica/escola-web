@@ -11,6 +11,15 @@
       </button>
     </mat-form-field>
 
+    <mat-form-field appearance="outline" style="width: 35%;">
+      <mat-label>Status</mat-label>
+      <mat-select [formControl]="ctrlStatusTurma" multiple>
+        @for (item of statusTurma; track item) {
+        <mat-option [value]="item">{{statusTurmaLabelMapping[item]}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
     <button mat-raised-button color="primary" routerLink="/turma/manter">Nova turma</button>
 
   </section>
@@ -58,10 +67,12 @@
       <ng-container matColumnDef="acoes">
         <th mat-header-cell *matHeaderCellDef> </th>
         <td mat-cell *matCellDef="let element" class="cursorSelect">
-          <a matTooltip="Inscrições" aria-hidden="false" [routerLink]="['/turma/matricula', element.id]" [queryParams]="{tab: 1}">
+          <a matTooltip="Inscrições" aria-hidden="false" [routerLink]="['/turma/matricula', element.id]"
+            [queryParams]="{tab: 1}">
             <mat-icon color="primary">assignment</mat-icon>
           </a>
-          <a matTooltip="Editar dados" aria-hidden="false" [routerLink]="['/turma/manter', element.id]" [queryParams]="{tab: 0}">
+          <a matTooltip="Editar dados" aria-hidden="false" [routerLink]="['/turma/manter', element.id]"
+            [queryParams]="{tab: 0}">
             <mat-icon color="primary">edit</mat-icon>
           </a>
           @if(authService.isUserAdmin()){

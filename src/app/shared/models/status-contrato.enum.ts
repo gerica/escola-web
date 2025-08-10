@@ -5,7 +5,7 @@ export enum StatusContrato {
     CANCELADO = 'CANCELADO',
     CONCLUIDO = 'CONCLUIDO',
     EM_NEGOCIACAO = 'EM_NEGOCIACAO',
-    TODOS = 'TODOS'
+    // TODOS = 'TODOS'
 }
 
 export const StatusContratoLabelMapping: Record<StatusContrato, string> = {
@@ -15,5 +15,5 @@ export const StatusContratoLabelMapping: Record<StatusContrato, string> = {
     [StatusContrato.CANCELADO]: 'Cancelado',
     [StatusContrato.CONCLUIDO]: 'Concluído',
     [StatusContrato.EM_NEGOCIACAO]: 'Negociação',
-    [StatusContrato.TODOS]: 'Todos',
+    // [StatusContrato.TODOS]: 'Todos',
 };

@@ -58,12 +58,12 @@ export class ContratoService {
     );
   }
 
-  buscar(filtro: string, status: StatusContrato, pageRequest: PageRequest): Observable<Page<Contrato>> {
+  buscar(filtro: string, status: StatusContrato[], pageRequest: PageRequest): Observable<Page<Contrato>> {
     return this.apollo.query<any>({
       query: FETCH_ALL_CONTRATOS,
       variables: {
         filtro: filtro,
-        statusContrato: status === StatusContrato.TODOS ? null : status,
+        status: status,
         page: pageRequest.page,
         size: pageRequest.size,
         sort: pageRequest.sorts || [],
