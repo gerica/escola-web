@@ -34,42 +34,54 @@ $web-dark-theme: mat.m2-define-dark-theme((color: (primary: $web-accent,
 
 // --- Adicionar Mixin para Cores Customizadas (info, success, warning, error) ---
 @mixin custom-status-colors($palette-info, $palette-success, $palette-warning, $palette-error, $palette-warningPlus) {
+
   // Cores para Ícones e Textos
-  .mat-icon.color-info, .mat-text-color-info {
+  .mat-icon.color-info,
+  .mat-text-color-info {
     color: mat.m2-get-color-from-palette($palette-warningPlus, 500); // Tom 500 da sua paleta $info
   }
 
-  .mat-icon.color-success, .mat-text-color-success {
+  .mat-icon.color-success,
+  .mat-text-color-success {
     color: mat.m2-get-color-from-palette($palette-success, 500); // Tom 500 da sua paleta $success
   }
 
-  .mat-icon.color-warning, .mat-text-color-warning {
+  .mat-icon.color-warning,
+  .mat-text-color-warning {
     color: mat.m2-get-color-from-palette($palette-warning, 500); // Tom 500 da sua paleta $warning
   }
 
   // Você pode ter uma classe `color-error` separada da `warn` do tema se precisar.
-  .mat-icon.color-error, .mat-text-color-error {
+  .mat-icon.color-error,
+  .mat-text-color-error {
     color: mat.m2-get-color-from-palette($palette-error, 500); // Tom 500 da sua paleta $error
+  }
+
+  .mat-icon.color-heightline,
+  .mat-text-color-heightline {
+    color: mat.m2-get-color-from-palette($palette-success, 800); // Tom 700 da sua paleta $sucess
   }
 
   // Cores de Fundo (se precisar para tags, por exemplo)
   .background-info {
     background-color: mat.m2-get-color-from-palette($palette-info, 50); // Tom 50 para fundo claro
   }
+
   .background-success {
     background-color: mat.m2-get-color-from-palette($palette-success, 50);
   }
+
   .background-warning {
     background-color: mat.m2-get-color-from-palette($palette-warning, 50);
   }
+
   .background-error {
     background-color: mat.m2-get-color-from-palette($palette-error, 50);
   }
 }
 
 // Incluir o mixin customizado, passando suas paletas definidas em `palette.scss`
-@include custom-status-colors(
-  palette.$info,
+@include custom-status-colors(palette.$info,
   palette.$success,
   palette.$warning,
   palette.$error,
@@ -86,7 +98,7 @@ $selected-tab-label-color: mat.m2-get-color-from-palette(palette.$primarias, 500
   --mdc-tab-indicator-active-indicator-color: #{$selected-tab-indicator-color};
   --mdc-tab-active-label-text-color: #{$selected-tab-label-color};
   --mat-tab-header-active-ripple-color: #{$selected-tab-indicator-color};
-  --mat-tab-header-active-label-text-color: #{$selected-tab-label-color};  
+  --mat-tab-header-active-label-text-color: #{$selected-tab-label-color};
   --mat-tab-header-active-focus-label-text-color: #{$selected-tab-indicator-color};
   --mat-tab-header-active-hover-indicator-color: #{$selected-tab-indicator-color};
   --mat-tab-header-active-focus-indicator-color: #{$selected-tab-indicator-color};

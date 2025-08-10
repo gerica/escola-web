@@ -20,7 +20,7 @@ export interface ContaReceberDialogData extends ContaReceber {
 }
 
 @Component({
-  selector: 'empresa-detalhe-dialog',
+  selector: 'financeiro-conta-receber-detalhe-dialog',
   templateUrl: './detalhe.html',
   styleUrls: ['../../../../entity-detalhe.scss', './detalhe.scss'],
   standalone: true,

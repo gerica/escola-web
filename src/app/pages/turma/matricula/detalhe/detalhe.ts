@@ -19,7 +19,7 @@ export interface MatriculaDialogData extends Matricula {
 }
 
 @Component({
-  selector: 'empresa-detalhe-dialog',
+  selector: 'turma-matricula-detalhe-dialog',
   templateUrl: './detalhe.html',
   styleUrls: ['../../../entity-detalhe.scss', './detalhe.scss'],
   standalone: true,

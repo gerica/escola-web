@@ -4,14 +4,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { ButtonsRowComponent, InnercardComponent } from 'src/app/shared/components';
-import { Empresa } from 'src/app/shared/models/empresa';
 import { StatusClienteLabelMapping } from 'src/app/shared/models/status-cliente.enum';
 import { Usuario } from 'src/app/shared/models/usuario';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
 
 
 @Component({
-  selector: 'empresa-detalhe-dialog',
+  selector: 'usuario-detalhe-dialog',
   templateUrl: './detalhe.html',
   styleUrl: '../../entity-detalhe.scss',
   standalone: true,

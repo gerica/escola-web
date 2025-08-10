@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,23 +16,17 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { catchError, EMPTY, switchMap } from 'rxjs';
+import { catchError, EMPTY, Observable, switchMap } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/core/components';
-import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { MSG_SUCESS } from 'src/app/shared/common/constants';
 import { InnercardComponent } from 'src/app/shared/components';
 import { ContaReceber } from 'src/app/shared/models/conta-receber';
 import Contrato from 'src/app/shared/models/contrato';
-import { Matricula } from 'src/app/shared/models/matricula';
 import { StatusContaReceber, StatusContaReceberLabelMapping } from 'src/app/shared/models/status-conta-receber.enum';
-import { StatusMatricula, StatusMatriculaLabelMapping } from 'src/app/shared/models/status-matricula.enum';
-import { Turma } from 'src/app/shared/models/turma';
-import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
 import { ContaReceberService } from 'src/app/shared/services/conta.receber.service';
-import { ContratoService } from 'src/app/shared/services/contrato.service';
-import { MatriculaService } from 'src/app/shared/services/matricula.service';
 import { ContaReceberDetalheDialog } from './detalhe/detalhe';
+import { ContaReceberPagamentoDetalheDialog } from './pagamento/comp';
 
 @Component({
   selector: 'app-conta-receber-manter',
@@ -124,28 +118,10 @@ export class ContaReceberManterComp implements OnInit {
     return this.statusContaReceberLabelMapping[status];
   }
 
-  salvar(value: Partial<ContaReceber>) {
-
-    this.spinner.showUntilCompletedCascate(
+  salvar(value: Partial<ContaReceber>) {    
+    this._executarOperacaoERecarregar(
       this.contaReceberService.salvar(value, this.contrato()!.id)
-    ).pipe(
-      switchMap(_ => {
-        return this.contaReceberService.buscar(this.contrato()!.id);
-      }),
-      catchError(err => {
-        this.notification.showError(err.message);
-        console.error('Erro ao executar chamada ao backend:', err);
-        return EMPTY;
-      })
-    ).subscribe({
-      next: (result) => {
-        this.contasReceber.set(result);
-        this.notification.showSuccess('Operação realizada com sucesso.');
-      }, error: (err) => {
-        this.notification.showError(err.message);
-        console.error('Erro ao recuperar dependentes:', err);
-      }
-    });
+    );
   }
 
   sortData(sort: Sort) {
@@ -254,12 +230,16 @@ export class ContaReceberManterComp implements OnInit {
   }
 
   excluir(entity: ContaReceber) {
-    this.spinner.showUntilCompletedCascate(
+    this._executarOperacaoERecarregar(
       this.contaReceberService.remover(entity.id)
+    );
+  }
+
+  private _executarOperacaoERecarregar(operacao$: Observable<any>) {
+    this.spinner.showUntilCompletedCascate(
+      operacao$
     ).pipe(
-      switchMap(_ => {
-        return this.contaReceberService.buscar(this.contrato()!.id);
-      }),
+      switchMap(() => this.contaReceberService.buscar(this.contrato()!.id)),
       catchError(err => {
         this.notification.showError(err.message);
         console.error('Erro ao executar chamada ao backend:', err);
@@ -271,7 +251,7 @@ export class ContaReceberManterComp implements OnInit {
         this.notification.showSuccess('Operação realizada com sucesso.');
       }, error: (err) => {
         this.notification.showError(err.message);
-        console.error('Erro ao recuperar dependentes:', err);
+        console.error('Erro ao recarregar as contas a receber:', err);
       }
     });
   }
@@ -289,6 +269,21 @@ export class ContaReceberManterComp implements OnInit {
       comparison = -1;
     }
     return comparison * (isAsc ? 1 : -1);
+  }
+
+  dialogPagamento(entity: ContaReceber) {
+    const dialogRef$ = this.dialog.open(ContaReceberPagamentoDetalheDialog, {
+      width: '550px',
+      data: {
+        ...entity,
+      }
+    });
+
+    dialogRef$.afterClosed().subscribe(result => {
+      if (result) {
+        this.salvar(result);
+      }
+    });
   }
 
 }
