@@ -91,11 +91,32 @@ export class ContaReceberManterComp implements OnInit {
 
   criarContas() {
     if (this.contrato()) {
-      this.spinner.showUntilCompleted(this.contaReceberService.criar(this.contrato()!.id)).subscribe({
-        next: _ => this.notification.showSuccess(MSG_SUCESS),
-        error: (err) => this.notification.showError('Erro ao salvar contrato: ' + (err.message || 'Erro desconhecido.')),
-        complete: () => this.buscar()
-      })
+      // this.spinner.showUntilCompleted(this.contaReceberService.criar(this.contrato()!.id)).subscribe({
+      //   next: _ => this.notification.showSuccess(MSG_SUCESS),
+      //   error: (err) => this.notification.showError('Erro ao salvar contrato: ' + (err.message || 'Erro desconhecido.')),
+      //   complete: () => this.buscar()
+      // })
+
+      this.spinner.showUntilCompletedCascate(
+        this.contaReceberService.criar(this.contrato()!.id)
+      ).pipe(
+        switchMap(_ => {
+          return this.contaReceberService.buscar(this.contrato()!.id);
+        }),
+        catchError(err => {
+          this.notification.showError(err.message);
+          console.error('Erro ao executar chamada ao backend:', err);
+          return EMPTY;
+        })
+      ).subscribe({
+        next: (result) => {
+          this.contasReceber.set(result);
+          this.notification.showSuccess(MSG_SUCESS);
+        }, error: (err) => {
+          this.notification.showError(err.message);
+          console.error('Erro ao recuperar dados:', err);
+        }
+      });
     }
   }
 
