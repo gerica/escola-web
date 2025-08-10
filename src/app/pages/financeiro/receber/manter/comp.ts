@@ -27,6 +27,7 @@ import { StatusContaReceber, StatusContaReceberLabelMapping } from 'src/app/shar
 import { ContaReceberService } from 'src/app/shared/services/conta.receber.service';
 import { ContaReceberDetalheDialog } from './detalhe/detalhe';
 import { ContaReceberPagamentoDetalheDialog } from './pagamento/comp';
+import { ContaReceberCriarContaDialog } from './criarConta/comp';
 
 @Component({
   selector: 'app-conta-receber-manter',
@@ -118,7 +119,7 @@ export class ContaReceberManterComp implements OnInit {
     return this.statusContaReceberLabelMapping[status];
   }
 
-  salvar(value: Partial<ContaReceber>) {    
+  salvar(value: Partial<ContaReceber>) {
     this._executarOperacaoERecarregar(
       this.contaReceberService.salvar(value, this.contrato()!.id)
     );
@@ -284,6 +285,50 @@ export class ContaReceberManterComp implements OnInit {
         this.salvar(result);
       }
     });
+  }
+
+  /** Retorna o valor total de todas as contas. */
+  getTotalValorTotal() {
+    if (!this.contasReceber) return 0;
+    return this.contasReceber().reduce((acc, conta) => acc + Number(conta.valorTotal || 0), 0);
+  }
+
+  /** Retorna o valor total de desconto em BRL. */
+  getTotalDesconto() {
+    if (!this.contasReceber) return 0;
+    // Calcula o valor monetário do desconto para cada conta e soma
+    return this.contasReceber().reduce((acc, conta) => acc + (Number(conta.valorTotal || 0) * Number(conta.desconto || 0) / 100), 0);
+  }
+
+  /** Retorna o valor total que foi pago. */
+  getTotalValorPago() {
+    if (!this.contasReceber) return 0;
+    // Usamos `|| 0` para o caso de contas ainda não pagas terem valorPago como null/undefined
+    return this.contasReceber().reduce((acc, conta) => acc + Number(conta.valorPago || 0), 0);
+  }
+
+  podeCriarContas() {
+    if (this.contrato()) {
+      return this.getTotalValorTotal() < this.contrato()!.valorTotal;
+    }
+    return false;
+  }
+
+  criarConta() {
+    const dialogRef$ = this.dialog.open(ContaReceberCriarContaDialog, {
+      width: '550px',
+      data: {
+        ...this.contrato()!,
+        valorTotalPago: this.getTotalValorTotal()
+      }
+    });
+
+    dialogRef$.afterClosed().subscribe(result => {      
+      if (result) {
+        this.salvar(result);
+      }
+    });
+
   }
 
 }

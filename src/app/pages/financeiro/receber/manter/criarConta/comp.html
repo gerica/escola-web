@@ -1,0 +1,64 @@
+<app-modalcard (fechar)="onDismiss()" titulo="Criar Conta" [estiloCardTitulo]="{'padding': '1em',}">
+  <form [formGroup]="form" (submit)="onSubmit()">
+
+    <div class="containerOut">
+      <div class="containerInner">
+        <span>Valor :</span>
+        <mat-form-field appearance="outline">
+          <mat-label>Valor</mat-label>
+          <input matInput formControlName="valorTotal" mask="separator.2" thousandSeparator="." decimalMarker=","
+            prefix="R$ ">
+          @if(form.controls['valorTotal'].hasError('required') && (form.controls['valorTotal'].touched ||
+          form.controls['valorTotal'].dirty)){
+          <mat-error> O valor é <strong>obrigatório</strong> </mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="containerInner">
+        <span>Deconto:</span>
+        <mat-form-field appearance="outline">
+          <mat-label>Desconto</mat-label>
+          <input matInput formControlName="desconto" mask="separator.2" thousandSeparator="." decimalMarker=","
+            prefix="R$ ">
+        </mat-form-field>
+      </div>
+
+      <div class="containerInner">
+        <span>Data de Vencimento</span>
+        <mat-form-field appearance="outline">
+          <mat-label>Data incio</mat-label>
+          <input matInput [matDatepicker]="pickerDtVecimento" formControlName="dataVencimento">
+          <mat-datepicker-toggle matIconSuffix [for]="pickerDtVecimento"></mat-datepicker-toggle>
+          <mat-datepicker #pickerDtVecimento></mat-datepicker>
+          @if(form.controls['valorTotal'].hasError('required') && (form.controls['valorTotal'].touched ||
+          form.controls['valorTotal'].dirty)){
+          <mat-error>
+            A data do vencimento é <strong>obrigatório</strong>
+          </mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="containerInner">
+        <span>Observação :</span>
+        <mat-form-field appearance="outline" class="mat-form-field-custom">
+          <mat-label>Observações</mat-label>
+          <textarea matInput formControlName="observacoes" rows="3"
+            placeholder="Digite os observações aqui..."></textarea>
+        </mat-form-field>
+      </div>
+
+
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <app-buttons-row style="display: flex;  justify-content: end; gap:1em">
+      <button mat-button (click)="onDismiss()" type="button" cdkFocusInitial>Fechar</button>
+      <button mat-raised-button color="primary" style="margin-left: 6px;" cdkFocusInitial type="submit">
+        Confirmar
+      </button>
+    </app-buttons-row>
+  </form>
+</app-modalcard>

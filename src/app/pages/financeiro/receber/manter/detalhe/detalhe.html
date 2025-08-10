@@ -23,6 +23,11 @@
     </div>
 
     <div class="containerInner">
+      <span>Data do Pagamento</span>
+      <span>{{data.dataPagamento | date: 'dd/MM/yyyy'}}</span>
+    </div>
+
+    <div class="containerInner">
       <span>Status :</span>
       @if(data.editar){
       <mat-form-field appearance="outline">
