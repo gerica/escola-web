@@ -9,14 +9,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ConfirmDialogComponent } from 'src/app/core/components';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { Anexo, AnexoBase64 } from 'src/app/shared/models/anexo';
 import Contrato from 'src/app/shared/models/contrato';
 import { AnexoService } from 'src/app/shared/services/anexo.service';
 import { InnercardComponent } from "../../../../shared/components/innercard/innercard.component";
-import { ConfirmDialogComponent } from 'src/app/core/components';
-import { MatTableModule } from '@angular/material/table';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { AssinarContratoDialogComponent } from './modal-assinar-contrato/modal';
+import { ContratoService } from 'src/app/shared/services/contrato.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -36,6 +39,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     InnercardComponent,
     MatTableModule,
     MatTooltipModule
+
   ],
 
 })
@@ -44,8 +48,10 @@ export class AnexosContratoComp implements OnInit {
   private readonly notification = inject(NotificationService);
   private readonly spinner = inject(LoadingSpinnerService);
   private readonly anexoService = inject(AnexoService);
+  private readonly contratoService = inject(ContratoService);
   private readonly fb = inject(FormBuilder);
   private readonly dialog = inject(MatDialog);
+  private router = inject(Router);
 
   @Input({ required: true }) contrato!: Contrato | null;
 
@@ -224,5 +230,33 @@ export class AnexosContratoComp implements OnInit {
     }
   }
 
+  dialogAssinarContrato() {
+    const dialogRef$ = this.dialog.open(AssinarContratoDialogComponent, {
+      width: '550px',
+      data: this.contrato
+    });
+
+    dialogRef$.afterClosed().subscribe(result => {
+      if (result) {
+        // this.salvar(result);
+        this.spinner.showUntilCompleted(this.contratoService.salvar(this.contrato!.id,
+          {
+            ...this.contrato,
+            dataAssinatura: result.dataAssinatura
+          }
+        ))
+          .subscribe({
+            next: _ => {
+              this.notification.showSuccess('Operação realizada com sucesso.');
+              this.router.navigate(['/cliente/contrato']);
+            },
+            error: (err) => {
+              this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+              console.error('Erro ao recuperar dados:', err);
+            }
+          })
+      }
+    });
+  }
 
 }

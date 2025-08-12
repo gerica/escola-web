@@ -1,0 +1,30 @@
+<app-modalcard (fechar)="onDismiss()" [titulo]="getTitulocabecalho()" [estiloCardTitulo]="{'padding': '1em',}">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <section>
+            <mat-form-field appearance="outline">
+                <mat-label>Data Assinatura</mat-label>
+                <input matInput [matDatepicker]="pickerDtInicio" formControlName="dataAssinatura">
+                <mat-datepicker-toggle matIconSuffix [for]="pickerDtInicio"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDtInicio></mat-datepicker>
+                @if(form.controls['dataAssinatura'].hasError('required') && (form.controls['dataAssinatura'].touched ||
+                form.controls['dataAssinatura'].dirty)){
+                <mat-error>
+                    A data assinatura é <strong>obrigatório</strong>
+                </mat-error>
+                }
+            </mat-form-field>
+        </section>
+
+        <mat-divider></mat-divider>
+
+        <app-buttons-row style="margin-bottom: 4px;   display: flex;  justify-content: end;">
+            <button mat-button mat-dialog-close (click)="onDismiss()" type="button">
+                Cancelar
+            </button>
+            <button mat-raised-button color="primary" cdkFocusInitial type="submit">
+                Confirmar
+            </button>
+        </app-buttons-row>
+    </form>
+
+</app-modalcard>

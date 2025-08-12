@@ -2,12 +2,20 @@
   <app-innercard>
     <div class="header-container">
       <h2>Anexar arquivos</h2>
-      <div class="file-upload-container">
-        <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none;" />
-        <button mat-raised-button color="primary" type="button" (click)="fileInput.click()">
-          <mat-icon>cloud_upload</mat-icon>
-          <span>Selecione um Arquivo</span>
+      <div class="containerButtons">
+        @if(anexos().length > 0){
+        <button mat-raised-button color="primary" type="button" (click)="dialogAssinarContrato()">
+          <span>Assinar Contrato</span>
+          <mat-icon>edit_square</mat-icon>
         </button>
+        }
+        <div class="file-upload-container">
+          <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none;" />
+          <button mat-raised-button color="primary" type="button" (click)="fileInput.click()">
+            <mat-icon>cloud_upload</mat-icon>
+            <span>Selecione um Arquivo</span>
+          </button>
+        </div>
       </div>
     </div>
     <mat-progress-bar *ngIf="loading" mode="indeterminate" class="progress-bar"></mat-progress-bar>
