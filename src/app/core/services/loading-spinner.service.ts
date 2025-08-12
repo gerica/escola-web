@@ -12,7 +12,7 @@ export class LoadingSpinnerService {
   showUntilCompleted<T>(obs$: Observable<T>, loadingOffAuto = true): Observable<T> {
     return of(null).pipe(
       tap(() => this.loadingOn()),
-      switchMap(() => obs$.pipe(minTime(1000))),
+      switchMap(() => obs$.pipe(minTime(0))),
       finalize(() => {
         if (loadingOffAuto) {
           this.loadingOff();
