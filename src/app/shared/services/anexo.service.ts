@@ -65,9 +65,6 @@ export class AnexoService {
             context: { uri: URL_ADMIN }
         }).pipe(
             map(result => result.data.downloadAnexo),
-            // tap(value => {
-            //     console.log("Received GraphQL data:", value);
-            // }),
         );
     }
 }

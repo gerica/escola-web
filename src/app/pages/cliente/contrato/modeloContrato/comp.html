@@ -5,9 +5,19 @@
     </section>
 
     <section class="container">
+      @if(podeBaixar()){
+      <button mat-raised-button color="primary" type="button" (click)="baixarDoc()">
+        <span>Baixar</span>
+        <mat-icon>download</mat-icon>
+      </button>
+      }
       <button mat-raised-button color="primary" type="button" (click)="confirmCarregarContrato()">Carregar
         Contrato</button>
       <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">Salvar</button>
     </section>
+
+    @if(loading()){
+    <mat-progress-bar mode="indeterminate" class="progress-bar"></mat-progress-bar>
+    }
   </app-innercard>
 </form>

@@ -20,6 +20,7 @@ import { InnercardComponent } from "../../../../shared/components/innercard/inne
 import { AssinarContratoDialogComponent } from './modal-assinar-contrato/modal';
 import { ContratoService } from 'src/app/shared/services/contrato.service';
 import { Router } from '@angular/router';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 
 
 @Component({
@@ -51,7 +52,9 @@ export class AnexosContratoComp implements OnInit {
   private readonly contratoService = inject(ContratoService);
   private readonly fb = inject(FormBuilder);
   private readonly dialog = inject(MatDialog);
-  private router = inject(Router);
+  private readonly router = inject(Router);
+  private readonly utilService = inject(UtilsService);
+
 
   @Input({ required: true }) contrato!: Contrato | null;
 
@@ -178,7 +181,7 @@ export class AnexosContratoComp implements OnInit {
 
     // O tipo do arquivo (MIME type) é necessário para o Blob.
     // Você pode inferir isso do nome do arquivo ou passar do backend.
-    const mimeType = this.getMimeType(anexo.nomeArquivo);
+    const mimeType = this.utilService.getMimeType(anexo.nomeArquivo);
     // const mimeType = "application/pdf";
 
     // Decodifica a string Base64 e cria um Blob
@@ -210,24 +213,6 @@ export class AnexosContratoComp implements OnInit {
     // document.body.removeChild(a);
     // window.URL.revokeObjectURL(url);
 
-  }
-
-  private getMimeType(fileName: string): string {
-    const extension = fileName.split('.').pop()?.toLowerCase();
-    switch (extension) {
-      case 'pdf':
-        return 'application/pdf';
-      case 'doc':
-      case 'docx':
-        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-      case 'jpg':
-      case 'jpeg':
-        return 'image/jpeg';
-      case 'png':
-        return 'image/png';
-      default:
-        return 'application/octet-stream';
-    }
   }
 
   dialogAssinarContrato() {

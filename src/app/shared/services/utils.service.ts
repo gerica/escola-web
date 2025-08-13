@@ -46,4 +46,22 @@ export class UtilsService {
         );
     }
 
+    getMimeType(fileName: string): string {
+        const extension = fileName.split('.').pop()?.toLowerCase();
+        switch (extension) {
+            case 'pdf':
+                return 'application/pdf';
+            case 'doc':
+            case 'docx':
+                return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+            case 'jpg':
+            case 'jpeg':
+                return 'image/jpeg';
+            case 'png':
+                return 'image/png';
+            default:
+                return 'application/octet-stream';
+        }
+    }
+
 }

@@ -23,6 +23,12 @@ export default interface Contrato {
   contratoDoc: string,
 }
 
+export interface ContratoDocBase64 {
+    nomeArquivo: string,
+    conteudoBase64: string,
+}
+
+
 export const SAVE_CONTRATO = gql`
   mutation saveContrato($request: ContratoRequest!){  
     saveContrato(request:$request)
@@ -115,6 +121,15 @@ export const CARREGAR_CONTRATO = gql`
   mutation parseContrato($id: ID!){  
     parseContrato(id:$id){
         contratoDoc
+    }
+  }
+`;
+
+export const DOWNLOAD_DOC_CONTRATO = gql`
+  query DownloadDocContrato($id: ID!) {
+    downloadDocContrato(id: $id){
+        nomeArquivo
+        conteudoBase64
     }
   }
 `;

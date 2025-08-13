@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { map, Observable, tap } from 'rxjs';
-import Contrato, { CARREGAR_CONTRATO, FETCH_ALL_CONTRATOS, FETCH_CONTRATO_BY_ID, FETCH_CONTRATO_BY_ID_MATRICULA, SAVE_CONTRATO, SAVE_CONTRATO_MODELO } from '../models/contrato';
+import Contrato, { CARREGAR_CONTRATO, ContratoDocBase64, DOWNLOAD_DOC_CONTRATO, FETCH_ALL_CONTRATOS, FETCH_CONTRATO_BY_ID, FETCH_CONTRATO_BY_ID_MATRICULA, SAVE_CONTRATO, SAVE_CONTRATO_MODELO } from '../models/contrato';
 import { Page, PageRequest } from 'src/app/core/models';
 import { DataUtils } from './data.service';
 import { URL_ADMIN } from '../common/constants';
@@ -9,7 +9,6 @@ import { StatusContrato } from '../models/status-contrato.enum';
 
 @Injectable({ providedIn: 'root' })
 export class ContratoService {
-
 
   private apollo = inject(Apollo);
 
@@ -125,4 +124,16 @@ export class ContratoService {
       map(result => result.data.fetchContratoByIdMatricula as Contrato),
     );
   }
+
+  downloadDocContrato(id: number): Observable<ContratoDocBase64> {
+    return this.apollo.query<any>({
+      query: DOWNLOAD_DOC_CONTRATO,
+      variables: { id },
+      context: { uri: URL_ADMIN },
+      fetchPolicy: 'network-only'
+    }).pipe(
+      map(result => result.data.downloadDocContrato),
+    );
+  }
+
 }

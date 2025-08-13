@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { provideNativeDateAdapter } from '@angular/material/core';
@@ -11,11 +11,13 @@ import { RouterModule } from '@angular/router';
 import { provideNgxMask } from 'ngx-mask';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { EditorComponent } from 'src/app/shared/components/editor/editor.component';
-import Contrato from 'src/app/shared/models/contrato';
+import Contrato, { ContratoDocBase64 } from 'src/app/shared/models/contrato';
 import { ContratoService } from 'src/app/shared/services/contrato.service';
 import { InnercardComponent } from "../../../../shared/components/innercard/innercard.component";
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/core/components';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 
 
 @Component({
@@ -32,7 +34,8 @@ import { ConfirmDialogComponent } from 'src/app/core/components';
     MatFormFieldModule,
     MatInputModule,
     MatProgressSpinnerModule,
-    EditorComponent
+    EditorComponent,
+    MatProgressBarModule,
   ],
   providers: [
     provideNativeDateAdapter(),
@@ -46,9 +49,13 @@ export class ManterContratoComp implements OnInit {
   private readonly contratoService = inject(ContratoService);
   private readonly fb = inject(FormBuilder);
   private readonly dialog = inject(MatDialog);
+  private readonly utilService = inject(UtilsService);
 
   form!: UntypedFormGroup;
   @Input({ required: true }) contrato!: Contrato | null;
+
+  podeBaixar = signal<boolean>(false);
+  loading = signal<boolean>(false);
 
   ngOnInit(): void {
     this._createForm();
@@ -82,13 +89,15 @@ export class ManterContratoComp implements OnInit {
     // 3. Chame o serviço com o objeto completo
     this.spinner.showUntilCompleted(
       this.contratoService.salvarModelo(this.contrato.id, updatedContratoDoc)).subscribe({
-        next: (result) => {
+        next: _ => {
+          this.podeBaixar.set(true);
           this.notification.showSuccess('Operação realizada com sucesso.');
           // Opcional: Atualize o objeto contrato localmente após o sucesso, se necessário
           // this.contrato = result;
         },
         error: (err) => {
           this.notification.showError('Erro ao salvar contrato: ' + (err.message || 'Erro desconhecido.'));
+          this.podeBaixar.set(false);
         }
       });
   }
@@ -124,6 +133,49 @@ export class ManterContratoComp implements OnInit {
       });
   }
 
+  baixarDoc() {
+    this.loading.set(true);
+    this.spinner.showUntilCompleted(this.contratoService.downloadDocContrato(this.contrato!.id))
+      .subscribe({
+        next: (result) => {
+          this._baixar(result);
+        },
+        error: (err) => {
+          this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+          console.error('Erro ao baixar anexo:', err);
+          this.loading.set(false);
+          // Adicionar lógica para mostrar erro ao usuário
+        }
+      });
+  }
+
+  _baixar(documento: ContratoDocBase64) {
+    this.loading.set(false); // Oculta o spinner
+
+    // O tipo do arquivo (MIME type) é necessário para o Blob.
+    // Você pode inferir isso do nome do arquivo ou passar do backend.
+    const mimeType = this.utilService.getMimeType(documento.nomeArquivo);
+    // const mimeType = "application/pdf";
+
+    // Decodifica a string Base64 e cria um Blob
+    const byteCharacters = atob(documento.conteudoBase64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: mimeType });
+
+    // Cria um link e simula o clique para iniciar o download
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = documento.nomeArquivo;
+    link.click();
+
+    window.URL.revokeObjectURL(link.href); // Libera o objeto URL
+
+  }
+
   private _createForm() {
     this.form = this.fb.group({
       contratoDoc: new FormControl('', [Validators.required]),
@@ -134,7 +186,9 @@ export class ManterContratoComp implements OnInit {
     this.form.patchValue({
       contratoDoc: value,
     }, { emitEvent: true });
-
+    if (value) {
+      this.podeBaixar.set(true);
+    }
   }
 
 }

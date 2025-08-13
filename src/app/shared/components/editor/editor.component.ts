@@ -38,7 +38,22 @@ export class EditorComponent implements OnInit {
   @Input() height: string = '250px';
   @Input() tipo: TipoMenuEnum = TipoMenuEnum.INLINE;
   @Input() toolbarConfig: any[] = [
+    // ['bold', 'italic', 'underline', 'strike'],
+    // ['blockquote', 'code-block', 'code'],
+    // ['link', 'image', 'video', 'formula'],
+    // [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
+    // [{ script: 'sub' }, { script: 'super' }],
+    // [{ indent: '-1' }, { indent: '+1' }],
+    // [{ direction: 'rtl' }],
+    // [{ size: ['small', false, 'large', 'huge'] }],    
+    // [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    // [{ color: [] }, { background: [] }],
+    // [{ font: [] }],
+    // [{ align: [] }],
+    // [{ [TableUp.toolName]: [] }],
+    // ['clean'],
     [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    [{ size: ['small', false, 'large', 'huge'] }],    
     [{ align: [] }],
     ['bold', 'italic', 'underline', 'strike'],
     [{ indent: '-1' }, { indent: '+1' }],
