@@ -196,11 +196,17 @@ export class MatriculaManterComp implements OnInit {
   }
 
   showModalContrato(matricula: Matricula, contrato: Contrato) {
-    this.dialog.open(ContratoDialogComponent, {
+    const dialogRef$ = this.dialog.open(ContratoDialogComponent, {
       width: '80vw',
       data: {
         matricula,
         contrato
+      }
+    });
+
+    dialogRef$.afterClosed().subscribe(result => {
+      if (result.sucesso) {
+        this.buscar();
       }
     });
   }

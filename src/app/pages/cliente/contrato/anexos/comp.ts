@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -14,13 +14,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfirmDialogComponent } from 'src/app/core/components';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { Anexo, AnexoBase64 } from 'src/app/shared/models/anexo';
-import Contrato from 'src/app/shared/models/contrato';
+import Contrato, { ContratoSalvoModal } from 'src/app/shared/models/contrato';
 import { AnexoService } from 'src/app/shared/services/anexo.service';
 import { InnercardComponent } from "../../../../shared/components/innercard/innercard.component";
 import { AssinarContratoDialogComponent } from './modal-assinar-contrato/modal';
 import { ContratoService } from 'src/app/shared/services/contrato.service';
 import { Router } from '@angular/router';
 import { UtilsService } from 'src/app/shared/services/utils.service';
+import { MSG_SUCESS } from 'src/app/shared/common/constants';
 
 
 @Component({
@@ -55,8 +56,9 @@ export class AnexosContratoComp implements OnInit {
   private readonly router = inject(Router);
   private readonly utilService = inject(UtilsService);
 
-
   @Input({ required: true }) contrato!: Contrato | null;
+  @Input({ required: true }) inModal = false;
+  @Output() contratoSalvo = new EventEmitter<any>();
 
   form!: FormGroup;
   anexos = signal<Anexo[]>([]);
@@ -232,8 +234,18 @@ export class AnexosContratoComp implements OnInit {
         ))
           .subscribe({
             next: _ => {
-              this.notification.showSuccess('Operação realizada com sucesso.');
-              this.router.navigate(['/cliente/contrato']);
+
+              this.notification.showSuccess(MSG_SUCESS);
+              if (this.inModal) {
+                const dadosSalvos: ContratoSalvoModal = {
+                  mensagem: MSG_SUCESS,
+                  sucesso: true
+
+                };
+                this.contratoSalvo.emit(dadosSalvos);
+              } else {
+                this.router.navigate(['/cliente/contrato']);
+              }
             },
             error: (err) => {
               this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));

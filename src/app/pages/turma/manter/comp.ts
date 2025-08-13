@@ -91,7 +91,7 @@ export class ManterComp implements OnInit {
 
   ngOnInit(): void {
     this._createForm();
-    this._initForm();
+    this._getDataSnapshot();
     this._initTab();
     this._observarCurso();
     this._observarMudancasParaCalcularDataFim();
@@ -109,7 +109,7 @@ export class ManterComp implements OnInit {
       id: [null],
       nome: ['', Validators.required],
       curso: [null, Validators.required], // Use null para objetos de autocomplete
-      codigo: ['', Validators.required],
+      codigo: [''],
       capacidadeMaxima: ['', Validators.required],
       status: [null, Validators.required], // Use null para select/enum
       anoPeriodo: ['', Validators.required],
@@ -132,18 +132,25 @@ export class ManterComp implements OnInit {
     });
   }
 
-  private _initForm() {
+  private _getDataSnapshot() {
     const entity = this.route.snapshot.data['entity'] as Turma;
     if (entity) {
       this.turma.set(entity);
+      this._initForm();
+    }
+  }
+
+  private _initForm() {
+    if (this.turma()) {
       this.form.patchValue({
-        ...entity,
+        ...this.turma(),
         // Garante que o time picker receba um objeto Date
-        horarioInicio: DataUtils.getDateHoursMinute(entity.horarioInicio.toString()),
-        horarioFim: DataUtils.getDateHoursMinute(entity.horarioFim.toString())
+        horarioInicio: DataUtils.getDateHoursMinute(this.turma()!.horarioInicio.toString()),
+        horarioFim: DataUtils.getDateHoursMinute(this.turma()!.horarioFim.toString())
       }, { emitEvent: true });
     }
   }
+
 
   private _observarCurso() {
     this.srvTextSubject.asObservable()
@@ -176,6 +183,7 @@ export class ManterComp implements OnInit {
     this.spinner.showUntilCompleted(this.turmaService.salvarTurma(this.form.value as Partial<Turma>)).subscribe({
       next: (turma) => {
         this.turma.set(turma);
+        this._initForm();
         this.notification.showSuccess('Operação realizada com sucesso.');
       },
       error: (err) => { // <--- Add error handling
@@ -220,17 +228,13 @@ export class ManterComp implements OnInit {
         dataFim.setDate(dataFim.getDate() + (valor * 7)); // O operador * já faria a conversão, mas é bom ser explícito.
         break;
       case 'MESES':
-        console.log(unidade);
         dataFim.setMonth(dataFim.getMonth() + valor);
         break;
       case 'ANOS':
         dataFim.setFullYear(dataFim.getFullYear() + valor);
         break;
     }
-    console.log(valor);
-    console.log(dataFim);
     this.form.get('dataFim')?.patchValue(dataFim, { emitEvent: false });
   }
-
 
 }

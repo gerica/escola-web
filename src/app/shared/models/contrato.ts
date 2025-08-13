@@ -23,9 +23,14 @@ export default interface Contrato {
   contratoDoc: string,
 }
 
+export interface ContratoSalvoModal {
+  mensagem: string,
+  sucesso: boolean
+}
+
 export interface ContratoDocBase64 {
-    nomeArquivo: string,
-    conteudoBase64: string,
+  nomeArquivo: string,
+  conteudoBase64: string,
 }
 
 

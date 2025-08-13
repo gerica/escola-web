@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -18,7 +18,7 @@ import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operato
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { Cidade } from 'src/app/shared/models/cidade';
 import Cliente from 'src/app/shared/models/cliente';
-import Contrato from 'src/app/shared/models/contrato';
+import Contrato, { ContratoSalvoModal } from 'src/app/shared/models/contrato';
 import { Estado } from 'src/app/shared/models/estado';
 import { PeriodoPagamento, PeriodoPagamentoLabelMapping } from 'src/app/shared/models/periodos-pagamento.enum';
 import { StatusContrato, StatusContratoLabelMapping } from 'src/app/shared/models/status-contrato.enum';
@@ -68,6 +68,7 @@ export class ContratoManterComp implements OnInit {
 
   @Input({ required: false }) contratoInput!: Contrato | null;
   @Input({ required: false }) matriculaInput!: Matricula | null;
+  @Output() contratoSalvo = new EventEmitter<any>();
 
   inModal = signal<boolean>(false);
 
@@ -218,6 +219,10 @@ export class ContratoManterComp implements OnInit {
           this.cidades.set(result);
         }
       });
+  }
+
+  eventContratoSalvo(dados: ContratoSalvoModal) {    
+    this.contratoSalvo.emit(dados);
   }
 
 }

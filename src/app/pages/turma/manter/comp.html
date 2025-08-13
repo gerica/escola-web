@@ -9,6 +9,20 @@
         <form [formGroup]="form" (submit)="onSubmit()">
 
           <section class="containerLinha">
+
+            <mat-form-field appearance="outline">
+              <mat-label>Código</mat-label>
+              <input matInput placeholder="codigo" formControlName="codigo">
+              <!-- Validação de campo obrigatório -->
+              @if(form.controls['codigo'].hasError('required') && (form.controls['codigo'].touched ||
+              form.controls['codigo'].dirty)){
+              <mat-error>
+                O código é <strong>obrigatório</strong>
+              </mat-error>
+              }
+              <mat-hint align="end">O código será gerado automaticamente</mat-hint>
+            </mat-form-field>
+
             <mat-form-field appearance="outline">
               <mat-label>Nome</mat-label>
               <input matInput placeholder="nome" formControlName="nome">
@@ -21,17 +35,7 @@
               }
             </mat-form-field>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Código</mat-label>
-              <input matInput placeholder="codigo" formControlName="codigo">
-              <!-- Validação de campo obrigatório -->
-              @if(form.controls['codigo'].hasError('required') && (form.controls['codigo'].touched ||
-              form.controls['codigo'].dirty)){
-              <mat-error>
-                O código é <strong>obrigatório</strong>
-              </mat-error>
-              }
-            </mat-form-field>
+
 
             <!-- curso -->
             <mat-form-field appearance="outline">
@@ -179,7 +183,7 @@
               <mat-label>Data Final</mat-label>
               <input matInput [matDatepicker]="pickerDtFinal" formControlName="dataFim">
               <mat-datepicker-toggle matIconSuffix [for]="pickerDtFinal"></mat-datepicker-toggle>
-              <mat-datepicker #pickerDtFinal></mat-datepicker>             
+              <mat-datepicker #pickerDtFinal></mat-datepicker>
             </mat-form-field>
           </section>
 
