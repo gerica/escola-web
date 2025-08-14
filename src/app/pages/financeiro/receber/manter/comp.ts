@@ -28,6 +28,7 @@ import { ContaReceberService } from 'src/app/shared/services/conta.receber.servi
 import { ContaReceberDetalheDialog } from './detalhe/detalhe';
 import { ContaReceberPagamentoDetalheDialog } from './pagamento/comp';
 import { ContaReceberCriarContaDialog } from './criarConta/comp';
+import { StatusContrato } from 'src/app/shared/models/status-contrato.enum';
 
 @Component({
   selector: 'app-conta-receber-manter',
@@ -66,12 +67,13 @@ export class ContaReceberManterComp implements OnInit {
 
   displayedColumns: string[] = ['dataVencimento', 'valorTotal', 'desconto', 'valorPago', 'dataPagamento', 'status', 'acoes'];
 
-
   statusContaReceber = Object.values(StatusContaReceber);
   statusContaReceberLabelMapping = StatusContaReceberLabelMapping;
+  statusContratoConcluido = StatusContrato.CONCLUIDO;
 
   ngOnInit(): void {
     this._initForm();
+    // console.log(this.contrato());
   }
 
   private _initForm() {

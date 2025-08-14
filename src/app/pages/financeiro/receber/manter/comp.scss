@@ -12,3 +12,14 @@
     justify-content: flex-end;
     gap: 8px;
 }
+
+.containerHeader {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.mat-icon-48 {
+  font-size: 48px; /* Ou o tamanho que você preferir */
+  width: 48px;
+  height: 48px;
+}

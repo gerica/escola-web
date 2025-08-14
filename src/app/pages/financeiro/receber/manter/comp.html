@@ -1,15 +1,24 @@
 <app-innercard titulo="Contrato" [estiloCard]="{'padding': '0em',}">
   @if (contrato()) {
-  <div class="details-container">
-    <p><strong>Contrato:</strong> {{ contrato()?.numeroContrato }}</p>
-    <p><strong>Cliente:</strong> {{ contrato()?.nomeCliente }}</p>
-    <p><strong>Status:</strong> {{ contrato()?.statusContrato }}</p>
-    <p><strong>Valor:</strong> {{ contrato()?.valorTotal | currency: 'BRL' }}</p>
-  </div>
-  <div class="details-container">
-    <p><strong>Descrição:</strong> {{ contrato()?.descricao }}</p>
-    <p><strong>Data de início:</strong> {{ contrato()?.dataInicio| date: 'dd/MM/yyyy' }}</p>
-    <p><strong>Data de fim:</strong> {{ contrato()?.dataFim| date: 'dd/MM/yyyy' }}</p>
+  <div class="containerHeader">
+    <div>
+      <div class="details-container">
+        <p><strong>Contrato:</strong> {{ contrato()?.numeroContrato }}</p>
+        <p><strong>Cliente:</strong> {{ contrato()?.nomeCliente }}</p>
+        <p><strong>Status:</strong> {{ contrato()?.statusContrato }}</p>
+        <p><strong>Valor:</strong> {{ contrato()?.valorTotal | currency: 'BRL' }}</p>
+      </div>
+      <div class="details-container">
+        <p><strong>Descrição:</strong> {{ contrato()?.descricao }}</p>
+        <p><strong>Data de início:</strong> {{ contrato()?.dataInicio| date: 'dd/MM/yyyy' }}</p>
+        <p><strong>Data de fim:</strong> {{ contrato()?.dataFim| date: 'dd/MM/yyyy' }}</p>
+      </div>
+    </div>
+    <div>
+      @if(contrato()?.statusContrato === statusContratoConcluido){
+      <mat-icon class="color-heightline mat-icon-48">verified</mat-icon>
+      }
+    </div>
   </div>
   } @else {
   <p>Carregando detalhes da turma...</p>
