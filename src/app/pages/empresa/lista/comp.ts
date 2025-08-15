@@ -21,6 +21,9 @@ import { InnercardComponent } from "../../../shared/components/innercard/innerca
 import { EmpresaDetalheDialog } from './detalhe';
 import { CnpjPipe } from 'src/app/shared/pipe/cnpj.pipe';
 import { TelefonePipe } from 'src/app/shared/pipe/telefone.pipe';
+import { ActionsComponent } from 'src/app/shared/components/actions/actions.component';
+import RelatorioBase64 from 'src/app/shared/services/relatorio.base64';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 
 @Component({
   selector: 'app-cliente-list',
@@ -42,7 +45,8 @@ import { TelefonePipe } from 'src/app/shared/pipe/telefone.pipe';
     ReactiveFormsModule,
     InnercardComponent,
     CnpjPipe,
-    TelefonePipe
+    TelefonePipe,
+    ActionsComponent
   ]
 })
 export class ListComp implements OnInit, OnDestroy {
@@ -52,6 +56,7 @@ export class ListComp implements OnInit, OnDestroy {
   private readonly spinner = inject(LoadingSpinnerService);
   private readonly empresaService = inject(EmpresaService);
   private readonly dialog = inject(MatDialog);
+  private readonly utilService = inject(UtilsService);
 
   empresas = signal(emptyPage<Empresa>());
   ctrlFiltro = new FormControl('', { nonNullable: true });
@@ -108,5 +113,45 @@ export class ListComp implements OnInit, OnDestroy {
         ...entity,
       }
     });
+  }
+
+  // Function to pass to the child component
+  download(type: string) {
+    this.spinner.showUntilCompleted(this.empresaService.downloadFile(type, this.ctrlFiltro.value))
+      .subscribe({
+        next: (result) => {
+          this._baixar(result);
+        },
+        error: (err) => {
+          this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+          console.error('Erro ao baixar anexo:', err);
+        }
+      }
+      );
+  }
+
+  _baixar(documento: RelatorioBase64) {
+    // O tipo do arquivo (MIME type) é necessário para o Blob.
+    // Você pode inferir isso do nome do arquivo ou passar do backend.
+    const mimeType = this.utilService.getMimeType(documento.nomeArquivo);
+    // const mimeType = "application/pdf";
+
+    // Decodifica a string Base64 e cria um Blob
+    const byteCharacters = atob(documento.conteudoBase64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: mimeType });
+
+    // Cria um link e simula o clique para iniciar o download
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = documento.nomeArquivo;
+    link.click();
+
+    window.URL.revokeObjectURL(link.href); // Libera o objeto URL
+
   }
 }

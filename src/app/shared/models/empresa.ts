@@ -1,18 +1,18 @@
 import { gql } from "apollo-angular";
 
 export interface Empresa {
-    id?: number; // Opcional, pois pode não existir em novas empresas antes de salvar
-    nomeFantasia: string;
-    razaoSocial: string;
-    cnpj: string;
-    inscricaoEstadual?: string; // Opcional
-    telefone?: string; // Opcional
-    email: string;
-    endereco: string;
-    logoUrl?: string; // Opcional
-    ativo: boolean;
-    dataCadastro?: string; // Opcional, geralmente preenchido pelo backend
-    dataAtualizacao?: string; // Opcional, geralmente preenchido pelo backend
+  id?: number; // Opcional, pois pode não existir em novas empresas antes de salvar
+  nomeFantasia: string;
+  razaoSocial: string;
+  cnpj: string;
+  inscricaoEstadual?: string; // Opcional
+  telefone?: string; // Opcional
+  email: string;
+  endereco: string;
+  logoUrl?: string; // Opcional
+  ativo: boolean;
+  dataCadastro?: string; // Opcional, geralmente preenchido pelo backend
+  dataAtualizacao?: string; // Opcional, geralmente preenchido pelo backend
 }
 
 const SAVE_EMPRESA = gql`
@@ -81,5 +81,14 @@ const FETCH_EMPRESA_BY_ID = gql`
   }
 `;
 
+const DOWNLOAD_LISTA_EMPRESAS = gql`
+  query DownloadListaEmpesas($request: FiltroRelatorioRequest!) {
+    downloadListaEmpesas(request: $request){
+        nomeArquivo
+        conteudoBase64
+    }
+  }
+`;
 
-export { SAVE_EMPRESA, FETCH_ALL_EMPRESAS, FETCH_EMPRESA_BY_ID };
+
+export { SAVE_EMPRESA, FETCH_ALL_EMPRESAS, FETCH_EMPRESA_BY_ID, DOWNLOAD_LISTA_EMPRESAS };

@@ -3,12 +3,14 @@ import { Apollo } from 'apollo-angular';
 import { map, Observable, tap } from 'rxjs';
 
 import { Page, PageRequest } from 'src/app/core/models';
-import { Empresa, FETCH_ALL_EMPRESAS, FETCH_EMPRESA_BY_ID, SAVE_EMPRESA } from '../models/empresa';
+import { DOWNLOAD_LISTA_EMPRESAS, Empresa, FETCH_ALL_EMPRESAS, FETCH_EMPRESA_BY_ID, SAVE_EMPRESA } from '../models/empresa';
 import { URL_ADMIN } from '../common/constants';
+import RelatorioBase64 from './relatorio.base64';
 
 
 @Injectable({ providedIn: 'root' })
 export class EmpresaService {
+
 
   private apollo = inject(Apollo);
 
@@ -76,6 +78,23 @@ export class EmpresaService {
       //   console.log("Received GraphQL data (fetchByIdCliente):", value);
       // }),
       // map(result => result)
+    );
+  }
+
+
+  downloadFile(tipo: string, filtro: string): Observable<RelatorioBase64> {
+    return this.apollo.query<any>({
+      query: DOWNLOAD_LISTA_EMPRESAS,
+      variables: {
+        request: {
+          filtro: filtro,
+          tipo: tipo
+        }
+      },
+      context: { uri: URL_ADMIN },
+      fetchPolicy: 'network-only'
+    }).pipe(
+      map(result => result.data.downloadListaEmpesas),
     );
   }
 }

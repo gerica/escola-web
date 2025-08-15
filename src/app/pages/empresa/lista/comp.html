@@ -10,7 +10,10 @@
       </button>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" routerLink="/empresa/manter">Nova empresa</button>
+    <app-buttons-actions (clickDonwload)="download($event)">
+      <button mat-raised-button color="primary" routerLink="/empresa/manter">Nova empresa</button>
+    </app-buttons-actions>
+
   </section>
 
   <app-innercard>

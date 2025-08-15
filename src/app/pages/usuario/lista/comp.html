@@ -9,7 +9,9 @@
       </button>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" routerLink="/usuario/manter">Novo usuário</button>
+    <app-buttons-actions (clickDonwload)="download($event)" [showBtnDownload]="true">
+      <button mat-raised-button color="primary" routerLink="/usuario/manter">Novo usuário</button>
+    </app-buttons-actions>
   </section>
 
   <app-innercard>

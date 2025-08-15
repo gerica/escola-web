@@ -1,0 +1,8 @@
+<div style=" display: flex; gap: 8px;">
+  @if(showBtnDownload){
+  <button mat-mini-fab (click)="openBottomSheet()">
+    <mat-icon>download</mat-icon>
+  </button>
+  }
+  <ng-content />
+</div>

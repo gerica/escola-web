@@ -6,11 +6,11 @@ import { MatListModule } from "@angular/material/list";
     selector: 'bottom-sheet-overview-example-sheet',
     template: `
   <mat-nav-list>
-    <a mat-list-item (click)="openLink($event, 'pdf')">
+    <a mat-list-item (click)="openLink($event, 'PDF')">
       <span matListItemTitle>Download</span>
       <span matLine>Baixar arquivo em PDF</span>
     </a>
-    <a mat-list-item (click)="openLink($event, 'ods')">
+    <a mat-list-item (click)="openLink($event, 'ODS')">
       <span matListItemTitle>Download</span>
       <span matLine>Baixar arquivo em ODS</span>
     </a>
