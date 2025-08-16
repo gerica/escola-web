@@ -82,7 +82,6 @@ export class EmpresaService {
     );
   }
 
-
   downloadFile(tipo: string, filtro: string): Observable<RelatorioBase64> {
     return this.apollo.query<any>({
       query: DOWNLOAD_LISTA_EMPRESAS,

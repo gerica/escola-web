@@ -11,7 +11,9 @@
     </mat-form-field>
     <!-- </div> -->
 
-    <button mat-raised-button color="primary" routerLink="/cliente/manter">Novo clientes</button>
+    <app-buttons-actions (clickDonwload)="download($event)">
+      <button mat-raised-button color="primary" routerLink="/cliente/manter">Novo clientes</button>
+    </app-buttons-actions>
   </section>
 
   <app-innercard>
@@ -60,7 +62,7 @@
               } @else if(isStatusBloqueado(element.statusCliente)) {
               <mat-icon color="accent">block</mat-icon>
               } @else if(isStatusPendente(element.statusCliente)) {
-              <mat-icon class="color-info">pending</mat-icon>              
+              <mat-icon class="color-info">pending</mat-icon>
               } @else {
               <mat-icon>help_outline</mat-icon>
               }
@@ -69,8 +71,8 @@
               <mat-icon color="primary">edit</mat-icon>
             </a>
             <a matTooltip="Remover" aria-hidden="false" (click)="confirmarExclusao(element)" class="cursorSelect">
-                <mat-icon color="primary">delete</mat-icon>
-              </a>
+              <mat-icon color="primary">delete</mat-icon>
+            </a>
           </td>
 
         </ng-container>

@@ -152,6 +152,5 @@ export class ListComp implements OnInit, OnDestroy {
     link.click();
 
     window.URL.revokeObjectURL(link.href); // Libera o objeto URL
-
   }
 }

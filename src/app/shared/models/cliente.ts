@@ -22,7 +22,7 @@ export default interface Cliente {
 }
 
 
-const SAVE_CLIENTE = gql`
+export const SAVE_CLIENTE = gql`
   mutation saveCliente($request: ClienteRequest!){  
     saveCliente(request:$request){
       id
@@ -42,7 +42,7 @@ const SAVE_CLIENTE = gql`
   }
 `;
 
-const FETCH_ALL_CLIENTES = gql`  
+export const FETCH_ALL_CLIENTES = gql`  
   query fetchAllClientes($filtro: String, $page: Int, $size: Int, $sort: [SortRequest]) { 
     fetchAllClientes(filtro: $filtro, page: $page, size: $size, sort: $sort) {    
       number
@@ -71,7 +71,7 @@ const FETCH_ALL_CLIENTES = gql`
   }
 `;
 
-const FETCH_ALL_ATIVOS_CLIENTES = gql`  
+export const FETCH_ALL_ATIVOS_CLIENTES = gql`  
   query fetchAllClientesAtivos($filtro: String, $page: Int, $size: Int, $sort: [SortRequest]) { 
     fetchAllClientesAtivos(filtro: $filtro, page: $page, size: $size, sort: $sort) {    
       number
@@ -100,7 +100,7 @@ const FETCH_ALL_ATIVOS_CLIENTES = gql`
   }
 `;
 
-const FETCH_ALL_ATIVOS_CLIENTES_COM_DEPENDENTES = gql`  
+export const FETCH_ALL_ATIVOS_CLIENTES_COM_DEPENDENTES = gql`  
   query fetchAllClientsByStatusAndFiltroWithDependents($filtro: String, $page: Int, $size: Int, $sort: [SortRequest]) { 
     fetchAllClientsByStatusAndFiltroWithDependents(filtro: $filtro, page: $page, size: $size, sort: $sort) {    
       number
@@ -123,7 +123,7 @@ const FETCH_ALL_ATIVOS_CLIENTES_COM_DEPENDENTES = gql`
   }
 `;
 
-const FETCH_CLIENTE_BY_ID = gql`
+export const FETCH_CLIENTE_BY_ID = gql`
   query fetchByIdCliente($id: ID!) { # $id: ID! means the id is a required ID type
     fetchByIdCliente(id: $id) {
       id
@@ -149,10 +149,11 @@ export const DELETE_BY_ID = gql`
   }
 `;
 
-export {
-  SAVE_CLIENTE,
-  FETCH_ALL_CLIENTES,
-  FETCH_CLIENTE_BY_ID,
-  FETCH_ALL_ATIVOS_CLIENTES,
-  FETCH_ALL_ATIVOS_CLIENTES_COM_DEPENDENTES
-};
+export const DOWNLOAD_LISTA_CLIENTES = gql`
+  query DownloadListaClientes($request: FiltroRelatorioRequest!) {
+    downloadListaClientes(request: $request){
+        nomeArquivo
+        conteudoBase64
+    }
+  }
+`;

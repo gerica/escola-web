@@ -3,8 +3,9 @@ import { Apollo } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
 import { Page, PageRequest } from 'src/app/core/models';
 import { URL_ADMIN } from '../common/constants';
-import Cliente, { DELETE_BY_ID, FETCH_ALL_ATIVOS_CLIENTES, FETCH_ALL_ATIVOS_CLIENTES_COM_DEPENDENTES, FETCH_ALL_CLIENTES, FETCH_CLIENTE_BY_ID, SAVE_CLIENTE } from '../models/cliente';
+import Cliente, { DELETE_BY_ID, DOWNLOAD_LISTA_CLIENTES, FETCH_ALL_ATIVOS_CLIENTES, FETCH_ALL_ATIVOS_CLIENTES_COM_DEPENDENTES, FETCH_ALL_CLIENTES, FETCH_CLIENTE_BY_ID, SAVE_CLIENTE } from '../models/cliente';
 import { DataUtils } from './data.service';
+import RelatorioBase64 from './relatorio.base64';
 
 @Injectable({ providedIn: 'root' })
 export class ClienteService {
@@ -154,6 +155,22 @@ export class ClienteService {
       context: { uri: URL_ADMIN },
     }).pipe(
       map(result => result.data.deleteCursoById as String),
+    );
+  }
+
+  downloadFile(tipo: string, filtro: string): Observable<RelatorioBase64> {
+    return this.apollo.query<any>({
+      query: DOWNLOAD_LISTA_CLIENTES,
+      variables: {
+        request: {
+          filtro: filtro,
+          tipo: tipo
+        }
+      },
+      context: { uri: URL_ADMIN },
+      fetchPolicy: 'network-only'
+    }).pipe(
+      map(result => result.data.downloadListaClientes),
     );
   }
 }
