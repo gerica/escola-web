@@ -5,7 +5,7 @@
         <div class="toolbar__home">
           @if(appUser()&& appUser()?.empresa?.id) {
           <div class="toolbar__home__logo">            
-            <img [src]="appUser()?.empresa?.logoUrl" alt="{{ appUser()?.empresa?.nomeFantasia }}"
+            <img [src]="logoUrl()" alt="{{ appUser()?.empresa?.nomeFantasia }}"
               class="toolbar__home__logo__image" />
           </div>
           <div class="toolbar__home__sistema">

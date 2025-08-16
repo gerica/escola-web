@@ -11,10 +11,10 @@ import RelatorioBase64 from './relatorio.base64';
 @Injectable({ providedIn: 'root' })
 export class EmpresaService {
 
-
   private apollo = inject(Apollo);
 
-  salvar(entity: Partial<Empresa>): Observable<Empresa> {
+  salvar(entity: Partial<Empresa>): Observable<String> {
+    console.log(entity);
     return this.apollo.mutate<any>({
       mutation: SAVE_EMPRESA,
       variables: {
@@ -27,13 +27,14 @@ export class EmpresaService {
           telefone: entity.telefone,
           email: entity.email,
           endereco: entity.endereco,
-          logoUrl: entity.logoUrl,
+          logoBase64: entity.logo?.conteudoBase64,
+          logoMimeType: entity.logo?.mimeType,
           ativo: entity.ativo,
         },
       },
       context: { uri: URL_ADMIN },
     }).pipe(
-      map(result => result.data.saveEmpresa as Empresa),
+      map(result => result.data.saveEmpresa as String),
       // tap(value => {
       //   console.log(value);
       // }),
@@ -66,7 +67,7 @@ export class EmpresaService {
         id: id // Pass the ID directly
       },
       context: { uri: URL_ADMIN },
-      fetchPolicy: 'cache-first'
+      fetchPolicy: 'network-only'
     }).pipe(
       map(result => {
         const entity = result.data.fetchByIdEmpresa as Empresa

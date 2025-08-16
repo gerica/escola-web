@@ -98,16 +98,22 @@
               <mat-error> O Endereço é <strong>obrigatório</strong> </mat-error>
               }
             </mat-form-field>
+          </section>
+          <section>
+            <div class="logo-container">
+              <div class="logo-preview-box">
+                @if (logoPreviewUrl()) {
+                <img [src]="logoPreviewUrl()" alt="Logo Preview" class="logo-preview">
+                } @else {
+                <mat-icon class="upload-icon">add_photo_alternate</mat-icon>
+                }
+              </div>
 
-            <mat-form-field appearance="outline" class="mat-form-field-full-width">
-              <mat-label>URL do Logo</mat-label>
-              <input type="url" matInput formControlName="logoUrl" placeholder="https://exemplo.com/logo.png"
-                maxlength="255">
-              <!-- Validação de formato de URL (opcional, mas boa prática) -->
-              @if (form.controls['logoUrl'].hasError('pattern')) {
-              <mat-error>Entre com uma URL válida</mat-error>
-              }
-            </mat-form-field>
+              <button mat-raised-button color="accent" type="button" (click)="fileInput.click()">
+                Selecionar Logo
+              </button>
+              <input hidden type="file" #fileInput (change)="onFileSelected($event)" accept="image/png, image/jpeg">
+            </div>
           </section>
 
           @if(usuarioEhSuperAdmin){

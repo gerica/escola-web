@@ -49,7 +49,10 @@ export const IMPERSONATE_USER_MUTATION = gql`
         empresa{
           id
           nomeFantasia
-          logoUrl
+          logo {
+            mimeType
+            conteudoBase64
+          }
         }
       }
     }

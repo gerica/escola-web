@@ -1,6 +1,7 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router, RouterModule } from '@angular/router';
 import { APP_CONFIG, APP_USER, MenuItem } from 'src/app/core/models';
 import { AuthService } from 'src/app/core/services';
@@ -14,13 +15,25 @@ import { AuthService } from 'src/app/core/services';
 })
 export class ToolbarComponent {
   private readonly router = inject(Router);
+  private readonly sanitizer = inject(DomSanitizer);
   readonly authService = inject(AuthService);
 
   appConfig = inject(APP_CONFIG);
-
   appUser = inject(APP_USER);
 
   @Input() menu!: MenuItem[];
+
+  // ⭐️ Novo: Signal Computado para o logo
+  logoUrl = computed<SafeUrl | undefined>(() => {
+    const user = this.appUser();
+    // Verifique se o usuário e o logo existem para evitar erros
+    if (user && user.empresa && user.empresa.logo && user.empresa.logo.conteudoBase64) {
+      const { mimeType, conteudoBase64 } = user.empresa.logo;
+      const base64WithPrefix = `data:${mimeType};base64,${conteudoBase64}`;
+      return this.sanitizer.bypassSecurityTrustUrl(base64WithPrefix);
+    }
+    return undefined; // Retorna undefined se o logo não existir
+  });
 
   onMenuClick(item: MenuItem): void {
     // Special handling for dynamic routes like 'empresa/manter/:id'    
@@ -36,6 +49,12 @@ export class ToolbarComponent {
       this.router.navigate([item.router]);
     }
   }
+
+  // getLogoSafeUrl(): SafeUrl {
+  //   const base64WithPrefix = `data:${this.appUser()?.empresa.logo.mimeType};base64,${this.appUser()?.empresa.logo.conteudoBase64}`;
+  //   // this.logoUrl.set(this.sanitizer.bypassSecurityTrustUrl(base64WithPrefix));    
+  //   return this.sanitizer.bypassSecurityTrustUrl(base64WithPrefix);
+  // }
 
   logout() {
     this.authService.logout();

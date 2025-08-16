@@ -9,28 +9,22 @@ export interface Empresa {
   telefone?: string; // Opcional
   email: string;
   endereco: string;
-  logoUrl?: string; // Opcional
+  logo: Logo; // Opcional  
   ativo: boolean;
   dataCadastro?: string; // Opcional, geralmente preenchido pelo backend
   dataAtualizacao?: string; // Opcional, geralmente preenchido pelo backend
 }
 
+export interface Logo {
+  uuid: string
+  mimeType: string
+  hash: string
+  conteudoBase64: string
+}
+
 const SAVE_EMPRESA = gql`
   mutation saveEmpresa($request: EmpresaRequest!){  
-    saveEmpresa(request:$request){
-        id
-        nomeFantasia
-        razaoSocial
-        cnpj
-        inscricaoEstadual
-        telefone
-        email
-        endereco
-        logoUrl
-        ativo
-        dataCadastro
-        dataAtualizacao
-    }
+    saveEmpresa(request:$request)
   }
 `;
 
@@ -53,7 +47,6 @@ const FETCH_ALL_EMPRESAS = gql`
         telefone
         email
         endereco
-        logoUrl
         ativo
         dataCadastro
         dataAtualizacao
@@ -73,7 +66,10 @@ const FETCH_EMPRESA_BY_ID = gql`
         telefone
         email
         endereco
-        logoUrl
+        logo{
+          mimeType
+          conteudoBase64
+        }
         ativo
         dataCadastro
         dataAtualizacao
