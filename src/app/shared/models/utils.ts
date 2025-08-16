@@ -50,3 +50,12 @@ export const FETCH_AVALIABLE_ROLES = gql`
     getAvailableRoles
   }
 `;
+
+export const DOWNLOAD_LISTA_USUARIOS = gql`
+  query DownloadListaUsuarios($request: FiltroRelatorioRequest!) {
+    downloadListaUsuarios(request: $request){
+        nomeArquivo
+        conteudoBase64
+    }
+  }
+`;

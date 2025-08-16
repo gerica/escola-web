@@ -50,12 +50,6 @@ export class ToolbarComponent {
     }
   }
 
-  // getLogoSafeUrl(): SafeUrl {
-  //   const base64WithPrefix = `data:${this.appUser()?.empresa.logo.mimeType};base64,${this.appUser()?.empresa.logo.conteudoBase64}`;
-  //   // this.logoUrl.set(this.sanitizer.bypassSecurityTrustUrl(base64WithPrefix));    
-  //   return this.sanitizer.bypassSecurityTrustUrl(base64WithPrefix);
-  // }
-
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);

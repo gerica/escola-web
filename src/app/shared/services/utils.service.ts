@@ -4,6 +4,7 @@ import { map, Observable } from 'rxjs';
 import { Page, PageRequest } from 'src/app/core/models';
 import { Cidade } from '../models/cidade';
 import { FETCH_CIDADE_BY_CODIGO, FETCH_CIDADE_BY_FILTRO } from '../models/utils';
+import ArquivoBase64 from '../models/arquivo.base64';
 
 const URL = '/utils/graphql';
 
@@ -62,6 +63,30 @@ export class UtilsService {
             default:
                 return 'application/octet-stream';
         }
+    }
+
+    downloadFile(documento: ArquivoBase64) {
+        // O tipo do arquivo (MIME type) é necessário para o Blob.
+        // Você pode inferir isso do nome do arquivo ou passar do backend.
+        const mimeType = this.getMimeType(documento.nomeArquivo);
+        // const mimeType = "application/pdf";
+
+        // Decodifica a string Base64 e cria um Blob
+        const byteCharacters = atob(documento.conteudoBase64);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: mimeType });
+
+        // Cria um link e simula o clique para iniciar o download
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = documento.nomeArquivo;
+        link.click();
+
+        window.URL.revokeObjectURL(link.href); // Libera o objeto URL
     }
 
 }

@@ -29,8 +29,7 @@ export const LOGIN = gql`
         precisaAlterarSenha
         empresa{
           id
-          nomeFantasia
-          logoUrl
+          nomeFantasia          
         }
     }
   }

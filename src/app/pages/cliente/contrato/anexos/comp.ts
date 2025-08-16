@@ -11,17 +11,17 @@ import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Router } from '@angular/router';
 import { ConfirmDialogComponent } from 'src/app/core/components';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
-import { Anexo, AnexoBase64 } from 'src/app/shared/models/anexo';
+import { MSG_SUCESS } from 'src/app/shared/common/constants';
+import { Anexo } from 'src/app/shared/models/anexo';
 import Contrato, { ContratoSalvoModal } from 'src/app/shared/models/contrato';
 import { AnexoService } from 'src/app/shared/services/anexo.service';
+import { ContratoService } from 'src/app/shared/services/contrato.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../../shared/components/innercard/innercard.component";
 import { AssinarContratoDialogComponent } from './modal-assinar-contrato/modal';
-import { ContratoService } from 'src/app/shared/services/contrato.service';
-import { Router } from '@angular/router';
-import { UtilsService } from 'src/app/shared/services/utils.service';
-import { MSG_SUCESS } from 'src/app/shared/common/constants';
 
 
 @Component({
@@ -168,7 +168,7 @@ export class AnexosContratoComp implements OnInit {
     this.spinner.showUntilCompleted(this.anexoService.downloadAnexo(entity.id))
       .subscribe({
         next: (result) => {
-          this._baixar(result);
+          this.utilService.downloadFile(result);
         },
         error: (err) => {
           this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
@@ -178,45 +178,7 @@ export class AnexosContratoComp implements OnInit {
       });
   }
 
-  _baixar(anexo: AnexoBase64) {
-    this.loading = false; // Oculta o spinner
-
-    // O tipo do arquivo (MIME type) é necessário para o Blob.
-    // Você pode inferir isso do nome do arquivo ou passar do backend.
-    const mimeType = this.utilService.getMimeType(anexo.nomeArquivo);
-    // const mimeType = "application/pdf";
-
-    // Decodifica a string Base64 e cria um Blob
-    const byteCharacters = atob(anexo.conteudoBase64);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: mimeType });
-
-    // Cria um link e simula o clique para iniciar o download
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = anexo.nomeArquivo;
-    link.click();
-
-    window.URL.revokeObjectURL(link.href); // Libera o objeto URL
-
-
-    // const blob = new Blob(base64String, { type: response.headers.get('Content-Type')! });
-    // const url = window.URL.createObjectURL(blob);
-    // const a = document.createElement('a');
-
-    // a.href = url;
-    // a.download = response.headers.get('Content-Disposition')?.split('filename=')[1]?.replace(/"/g, '') || 'download';
-    // document.body.appendChild(a);
-    // a.click();
-    // document.body.removeChild(a);
-    // window.URL.revokeObjectURL(url);
-
-  }
-
+  
   dialogAssinarContrato() {
     const dialogRef$ = this.dialog.open(AssinarContratoDialogComponent, {
       width: '550px',

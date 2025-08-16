@@ -85,9 +85,7 @@ export class EmpresaManterComp implements OnInit {
       inscricaoEstadual: [''],
       telefone: [''],
       email: ['', [Validators.required, Validators.email]],
-      endereco: ['', Validators.required],
-      // logoUrl: ['', Validators.pattern(/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i)], // Exemplo de regex para URL
-      logoUrl: [null],
+      endereco: ['', Validators.required],            
       ativo: [true],
       // dataCadastro e dataAtualizacao são gerenciados pelo backend
     });

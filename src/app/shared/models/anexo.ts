@@ -8,11 +8,6 @@ export interface Anexo {
     dataCadastro: Date,
 }
 
-export interface AnexoBase64 {
-    nomeArquivo: string,
-    conteudoBase64: string,
-}
-
 
 // -------------------------------------------------------------------------
 // Queries e Mutações GraphQL

@@ -3,7 +3,6 @@ import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -18,12 +17,13 @@ import { ConfirmDialogComponent } from 'src/app/core/components';
 import { emptyPage, firstPageAndSort, PageRequest, User } from 'src/app/core/models';
 import { AuthService, LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { KEY_SUPER_ADMIN_TOKEN, KEY_SUPER_ADMIN_USER } from 'src/app/shared/common/constants';
+import { ActionsComponent } from 'src/app/shared/components/actions/actions.component';
 import { Usuario } from 'src/app/shared/models/usuario';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
 import { UsuarioDetalheDialog } from './detalhe';
-import { ActionsComponent } from 'src/app/shared/components/actions/actions.component';
 
 @Component({
   selector: 'app-cliente-list',
@@ -57,7 +57,7 @@ export class ListComp implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
-  
+  private readonly utilService = inject(UtilsService);  
 
   usuarios = signal(emptyPage<Usuario>());
   ctrlFiltro = new FormControl('', { nonNullable: true });
@@ -150,20 +150,19 @@ export class ListComp implements OnInit, OnDestroy {
 
   // Function to pass to the child component
   download(type: string) {
-    console.log(type);
-    // this.spinner.showUntilCompleted(this.empresaService.downloadFile(type, this.nomeOuCodigoCtrl.value))
-    //   .subscribe(response => {
-    //     const blob = new Blob([response.body!], { type: response.headers.get('Content-Type')! });
-    //     const url = window.URL.createObjectURL(blob);
-    //     const a = document.createElement('a');
-
-    //     a.href = url;
-    //     a.download = response.headers.get('Content-Disposition')?.split('filename=')[1]?.replace(/"/g, '') || 'download';
-    //     document.body.appendChild(a);
-    //     a.click();
-    //     document.body.removeChild(a);
-    //     window.URL.revokeObjectURL(url);
-    //   });
-  }
+     this.spinner.showUntilCompleted(this.usuarioService.downloadFile(type, this.ctrlFiltro.value))
+       .subscribe({
+         next: (result) => {
+           this.utilService.downloadFile(result);
+         },
+         error: (err) => {
+           this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+           console.error('Erro ao baixar anexo:', err);
+         }
+       }
+       );
+   }
+ 
+  
 
 }

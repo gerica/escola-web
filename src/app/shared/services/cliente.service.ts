@@ -5,7 +5,7 @@ import { Page, PageRequest } from 'src/app/core/models';
 import { URL_ADMIN } from '../common/constants';
 import Cliente, { DELETE_BY_ID, DOWNLOAD_LISTA_CLIENTES, FETCH_ALL_ATIVOS_CLIENTES, FETCH_ALL_ATIVOS_CLIENTES_COM_DEPENDENTES, FETCH_ALL_CLIENTES, FETCH_CLIENTE_BY_ID, SAVE_CLIENTE } from '../models/cliente';
 import { DataUtils } from './data.service';
-import RelatorioBase64 from './relatorio.base64';
+import ArquivoBase64 from '../models/arquivo.base64';
 
 @Injectable({ providedIn: 'root' })
 export class ClienteService {
@@ -158,7 +158,7 @@ export class ClienteService {
     );
   }
 
-  downloadFile(tipo: string, filtro: string): Observable<RelatorioBase64> {
+  downloadFile(tipo: string, filtro: string): Observable<ArquivoBase64> {
     return this.apollo.query<any>({
       query: DOWNLOAD_LISTA_CLIENTES,
       variables: {

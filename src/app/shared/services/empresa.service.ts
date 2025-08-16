@@ -5,7 +5,7 @@ import { map, Observable, tap } from 'rxjs';
 import { Page, PageRequest } from 'src/app/core/models';
 import { DOWNLOAD_LISTA_EMPRESAS, Empresa, FETCH_ALL_EMPRESAS, FETCH_EMPRESA_BY_ID, SAVE_EMPRESA } from '../models/empresa';
 import { URL_ADMIN } from '../common/constants';
-import RelatorioBase64 from './relatorio.base64';
+import ArquivoBase64 from '../models/arquivo.base64';
 
 
 @Injectable({ providedIn: 'root' })
@@ -82,7 +82,7 @@ export class EmpresaService {
     );
   }
 
-  downloadFile(tipo: string, filtro: string): Observable<RelatorioBase64> {
+  downloadFile(tipo: string, filtro: string): Observable<ArquivoBase64> {
     return this.apollo.query<any>({
       query: DOWNLOAD_LISTA_EMPRESAS,
       variables: {

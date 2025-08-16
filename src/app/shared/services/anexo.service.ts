@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { URL_ADMIN } from '../common/constants';
-import { Anexo, AnexoBase64, DELETE_ANEXO, DOWNLOAD_ANEXO, FETCH_ANEXOS, UPLOAD_ANEXO } from '../models/anexo';
+import { Anexo, DELETE_ANEXO, DOWNLOAD_ANEXO, FETCH_ANEXOS, UPLOAD_ANEXO } from '../models/anexo';
+import ArquivoBase64 from '../models/arquivo.base64';
 
 
 @Injectable({ providedIn: 'root' })
@@ -57,7 +58,7 @@ export class AnexoService {
         );
     }
 
-    downloadAnexo(idAnexo: number): Observable<AnexoBase64> {
+    downloadAnexo(idAnexo: number): Observable<ArquivoBase64> {
         console.log(`Baixar anexo #${idAnexo} via GraphQL`);
         return this.apollo.query<any>({
             query: DOWNLOAD_ANEXO,

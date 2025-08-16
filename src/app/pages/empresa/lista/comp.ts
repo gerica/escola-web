@@ -22,7 +22,7 @@ import { EmpresaDetalheDialog } from './detalhe';
 import { CnpjPipe } from 'src/app/shared/pipe/cnpj.pipe';
 import { TelefonePipe } from 'src/app/shared/pipe/telefone.pipe';
 import { ActionsComponent } from 'src/app/shared/components/actions/actions.component';
-import RelatorioBase64 from 'src/app/shared/services/relatorio.base64';
+import ArquivoBase64 from 'src/app/shared/models/arquivo.base64';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 
 @Component({
@@ -130,7 +130,7 @@ export class ListComp implements OnInit, OnDestroy {
       );
   }
 
-  _baixar(documento: RelatorioBase64) {
+  _baixar(documento: ArquivoBase64) {
     // O tipo do arquivo (MIME type) é necessário para o Blob.
     // Você pode inferir isso do nome do arquivo ou passar do backend.
     const mimeType = this.utilService.getMimeType(documento.nomeArquivo);

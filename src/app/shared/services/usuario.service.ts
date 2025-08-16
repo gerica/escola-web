@@ -3,8 +3,9 @@ import { Apollo } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
 import { Page, PageRequest } from 'src/app/core/models';
 import { FETCH_ALL_USUARIOS, FETCH_ALL_USUARIOS_BY_EMPRESA, FETCH_USUARIO_BY_ID, SAVE_USUARIO, Usuario } from '../models/usuario';
-import { FETCH_AVALIABLE_ROLES } from '../models/utils';
+import { DOWNLOAD_LISTA_USUARIOS, FETCH_AVALIABLE_ROLES } from '../models/utils';
 import { URL_ADMIN } from '../common/constants';
+import ArquivoBase64 from '../models/arquivo.base64';
 
 @Injectable({ providedIn: 'root' })
 export class UsuarioService {
@@ -109,6 +110,22 @@ export class UsuarioService {
       //   console.log("Received GraphQL data (fetchByIdCliente):", value);
       // }),
       // map(result => result)
+    );
+  }
+
+  downloadFile(tipo: string, filtro: string): Observable<ArquivoBase64> {
+    return this.apollo.query<any>({
+      query: DOWNLOAD_LISTA_USUARIOS,
+      variables: {
+        request: {
+          filtro: filtro,
+          tipo: tipo
+        }
+      },
+      context: { uri: URL_ADMIN },
+      fetchPolicy: 'network-only'
+    }).pipe(
+      map(result => result.data.downloadListaUsuarios),
     );
   }
 
