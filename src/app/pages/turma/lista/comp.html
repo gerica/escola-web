@@ -19,10 +19,15 @@
         }
       </mat-select>
     </mat-form-field>
-
-    <button mat-raised-button color="primary" routerLink="/turma/manter">Nova turma</button>
-
+    
   </section>
+
+  <section class="containerControles" style="justify-content: flex-end;">
+    <app-buttons-actions (clickDonwload)="download($event)">
+      <button mat-raised-button color="primary" routerLink="/turma/manter">Nova turma</button>      
+    </app-buttons-actions>
+  </section>
+  
   @if(!turmas().empty){
   <section class="lista">
     <table mat-table [dataSource]="turmas().content" matSort (matSortChange)="sortData($event)"

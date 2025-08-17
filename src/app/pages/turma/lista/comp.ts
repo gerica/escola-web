@@ -23,11 +23,13 @@ import { ConfirmDialogComponent } from 'src/app/core/components';
 import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { AuthService, LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { InnercardComponent } from 'src/app/shared/components';
+import { ActionsComponent } from 'src/app/shared/components/actions/actions.component';
 import { StatusTurma, StatusTurmaLabelMapping } from 'src/app/shared/models/status-turma.enum';
 import { Turma } from 'src/app/shared/models/turma';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
 import { DataUtils } from 'src/app/shared/services/data.service';
 import { TurmaService } from 'src/app/shared/services/turma.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 
 @Component({
   selector: 'app-turma-lista',
@@ -53,6 +55,7 @@ import { TurmaService } from 'src/app/shared/services/turma.service';
     PrimeiraMaiusculaPipe,
     InnercardComponent,
     MatDividerModule,
+    ActionsComponent,
   ],
   providers: [
     provideNativeDateAdapter(), // necessário adicionar esse provider para o time picker apresentar no formato hh:mm    
@@ -67,6 +70,7 @@ export class ListComp implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly dialog = inject(MatDialog);
   private destroy$ = new Subject<void>();
+  private readonly utilService = inject(UtilsService);
 
   form!: FormGroup;
   turmas = signal(emptyPage<Turma>());
@@ -232,5 +236,18 @@ export class ListComp implements OnInit, OnDestroy {
     });
   }
 
+    download(type: string) {
+    this.spinner.showUntilCompleted(this.turmaService.downloadFile(type, this.ctrlFiltro.value))
+      .subscribe({
+        next: (result) => {
+          this.utilService.downloadFile(result);
+        },
+        error: (err) => {
+          this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+          console.error('Erro ao baixar anexo:', err);
+        }
+      }
+      );
+  }
 
 }

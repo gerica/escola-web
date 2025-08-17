@@ -102,3 +102,12 @@ export const FETCH_BY_ID = gql`
     }
   }
 `;
+
+export const DOWNLOAD_LISTA_TURMAS = gql`
+  query DownloadListaTurmas($request: FiltroRelatorioRequest!) {
+    downloadListaTurmas(request: $request){
+        nomeArquivo
+        conteudoBase64
+    }
+  }
+`;

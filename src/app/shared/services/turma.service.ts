@@ -3,9 +3,10 @@ import { Apollo } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
 import { Page, PageRequest } from 'src/app/core/models';
 import { URL_ADMIN } from '../common/constants';
-import { DELETE_TURMA_BY_ID, FETCH_ALL_TURMAS, FETCH_BY_ID, SAVE_TURMA, Turma } from '../models/turma';
+import { DELETE_TURMA_BY_ID, DOWNLOAD_LISTA_TURMAS, FETCH_ALL_TURMAS, FETCH_BY_ID, SAVE_TURMA, Turma } from '../models/turma';
 import { DataUtils } from './data.service';
 import { StatusTurma } from '../models/status-turma.enum';
+import ArquivoBase64 from '../models/arquivo.base64';
 
 @Injectable({ providedIn: 'root' })
 export class TurmaService {
@@ -83,6 +84,22 @@ export class TurmaService {
             //   console.log("Received GraphQL data (fetchByIdCliente):", value);
             // }),
             // map(result => result)
+        );
+    }
+
+    downloadFile(tipo: string, filtro: string): Observable<ArquivoBase64> {
+        return this.apollo.query<any>({
+            query: DOWNLOAD_LISTA_TURMAS,
+            variables: {
+                request: {
+                    filtro: filtro,
+                    tipo: tipo
+                }
+            },
+            context: { uri: URL_ADMIN },
+            fetchPolicy: 'network-only'
+        }).pipe(
+            map(result => result.data.downloadListaTurmas),
         );
     }
 

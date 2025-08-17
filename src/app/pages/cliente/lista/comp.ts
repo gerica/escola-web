@@ -193,37 +193,13 @@ export class ListComp implements OnInit, OnDestroy {
     this.spinner.showUntilCompleted(this.clienteService.downloadFile(type, this.ctrlFiltro.value))
       .subscribe({
         next: (result) => {
-          this._baixar(result);
+          this.utilService.downloadFile(result);
         },
         error: (err) => {
           this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
           console.error('Erro ao baixar anexo:', err);
         }
       });
-  }
-
-  _baixar(documento: ArquivoBase64) {
-    // O tipo do arquivo (MIME type) é necessário para o Blob.
-    // Você pode inferir isso do nome do arquivo ou passar do backend.
-    const mimeType = this.utilService.getMimeType(documento.nomeArquivo);
-    // const mimeType = "application/pdf";
-
-    // Decodifica a string Base64 e cria um Blob
-    const byteCharacters = atob(documento.conteudoBase64);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: mimeType });
-
-    // Cria um link e simula o clique para iniciar o download
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = documento.nomeArquivo;
-    link.click();
-
-    window.URL.revokeObjectURL(link.href); // Libera o objeto URL
   }
 
 }
