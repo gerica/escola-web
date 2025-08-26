@@ -1,11 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { map, Observable, tap } from 'rxjs';
-import Contrato, { CARREGAR_CONTRATO, ContratoDocBase64, DOWNLOAD_DOC_CONTRATO, FETCH_ALL_CONTRATOS, FETCH_CONTRATO_BY_ID, FETCH_CONTRATO_BY_ID_MATRICULA, SAVE_CONTRATO, SAVE_CONTRATO_MODELO } from '../models/contrato';
+import Contrato, { CARREGAR_CONTRATO, ContratoDocBase64, DOWNLOAD_DOC_CONTRATO, DOWNLOAD_LISTA_CONTRATOS, FETCH_ALL_CONTRATOS, FETCH_CONTRATO_BY_ID, FETCH_CONTRATO_BY_ID_MATRICULA, SAVE_CONTRATO, SAVE_CONTRATO_MODELO } from '../models/contrato';
 import { Page, PageRequest } from 'src/app/core/models';
 import { DataUtils } from './data.service';
 import { URL_ADMIN } from '../common/constants';
 import { StatusContrato } from '../models/status-contrato.enum';
+import ArquivoBase64 from '../models/arquivo.base64';
 
 @Injectable({ providedIn: 'root' })
 export class ContratoService {
@@ -133,6 +134,22 @@ export class ContratoService {
       fetchPolicy: 'network-only'
     }).pipe(
       map(result => result.data.downloadDocContrato),
+    );
+  }
+
+  downloadFile(tipo: string, filtro: string): Observable<ArquivoBase64> {
+    return this.apollo.query<any>({
+      query: DOWNLOAD_LISTA_CONTRATOS,
+      variables: {
+        request: {
+          filtro: filtro,
+          tipo: tipo
+        }
+      },
+      context: { uri: URL_ADMIN },
+      fetchPolicy: 'network-only'
+    }).pipe(
+      map(result => result.data.downloadListaContratos),
     );
   }
 

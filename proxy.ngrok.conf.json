@@ -1,0 +1,20 @@
+{
+  "/graphql": {
+    "target": "https://4d6818ce7a1a.ngrok-free.app",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },  
+  "/utils/graphql": {
+    "target": "https://4d6818ce7a1a.ngrok-free.app",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/admin/graphql": {
+    "target": "https://4d6818ce7a1a.ngrok-free.app",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

@@ -14,13 +14,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
-import { LoadingSpinnerService } from 'src/app/core/services';
+import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import Contrato from 'src/app/shared/models/contrato';
 import { ContratoService } from 'src/app/shared/services/contrato.service';
 import { InnercardComponent } from "../../../../shared/components/innercard/innercard.component";
 import { ContratoDetalheDialog } from './detalhe';
 import { StatusContrato, StatusContratoLabelMapping } from 'src/app/shared/models/status-contrato.enum';
 import { MatSelectModule } from '@angular/material/select';
+import { ActionsComponent } from 'src/app/shared/components/actions/actions.component';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 
 @Component({
   selector: 'app-contratos-list',
@@ -42,15 +44,17 @@ import { MatSelectModule } from '@angular/material/select';
     ReactiveFormsModule,
     InnercardComponent,
     MatSelectModule,
+    ActionsComponent
   ]
 })
 export class ContratoListComp implements OnInit, OnDestroy {
 
-  // private readonly router = inject(Router);  
+  private readonly notification = inject(NotificationService);
   // private readonly notification = inject(NotificationService);
   private readonly spinner = inject(LoadingSpinnerService);
   private readonly contratosService = inject(ContratoService);
   private readonly dialog = inject(MatDialog);
+  private readonly utilService = inject(UtilsService);
 
   moduloAdmin = signal<boolean>(true);
   moduloFinanceiro = signal<boolean>(false);
@@ -119,6 +123,20 @@ export class ContratoListComp implements OnInit, OnDestroy {
 
   getStatus(status: StatusContrato) {
     return StatusContratoLabelMapping[status];
+  }
+
+  download(type: string) {
+    this.spinner.showUntilCompleted(this.contratosService.downloadFile(type, this.ctrlFiltro.value))
+      .subscribe({
+        next: (result) => {
+          this.utilService.downloadFile(result);
+        },
+        error: (err) => {
+          this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+          console.error('Erro ao baixar anexo:', err);
+        }
+      }
+      );
   }
 
 }

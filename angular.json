@@ -64,6 +64,10 @@
             },
             "development": {
               "buildTarget": "escola-web:build:development"
+            },
+            "ngrok": {
+              "proxyConfig": "proxy.ngrok.conf.json",
+              "buildTarget": "escola-web:build:development"
             }
           },
           "options": {          

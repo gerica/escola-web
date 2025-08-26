@@ -51,7 +51,6 @@ import { UtilsService } from 'src/app/shared/services/utils.service';
 })
 export class ListComp implements OnInit, OnDestroy {
 
-  // private readonly router = inject(Router);  
   private readonly notification = inject(NotificationService);
   private readonly spinner = inject(LoadingSpinnerService);
   private readonly empresaService = inject(EmpresaService);

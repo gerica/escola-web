@@ -138,3 +138,12 @@ export const DOWNLOAD_DOC_CONTRATO = gql`
     }
   }
 `;
+
+export const DOWNLOAD_LISTA_CONTRATOS = gql`
+  query DownloadListaContratos($request: FiltroRelatorioRequest!) {
+    downloadListaContratos(request: $request){
+        nomeArquivo
+        conteudoBase64
+    }
+  }
+`;
