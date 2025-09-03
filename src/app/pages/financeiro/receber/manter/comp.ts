@@ -16,7 +16,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { catchError, EMPTY, Observable, switchMap } from 'rxjs';
+import { catchError, EMPTY, forkJoin, Observable, switchMap } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/core/components';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { MSG_SUCESS } from 'src/app/shared/common/constants';
@@ -29,6 +29,7 @@ import { ContaReceberDetalheDialog } from './detalhe/detalhe';
 import { ContaReceberPagamentoDetalheDialog } from './pagamento/comp';
 import { ContaReceberCriarContaDialog } from './criarConta/comp';
 import { StatusContrato } from 'src/app/shared/models/status-contrato.enum';
+import { ContratoService } from 'src/app/shared/services/contrato.service';
 
 @Component({
   selector: 'app-conta-receber-manter',
@@ -60,6 +61,7 @@ export class ContaReceberManterComp implements OnInit {
   private readonly notification = inject(NotificationService);
   private readonly spinner = inject(LoadingSpinnerService);
   private readonly contaReceberService = inject(ContaReceberService);
+  private readonly contratoService = inject(ContratoService);
   private readonly dialog = inject(MatDialog);
 
   contrato = signal<Contrato | null>(null);
@@ -242,7 +244,19 @@ export class ContaReceberManterComp implements OnInit {
     this.spinner.showUntilCompletedCascate(
       operacao$
     ).pipe(
-      switchMap(() => this.contaReceberService.buscar(this.contrato()!.id)),
+      switchMap(() => {
+        // Cria um Observable para a primeira busca (contas a receber)
+        const buscarContasReceber$ = this.contaReceberService.buscar(this.contrato()!.id);
+
+        // Cria um Observable para a segunda busca (contrato)
+        const buscarContrato$ = this.contratoService.recuperarPorId(this.contrato()!.id);
+
+        // Combina os dois Observables para que sejam executados simultaneamente
+        return forkJoin({
+          contasReceber: buscarContasReceber$,
+          contrato: buscarContrato$
+        });
+      }),
       catchError(err => {
         this.notification.showError(err.message);
         console.error('Erro ao executar chamada ao backend:', err);
@@ -250,9 +264,13 @@ export class ContaReceberManterComp implements OnInit {
       })
     ).subscribe({
       next: (result) => {
-        this.contasReceber.set(result);
+        // O 'result' agora é um objeto com as propriedades 'contasReceber' e 'contrato'
+        this.contasReceber.set(result.contasReceber);
+        console.log(result.contrato);
+        this.contrato.set(result.contrato); // Exemplo de como você pode usar o resultado do contrato
         this.notification.showSuccess('Operação realizada com sucesso.');
-      }, error: (err) => {
+      },
+      error: (err) => {
         this.notification.showError(err.message);
         console.error('Erro ao recarregar as contas a receber:', err);
       }
@@ -325,7 +343,7 @@ export class ContaReceberManterComp implements OnInit {
       }
     });
 
-    dialogRef$.afterClosed().subscribe(result => {      
+    dialogRef$.afterClosed().subscribe(result => {
       if (result) {
         this.salvar(result);
       }

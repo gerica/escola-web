@@ -16,7 +16,7 @@
     </div>
     <div>
       @if(contrato()?.statusContrato === statusContratoConcluido){
-      <mat-icon class="color-heightline mat-icon-48">verified</mat-icon>
+      <mat-icon class="color-heightline mat-icon-48" matTooltip="Contrato concluído">verified</mat-icon>
       }
     </div>
   </div>
@@ -83,7 +83,7 @@
             <a aria-hidden="false" (click)="visualizar(element)" matTooltip="Visualizar" class="cursorSelect">
               <mat-icon color="primary">topic</mat-icon>
             </a>
-            <a matTooltip="Alterar Matricula" aria-hidden="false" (click)="alterar(element)" class="cursorSelect">
+            <a matTooltip="Alterar" aria-hidden="false" (click)="alterar(element)" class="cursorSelect">
               <mat-icon color="primary">edit</mat-icon>
             </a>
             @if(element.status !== 'PAGA'){

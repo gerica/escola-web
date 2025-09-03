@@ -85,7 +85,7 @@ export class ContratoService {
         id: id // Pass the ID directly
       },
       context: { uri: URL_ADMIN },
-      fetchPolicy: 'cache-first'
+      fetchPolicy: 'network-only'
     }).pipe(
       map(result => {
         const entity = result.data.fetchById as Contrato
