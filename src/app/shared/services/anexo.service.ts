@@ -24,8 +24,7 @@ export class AnexoService {
     }
 
     // Método de upload atualizado para receber a string Base64
-    uploadAnexo(conteudoBase64: string, nomeArquivo: string, idContrato: number): Observable<Anexo> {
-        console.log(`Iniciando upload do arquivo: ${nomeArquivo} via GraphQL (Base64)`);
+    uploadAnexo(conteudoBase64: string, nomeArquivo: string, idContrato: number): Observable<Anexo> {        
         return this.apollo.mutate<{ uploadAnexo: Anexo }>({
             mutation: UPLOAD_ANEXO,
             variables: {
@@ -45,7 +44,6 @@ export class AnexoService {
     }
 
     deleteAnexo(idAnexo: number): Observable<boolean> {
-        console.log(`Deletando anexo #${idAnexo} via GraphQL`);
         return this.apollo.mutate<any>({
             mutation: DELETE_ANEXO,
             variables: { id: idAnexo },

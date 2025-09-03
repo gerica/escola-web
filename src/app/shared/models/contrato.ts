@@ -71,6 +71,7 @@ export const FETCH_ALL_CONTRATOS = gql`
         periodoPagamento
         dataProximoPagamento
         observacoes
+        desconto
       }
     }
   }

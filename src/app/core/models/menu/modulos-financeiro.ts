@@ -2,7 +2,8 @@ import { MenuItem } from "./menu-item";
 
 export const moduloConta = 'conta';
 export const moduloContaReceber = `${moduloConta}/receber`;
-export const moduloContaPagar = `${moduloConta}/pagar`;;
+export const moduloContaPagar = `${moduloConta}/pagar`;
+
 
 export const modulosFinanceiro: MenuItem[] = [
   {
@@ -11,6 +12,7 @@ export const modulosFinanceiro: MenuItem[] = [
     router: moduloConta,
     parent: null,
     submenus: null,
+    order: 1,
   },
   {
     icon: 'contract',
@@ -18,6 +20,7 @@ export const modulosFinanceiro: MenuItem[] = [
     router: moduloContaReceber,
     parent: moduloConta,
     submenus: null,
+    order: 2,
   },
   {
     icon: 'contract',
@@ -25,7 +28,8 @@ export const modulosFinanceiro: MenuItem[] = [
     router: moduloContaPagar,
     parent: moduloConta,
     submenus: null,
-  },
+    order: 3,
+  }
 ];
 
 

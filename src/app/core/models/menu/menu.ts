@@ -8,7 +8,22 @@ export class Menu {
     // perfis = [UserRole.ADMIN];
     // console.log(perfis);
     const identifieres = (perfis || []).map(p => modulosPorPerfil[UserRole[p]]).flat();
-    const funcoesHabilitadas = modulos.filter(f => identifieres.includes(f.router)) || [];
+    // console.log(identifieres);
+    // const funcoesHabilitadas = modulos.filter(f => identifieres.includes(f.router)) || [];
+    const funcoesHabilitadas = modulos
+      .filter(f => identifieres.includes(f.router))
+      // .sort((a, b) => a.order - b.order);
+      .sort((a, b) => {
+        // 1. Compare a propriedade 'order' primeiro
+        if (a.order !== b.order) {
+          return a.order - b.order;
+        }
+        const nomeA = a.name || ''; // Usa uma string vazia se o nome for nulo
+        const nomeB = b.name || ''; // Usa uma string vazia se o nome for nulo
+        return nomeA.localeCompare(nomeB);
+      });
+
+    // console.log(funcoesHabilitadas);
     const itensMenu: MenuItem[] = [];
     funcoesHabilitadas.map(f => {
       if (!f.parent) {

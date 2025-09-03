@@ -13,6 +13,7 @@ export const modulos: MenuItem[] = [
     router: moduloInicial,
     parent: null,
     submenus: null,
+    order: 0,
   },
   ...modulosFinanceiro,
   ...modulosCoordenador,

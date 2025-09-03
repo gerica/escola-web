@@ -66,7 +66,7 @@ export class ContratoListComp implements OnInit, OnDestroy {
   ctrlStatusContrato = new FormControl<StatusContrato[]>([StatusContrato.ATIVO], { nonNullable: true });
   pageSize = 10;
   page = signal<PageRequest>(firstPageAndSort(this.pageSize, { property: 'numeroContrato', direction: 'asc' }));
-  displayedColumns: string[] = ['numeroContrato', 'cliente', 'dataInicio', 'dataFim', 'valorTotal', 'status', 'acoes'];
+  displayedColumns: string[] = ['numeroContrato', 'cliente', 'dataInicio', 'dataFim', 'valorTotal', 'desconto', 'status', 'acoes'];
   // Subject to emit a signal when the component is destroyed, for RxJS cleanup
   private destroy$ = new Subject<void>();
   statusContrato = Object.values(StatusContrato);

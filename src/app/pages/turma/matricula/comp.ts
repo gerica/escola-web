@@ -204,8 +204,8 @@ export class MatriculaManterComp implements OnInit {
       }
     });
 
-    dialogRef$.afterClosed().subscribe(result => {
-      if (result.sucesso) {
+    dialogRef$.afterClosed().subscribe(result => {      
+      if (result && result.sucesso) {
         this.buscar();
       }
     });

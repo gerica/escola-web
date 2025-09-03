@@ -15,6 +15,7 @@ export const modulosSuperadmin: MenuItem[] = [
     router: moduloEmpresas,
     parent: null,
     submenus: null,
+    order: 1,
   },
   {
     icon: 'contract',
@@ -22,6 +23,7 @@ export const modulosSuperadmin: MenuItem[] = [
     router: moduloUsuario,
     parent: null,
     submenus: null,
+    order: 2,
   },
   {
     icon: 'contract',
@@ -29,6 +31,7 @@ export const modulosSuperadmin: MenuItem[] = [
     router: moduloSuperadminSistema,
     parent: null,
     submenus: null,
+    order: 3,
   },
   {
     icon: 'contract',
@@ -36,6 +39,7 @@ export const modulosSuperadmin: MenuItem[] = [
     router: moduloSuperadminRelatorio,
     parent: null,
     submenus: null,
+    order: 4,
   },
   {
     icon: 'contract',
@@ -43,6 +47,7 @@ export const modulosSuperadmin: MenuItem[] = [
     router: moduloAdmin,
     parent: null,
     submenus: null,
+    order: 5,
   },
   {
     icon: 'contract',
@@ -50,6 +55,7 @@ export const modulosSuperadmin: MenuItem[] = [
     router: moduloSuperadminAssinaturas,
     parent: moduloAdmin,
     submenus: null,
+    order: 6,
   },
   {
     icon: 'contract',
@@ -57,12 +63,13 @@ export const modulosSuperadmin: MenuItem[] = [
     router: moduloAminCamposFormularios,
     parent: moduloAdmin,
     submenus: null,
+    order: 7,
   },
-  {
-    icon: 'contract',
-    name: 'Perfis de Usuários e Permissões',
-    router: moduloAdminPerfil,
-    parent: moduloAdmin,
-    submenus: null,
-  },
+  // {
+  //   icon: 'contract',
+  //   name: 'Perfis de Usuários e Permissões',
+  //   router: moduloAdminPerfil,
+  //   parent: moduloAdmin,
+  //   submenus: null,
+  // },
 ];

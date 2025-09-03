@@ -265,8 +265,7 @@ export class ContaReceberManterComp implements OnInit {
     ).subscribe({
       next: (result) => {
         // O 'result' agora é um objeto com as propriedades 'contasReceber' e 'contrato'
-        this.contasReceber.set(result.contasReceber);
-        console.log(result.contrato);
+        this.contasReceber.set(result.contasReceber);        
         this.contrato.set(result.contrato); // Exemplo de como você pode usar o resultado do contrato
         this.notification.showSuccess('Operação realizada com sucesso.');
       },

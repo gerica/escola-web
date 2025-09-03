@@ -1,4 +1,4 @@
-import { moduloAdminCurso, moduloAdminEmpresa, moduloAdminNotificacao, moduloAdminParametros, moduloAdminTabelasAuxiliares, moduloAdminTipoDocumentosModelos, moduloCliente, moduloClienteContrato, moduloClienteNovo } from "./modulos-admin-empresa";
+import { moduloAdminCurso, moduloAdminEmpresa, moduloAdminNotificacao, moduloAdminParametros, moduloAdminTabelasAuxiliares, moduloAdminTipoDocumentosModelos, moduloCliente, moduloClienteContrato, moduloClienteNovo, moduloRelatorio } from "./modulos-admin-empresa";
 import { moduloInicial } from "./modulos-comum";
 import { moduloProfessor, moduloTurma } from "./modulos-coordenador";
 import { moduloConta, moduloContaPagar, moduloContaReceber } from "./modulos-financeiro";
@@ -25,8 +25,8 @@ export const modulosPorPerfil = {
     moduloAdmin,
     // moduloAdminCargo,
     moduloAdminEmpresa,
-    moduloAdminCurso,
     moduloTurma,
+    moduloAdminCurso,
     moduloAdminPerfil,
     moduloAdminParametros,
     moduloAdminTipoDocumentosModelos,
@@ -35,7 +35,8 @@ export const modulosPorPerfil = {
     // financeiro
     moduloConta,
     moduloContaReceber,
-    moduloContaPagar
+    moduloContaPagar,
+    moduloRelatorio,
   ],
   COORDENADOR: [
     moduloInicial,
@@ -49,7 +50,8 @@ export const modulosPorPerfil = {
     moduloClienteContrato,
     moduloConta,
     moduloContaReceber,
-    moduloContaPagar
+    moduloContaPagar,
+    moduloRelatorio,
   ],
   RECEPCIONISTA: [],
 };
