@@ -23,7 +23,7 @@ export const modulosAdminEmpresa: MenuItem[] = [
     router: moduloCliente,
     parent: null,
     submenus: null,
-    order: 1,
+    order: null,
   },
   {
     icon: 'contract',
@@ -31,7 +31,7 @@ export const modulosAdminEmpresa: MenuItem[] = [
     router: moduloClienteNovo,
     parent: moduloCliente,
     submenus: null,
-    order: 2,
+    order: null,
   },
   {
     icon: 'contract',
@@ -39,7 +39,7 @@ export const modulosAdminEmpresa: MenuItem[] = [
     router: moduloAdminEmpresa,
     parent: moduloAdmin,
     submenus: null,
-    order: 3,
+    order: null,
   },
   {
     icon: 'contract',
@@ -47,7 +47,7 @@ export const modulosAdminEmpresa: MenuItem[] = [
     router: moduloClienteContrato,
     parent: moduloCliente,
     submenus: null,
-    order: 4,
+    order: null,
   },
   {
     icon: 'contract',
@@ -55,7 +55,7 @@ export const modulosAdminEmpresa: MenuItem[] = [
     router: moduloAdminCargo,
     parent: moduloAdmin,
     submenus: null,
-    order: 5,
+    order: null,
   },
   {
     icon: 'contract',
@@ -63,7 +63,7 @@ export const modulosAdminEmpresa: MenuItem[] = [
     router: moduloAdminCurso,
     parent: moduloAdmin,
     submenus: null,
-    order: 6,
+    order: null,
   },
   {
     icon: 'contract',
@@ -71,7 +71,7 @@ export const modulosAdminEmpresa: MenuItem[] = [
     router: moduloTurma,
     parent: null,
     submenus: null,
-    order: 7,
+    order: null,
   },
   {
     icon: 'contract',
@@ -79,7 +79,7 @@ export const modulosAdminEmpresa: MenuItem[] = [
     router: moduloAdminParametros,
     parent: moduloAdmin,
     submenus: null,
-    order: 8,
+    order: null,
   },
   {
     icon: 'contract',
@@ -87,7 +87,7 @@ export const modulosAdminEmpresa: MenuItem[] = [
     router: moduloAdminTipoDocumentosModelos,
     parent: moduloAdmin,
     submenus: null,
-    order: 9,
+    order: null,
   },
   {
     icon: 'contract',
@@ -95,7 +95,7 @@ export const modulosAdminEmpresa: MenuItem[] = [
     router: moduloAdminTabelasAuxiliares,
     parent: moduloAdmin,
     submenus: null,
-    order: 10,
+    order: null,
   },
   {
     icon: 'contract',
@@ -103,18 +103,16 @@ export const modulosAdminEmpresa: MenuItem[] = [
     router: moduloAdminNotificacao,
     parent: moduloAdmin,
     submenus: null,
-    order: 11,
+    order: null,
   },
   {
     icon: 'contract',
-    name: ' Relatórios',
+    name: 'Relatórios',
     router: moduloRelatorio,
     parent: null,
     submenus: null,
-    order: 12,
+    order: null,
   },
-
-
 
 ];
 
