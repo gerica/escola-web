@@ -3,7 +3,8 @@
 @use 'palette'; // Assumindo que 'palette.scss' está no mesmo diretório ou acessível
 @use '@angular/material' as mat;
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 // Suas definições de paleta e temas já existentes
 $web-primary: mat.m2-define-palette(palette.$primarias, A200, A100, A400);
@@ -95,13 +96,13 @@ $selected-tab-label-color: mat.m2-get-color-from-palette(palette.$primarias, 500
 // Sobrescreve as variáveis CSS para o mat-tab-group com a cor padrão "primary"
 .mat-mdc-tab-group.mat-primary {
   // Aba Ativa (Active Tab)
-  --mdc-tab-indicator-active-indicator-color: #{$selected-tab-indicator-color};
-  --mdc-tab-active-label-text-color: #{$selected-tab-label-color};
-  --mat-tab-header-active-ripple-color: #{$selected-tab-indicator-color};
-  --mat-tab-header-active-label-text-color: #{$selected-tab-label-color};
-  --mat-tab-header-active-focus-label-text-color: #{$selected-tab-indicator-color};
-  --mat-tab-header-active-hover-indicator-color: #{$selected-tab-indicator-color};
-  --mat-tab-header-active-focus-indicator-color: #{$selected-tab-indicator-color};
+  --mat-tab-active-indicator-color: #{$selected-tab-indicator-color};
+  --mat-tab-active-label-text-color: #{$selected-tab-label-color};
+  --mat-tab-active-ripple-color: #{$selected-tab-indicator-color};
+  --mat-tab-active-label-text-color: #{$selected-tab-label-color};
+  --mat-tab-active-focus-label-text-color: #{$selected-tab-indicator-color};
+  --mat-tab-active-hover-indicator-color: #{$selected-tab-indicator-color};
+  --mat-tab-active-focus-indicator-color: #{$selected-tab-indicator-color};
 }
 
 //Novos estilos dos componentes

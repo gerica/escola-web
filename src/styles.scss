@@ -6,7 +6,8 @@
 @use 'quill-table-up/table-creator.css';
 
 @use '@angular/material' as mat;
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 body {
   margin: 0;
@@ -258,19 +259,19 @@ mat-header-row.mat-mdc-header-row {
 
 // Custom styles for the success snackbar
 .snackbar-success {
-  // --mdc-snackbar-container-color is the custom property for the background
-  --mdc-snackbar-container-color: #4CAF50; // A nice green color
+  // --mat-snackbar-container-color is the custom property for the background
+  --mat-snackbar-container-color: #4CAF50; // A nice green color
   // --mat-mdc-snack-bar-button-color is for the action button color
   --mat-mdc-snack-bar-button-color: #ffffff;
-  // --mdc-snackbar-supporting-text-color is for the message text color
-  --mdc-snackbar-supporting-text-color: #ffffff;
+  // --mat-snackbar-supporting-text-color is for the message text color
+  --mat-snackbar-supporting-text-color: #ffffff;
 }
 
 // Custom styles for the error snackbar
 .snackbar-error {
-  --mdc-snackbar-container-color: #f44336; // A nice red color
+  --mat-snackbar-container-color: #f44336; // A nice red color
   --mat-mdc-snack-bar-button-color: #ffffff;
-  --mdc-snackbar-supporting-text-color: #ffffff;
+  --mat-snackbar-supporting-text-color: #ffffff;
 }
 
 .cursorSelect {
