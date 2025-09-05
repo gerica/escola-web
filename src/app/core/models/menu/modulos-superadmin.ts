@@ -15,7 +15,6 @@ export const modulosSuperadmin: MenuItem[] = [
     router: moduloEmpresas,
     parent: null,
     submenus: null,
-    order: null    
   },
   {
     icon: 'contract',
@@ -23,7 +22,6 @@ export const modulosSuperadmin: MenuItem[] = [
     router: moduloUsuario,
     parent: null,
     submenus: null,
-    order: null,
   },
   {
     icon: 'contract',
@@ -31,7 +29,6 @@ export const modulosSuperadmin: MenuItem[] = [
     router: moduloSuperadminSistema,
     parent: null,
     submenus: null,
-    order: null,
   },
   {
     icon: 'contract',
@@ -39,7 +36,6 @@ export const modulosSuperadmin: MenuItem[] = [
     router: moduloSuperadminRelatorio,
     parent: null,
     submenus: null,
-    order: null,
   },
   {
     icon: 'contract',
@@ -47,7 +43,6 @@ export const modulosSuperadmin: MenuItem[] = [
     router: moduloAdmin,
     parent: null,
     submenus: null,
-    order: null,
   },
   {
     icon: 'contract',
@@ -55,7 +50,6 @@ export const modulosSuperadmin: MenuItem[] = [
     router: moduloSuperadminAssinaturas,
     parent: moduloAdmin,
     submenus: null,
-    order: null,
   },
   {
     icon: 'contract',
@@ -63,7 +57,6 @@ export const modulosSuperadmin: MenuItem[] = [
     router: moduloAminCamposFormularios,
     parent: moduloAdmin,
     submenus: null,
-    order: null,
   },
   // {
   //   icon: 'contract',

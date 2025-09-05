@@ -1,0 +1,10 @@
+.containerResumo {
+  display: flex;
+  justify-content: space-between;
+}
+
+.containerTotais {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

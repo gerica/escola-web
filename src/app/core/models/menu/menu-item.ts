@@ -3,6 +3,5 @@ export interface MenuItem {
   name: string;
   router: string;
   parent: string | null,
-  submenus: MenuItem[] | null;
-  order: number | null
+  submenus: MenuItem[] | null;  
 }

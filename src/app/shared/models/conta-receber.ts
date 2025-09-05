@@ -13,6 +13,13 @@ export interface ContaReceber {
   dataCadastro: Date
 }
 
+export interface ContaReceberResumoPorMes {
+  dataRef: Date,
+  totalEsperado: number,
+  totalRecebido: number,
+  totalEmAberto: number,
+}
+
 export const CRIAR_CONTA_RECEBER = gql`
   mutation CriarContasReceber($idContrato: ID!){  
     criarContasReceber(idContrato:$idContrato)
@@ -59,5 +66,17 @@ export const FETCH_CONTA_RECEBER_BY_ID = gql`
 export const DELETE_CONTA_RECEBER_BY_ID = gql`
   mutation ApagarContaReceber($id: ID!){  
     apagarContaReceber(id: $id)
+  }
+`;
+
+
+export const FETCH_RESUMO_BY_MES = gql`
+  query FetchResumoByMes($dataRef: Date!) { # $id: ID! means the id is a required ID type
+    fetchResumoByMes(dataRef: $dataRef) {
+      dataRef
+      totalEsperado
+      totalRecebido
+      totalEmAberto        
+    }
   }
 `;

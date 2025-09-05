@@ -9,8 +9,7 @@ export const modulosCoordenador: MenuItem[] = [
     name: 'Professor',
     router: moduloProfessor,
     parent: null,
-    submenus: null,
-    order: 1,
+    submenus: null,    
   },  
 
 ];

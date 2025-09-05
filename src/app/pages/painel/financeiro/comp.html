@@ -1,0 +1,40 @@
+<section>
+  <app-innercard titulo="Filtros" [estiloCardTitulo]="{'padding': '1em',}">
+    <form [formGroup]="form">
+      <mat-form-field appearance="outline">
+        <mat-label>Mês de Referência</mat-label>
+        <input matInput [matDatepicker]="dpMes" formControlName="dataRef" placeholder="MM/AAAA" />
+        <mat-datepicker-toggle matSuffix [for]="dpMes"></mat-datepicker-toggle>
+        <mat-datepicker #dpMes startView="multi-year" (monthSelected)="selecionarMes($event)"
+          (monthSelected)="dpMes.close()">
+        </mat-datepicker>
+      </mat-form-field>
+    </form>
+  </app-innercard>
+</section>
+
+<section>
+  <app-innercard [titulo]="titulocabecalho()" [estiloCardTitulo]="{'padding': '1em',}">
+    <div class="containerResumo">
+      <div class="containerTotais">
+        <div>
+          <b> Total de Pagamentos Esperados: </b>{{resumo()?.totalEsperado |currency}}
+        </div>
+        <div>
+          <b>Total Recebido: </b>{{resumo()?.totalRecebido |currency}}
+        </div>
+        <div>
+          <b>Total em Aberto: </b>{{resumo()?.totalEmAberto |currency}}
+        </div>
+      </div>
+      <div>
+        <div>
+          Grafico de pizza
+          <!-- Porcentagem de Recebimento: Uma métrica visual que mostra o progresso do recebimento (ex: "75% do esperado já
+          foi
+          recebido"). -->
+        </div>
+      </div>
+    </div>
+  </app-innercard>
+</section>

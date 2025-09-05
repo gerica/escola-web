@@ -23,6 +23,7 @@
     "@angular/router": "^19.2.14",
     "@apollo/client": "^3.13.8",
     "apollo-angular": "^11.0.0",
+    "chart.js": "^4.5.0",
     "graphql": "^16.11.0",
     "jwt-decode": "^4.0.0",
     "moment": "^2.30.1",
