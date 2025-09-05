@@ -24,6 +24,7 @@ import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
 import { UsuarioDetalheDialog } from './detalhe';
+import { CardComponent } from "src/app/shared/components";
 
 @Component({
   selector: 'app-cliente-list',
@@ -45,8 +46,9 @@ import { UsuarioDetalheDialog } from './detalhe';
     ReactiveFormsModule,
     InnercardComponent,
     PrimeiraMaiusculaPipe,
-    ActionsComponent
-  ]
+    ActionsComponent,
+    CardComponent
+]
 })
 export class ListComp implements OnInit, OnDestroy {
 

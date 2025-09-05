@@ -13,7 +13,7 @@ const localResolver: ResolveFn<Empresa> = route => {
   return inject(LoadingSpinnerService).showUntilCompleted(inject(EmpresaService).recuperarPorId(+route.paramMap.get('id')!));
 };
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: 'parametros',
     component: ParametroManterComp,
@@ -35,8 +35,3 @@ const routes: Routes = [
   { path: '**', component: NotFoundComponent },
 ];
 
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class AdministrativoRoutes { }

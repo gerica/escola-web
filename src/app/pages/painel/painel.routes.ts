@@ -7,16 +7,10 @@ import { PainelFinanceiroComp } from './financeiro/comp';
 //   return inject(LoadingSpinnerService).showUntilCompleted(inject(UsuarioService).recuperarPorId(+route.paramMap.get('id')!));
 // };
 
-const routes: Routes = [
+export const routes: Routes = [
 {
     path: 'financeiro',
     component: PainelFinanceiroComp
   },
   { path: '**', component: NotFoundComponent },
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class PainelRoutes { }

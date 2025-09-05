@@ -11,7 +11,7 @@ const localResolver: ResolveFn<Usuario> = route => {
   return inject(LoadingSpinnerService).showUntilCompleted(inject(UsuarioService).recuperarPorId(+route.paramMap.get('id')!));
 };
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     component: ListComp,
@@ -28,8 +28,3 @@ const routes: Routes = [
   { path: '**', component: NotFoundComponent },
 ];
 
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class CompRoutes { }

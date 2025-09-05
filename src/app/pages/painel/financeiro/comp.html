@@ -1,5 +1,5 @@
 <section>
-  <app-innercard titulo="Filtros" [estiloCardTitulo]="{'padding': '1em',}">
+  <app-card titulo="Filtros">
     <form [formGroup]="form">
       <mat-form-field appearance="outline">
         <mat-label>Mês de Referência</mat-label>
@@ -10,11 +10,11 @@
         </mat-datepicker>
       </mat-form-field>
     </form>
-  </app-innercard>
+  </app-card>
 </section>
 
 <section>
-  <app-innercard [titulo]="titulocabecalho()" [estiloCardTitulo]="{'padding': '1em',}">
+  <app-card [titulo]="titulocabecalho()" [estiloCard]="{'margin-top': '1em'}">
     <div class="containerResumo">
       <div class="containerTotais">
         <div>
@@ -36,5 +36,5 @@
         </div>
       </div>
     </div>
-  </app-innercard>
+  </app-card>
 </section>

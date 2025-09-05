@@ -6,7 +6,7 @@ import { NotFoundComponent } from '../not-found';
 //   return inject(LoadingSpinnerService).showUntilCompleted(inject(UsuarioService).recuperarPorId(+route.paramMap.get('id')!));
 // };
 
-const routes: Routes = [
+export const routes: Routes = [
 {
     path: 'receber',
     loadChildren: () => import('./receber/receber.routes').then(m => m.ReceberRoutes),
@@ -14,8 +14,3 @@ const routes: Routes = [
   { path: '**', component: NotFoundComponent },
 ];
 
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class FinanceiroRoutes { }

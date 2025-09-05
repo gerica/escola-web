@@ -3,27 +3,27 @@ import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { emptyPage, firstPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
+import { catchError, debounceTime, distinctUntilChanged, EMPTY, Subject, switchMap, takeUntil } from 'rxjs';
+import { ConfirmDialogComponent } from 'src/app/core/components';
+import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
+import { CardComponent } from 'src/app/shared/components';
+import { ActionsComponent } from 'src/app/shared/components/actions/actions.component';
 import Cliente from 'src/app/shared/models/cliente';
+import { StatusCliente, StatusClienteLabelMapping } from 'src/app/shared/models/status-cliente.enum';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
 import { ClienteDetalheDialog } from './detalhe';
-import { catchError, debounceTime, distinctUntilChanged, EMPTY, Subject, switchMap, takeUntil } from 'rxjs';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { StatusCliente, StatusClienteLabelMapping } from 'src/app/shared/models/status-cliente.enum';
-import { ConfirmDialogComponent } from 'src/app/core/components';
-import { ActionsComponent } from 'src/app/shared/components/actions/actions.component';
-import ArquivoBase64 from 'src/app/shared/models/arquivo.base64';
-import { UtilsService } from 'src/app/shared/services/utils.service';
 
 @Component({
   selector: 'app-cliente-list',
@@ -43,6 +43,7 @@ import { UtilsService } from 'src/app/shared/services/utils.service';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
+    CardComponent,
     InnercardComponent,
     ActionsComponent,
   ]

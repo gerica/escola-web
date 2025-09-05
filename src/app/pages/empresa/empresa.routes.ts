@@ -7,16 +7,16 @@ import { NotFoundComponent } from '../not-found';
 import { ListComp } from './lista/comp';
 import { EmpresaManterComp } from './manter/comp';
 
-const localResolver: ResolveFn<Empresa> = route => {  
+const localResolver: ResolveFn<Empresa> = route => {
   return inject(LoadingSpinnerService).showUntilCompleted(inject(EmpresaService).recuperarPorId(+route.paramMap.get('id')!));
 };
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     component: ListComp,
-  },  
-    {
+  },
+  {
     path: 'manter',
     component: EmpresaManterComp,
   },
@@ -27,9 +27,3 @@ const routes: Routes = [
   },
   { path: '**', component: NotFoundComponent },
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class EmpresaRoutes { }

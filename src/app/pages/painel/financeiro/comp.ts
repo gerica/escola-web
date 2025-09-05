@@ -14,6 +14,8 @@ import Cliente from 'src/app/shared/models/cliente';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
 import { ContaReceberService } from 'src/app/shared/services/conta.receber.service';
 import { ContaReceberResumoPorMes } from 'src/app/shared/models/conta-receber';
+import { CardComponent } from "src/app/shared/components";
+import { NgChartsModule } from 'ng2-charts';
 
 @Component({
   selector: 'app-painel-financeiro',
@@ -31,7 +33,10 @@ import { ContaReceberResumoPorMes } from 'src/app/shared/models/conta-receber';
     // MatIconModule,
     // MatTooltipModule,
     // MatSelectModule,
-    InnercardComponent
+    InnercardComponent,
+    CardComponent,
+    NgChartsModule,
+
   ],
   providers: [
     { provide: DateAdapter, useClass: CustomDateAdapter, deps: [MAT_DATE_LOCALE] },

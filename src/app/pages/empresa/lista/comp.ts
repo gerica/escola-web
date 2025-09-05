@@ -15,15 +15,15 @@ import { RouterModule } from '@angular/router';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
+import { CardComponent } from "src/app/shared/components";
+import { ActionsComponent } from 'src/app/shared/components/actions/actions.component';
 import { Empresa } from 'src/app/shared/models/empresa';
-import { EmpresaService } from 'src/app/shared/services/empresa.service';
-import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
-import { EmpresaDetalheDialog } from './detalhe';
 import { CnpjPipe } from 'src/app/shared/pipe/cnpj.pipe';
 import { TelefonePipe } from 'src/app/shared/pipe/telefone.pipe';
-import { ActionsComponent } from 'src/app/shared/components/actions/actions.component';
-import ArquivoBase64 from 'src/app/shared/models/arquivo.base64';
+import { EmpresaService } from 'src/app/shared/services/empresa.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
+import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
+import { EmpresaDetalheDialog } from './detalhe';
 
 @Component({
   selector: 'app-cliente-list',
@@ -46,8 +46,9 @@ import { UtilsService } from 'src/app/shared/services/utils.service';
     InnercardComponent,
     CnpjPipe,
     TelefonePipe,
-    ActionsComponent
-  ]
+    ActionsComponent,
+    CardComponent
+]
 })
 export class ListComp implements OnInit, OnDestroy {
 

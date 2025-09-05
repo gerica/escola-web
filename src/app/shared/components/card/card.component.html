@@ -1,6 +1,6 @@
-<div class="card">
-  <div class="card__titulo">{{ titulo }}</div>
-  <div class="card__conteudo">
+<div class="card" [ngStyle]="estiloCard">
+  <div class="card__titulo" [ngStyle]="estiloCardTitulo">{{ titulo }}</div>
+  <div class="card__conteudo" [ngStyle]="estiloCardConteudo">
     <ng-content></ng-content>
   </div>
 </div>

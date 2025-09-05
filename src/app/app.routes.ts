@@ -12,7 +12,7 @@ export const routes: Routes = [
         path: '',
         // Se PagesModule contém componentes que não são standalone,
         // ou se você ainda quer lazy-load de um NgModule:
-        loadChildren: () => import('./pages/pages.routes').then(m => m.PagesRoutes),
+        loadChildren: () => import('./pages/pages.routes').then(m => m.routes),
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
     },
