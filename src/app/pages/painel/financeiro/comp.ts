@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroupDirective, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -8,11 +8,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
-import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
+import { NotificationService } from 'src/app/core/services';
 import { CardComponent } from "src/app/shared/components";
 import { CustomDateAdapter, MAT_CUSTOM_DATE_FORMATS } from 'src/app/shared/components/adapter/custom/custom-date.adapter';
 import Cliente from 'src/app/shared/models/cliente';
-import { ContaReceberResumoPorMes } from 'src/app/shared/models/conta-receber';
 import { ContaReceberService } from 'src/app/shared/services/conta.receber.service';
 import { FinanceiroResumoGraficoComponent } from './componente/resumo.grafico';
 import { FinanceiroResumoTabelaComponent } from './componente/resumo.tabela';
@@ -42,7 +41,7 @@ export class PainelFinanceiroComp implements OnInit {
 
   // private readonly router = inject(Router);  
   private readonly notification = inject(NotificationService);
-  private readonly spinner = inject(LoadingSpinnerService);
+  // private readonly spinner = inject(LoadingSpinnerService);
   private readonly dialog = inject(MatDialog);
   private readonly contaReceberService = inject(ContaReceberService);
   private readonly fb = inject(FormBuilder);

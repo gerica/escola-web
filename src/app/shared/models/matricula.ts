@@ -88,3 +88,16 @@ export const FETCH_BY_ID = gql`
     }
   }
 `;
+
+export const FETCH_BY_CODIGO = gql`
+  query fetchByCodigo($codigo: String!) { 
+    fetchByCodigo(codigo: $codigo) {
+        id
+        codigo
+        turma {
+          id
+          nome
+        }        
+    }
+  }
+`;

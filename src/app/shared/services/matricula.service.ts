@@ -3,11 +3,11 @@ import { Apollo } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
 import { Page, PageRequest } from 'src/app/core/models';
 import { URL_ADMIN } from '../common/constants';
-import { DELETE_BY_ID, FETCH_ALL, FETCH_BY_ID, Matricula, SAVE } from '../models/matricula';
+import { DELETE_BY_ID, FETCH_ALL, FETCH_BY_CODIGO, FETCH_BY_ID, Matricula, SAVE } from '../models/matricula';
 
 @Injectable({ providedIn: 'root' })
 export class MatriculaService {
-    
+
 
     private apollo = inject(Apollo);
 
@@ -70,6 +70,21 @@ export class MatriculaService {
             fetchPolicy: 'cache-first'
         }).pipe(
             map(result => result.data.fetchByIdMatricula as Matricula),
+            // tap(value => {
+            //   console.log("Received GraphQL data (fetchByIdCliente):", value);
+            // }),
+            // map(result => result)
+        );
+    }
+
+    recuperarPorCodigo(codigo: string): Observable<Matricula> {
+        return this.apollo.query<any>({
+            query: FETCH_BY_CODIGO,
+            variables: { codigo },
+            context: { uri: URL_ADMIN },
+            fetchPolicy: 'cache-first'
+        }).pipe(
+            map(result => result.data.fetchByCodigo as Matricula),
             // tap(value => {
             //   console.log("Received GraphQL data (fetchByIdCliente):", value);
             // }),
