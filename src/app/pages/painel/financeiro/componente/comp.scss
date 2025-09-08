@@ -1,0 +1,22 @@
+.sectionGrafico {
+  width: 300px;
+}
+
+.sectionTabela {
+   width: 100%;
+}
+
+.containerResumo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  // width: 250px;
+}
+
+.containerTotais {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+

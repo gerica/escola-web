@@ -1,5 +1,6 @@
 import { gql } from "apollo-angular";
 import { StatusContaReceber } from "./status-conta-receber.enum";
+import Contrato from "./contrato";
 
 export interface ContaReceber {
   id: number,
@@ -19,6 +20,17 @@ export interface ContaReceberResumoPorMes {
   totalRecebido: number,
   totalEmAberto: number,
 }
+
+export interface ContaReceberResumoPorMesDetalhe {
+  contrato: Contrato,
+  nome: string,
+  valorTotal: number,
+  dataVencimento: Date,
+  valorPago: number,
+  dataPagamento: Date,
+  diasAtraso: number,
+}
+
 
 export const CRIAR_CONTA_RECEBER = gql`
   mutation CriarContasReceber($idContrato: ID!){  
@@ -69,7 +81,6 @@ export const DELETE_CONTA_RECEBER_BY_ID = gql`
   }
 `;
 
-
 export const FETCH_RESUMO_BY_MES = gql`
   query FetchResumoByMes($dataRef: Date!) { # $id: ID! means the id is a required ID type
     fetchResumoByMes(dataRef: $dataRef) {
@@ -77,6 +88,32 @@ export const FETCH_RESUMO_BY_MES = gql`
       totalEsperado
       totalRecebido
       totalEmAberto        
+    }
+  }
+`;
+
+export const FETCH_RESUMO_BY_MES_DETALHE = gql`  
+  query FetchResumoByMesDetalhe($dataRef: Date!, $page: Int, $size: Int, $sort: [SortRequest]) { 
+    fetchResumoByMesDetalhe(dataRef: $dataRef, page: $page, size: $size, sort: $sort) {    
+      number
+      size
+      totalElements
+      totalPages
+      first
+      last
+      empty
+      content {
+        contrato{
+          id
+          numeroContrato
+        }
+        nome
+        valorTotal
+        dataVencimento
+        valorPago
+        dataPagamento
+        diasAtraso
+      }
     }
   }
 `;

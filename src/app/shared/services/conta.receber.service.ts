@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
 import { URL_ADMIN } from '../common/constants';
-import { ContaReceber, ContaReceberResumoPorMes, CRIAR_CONTA_RECEBER, DELETE_CONTA_RECEBER_BY_ID, FETCH_ALL_CONTAS_RECEBER_BY_CONTRATO, FETCH_RESUMO_BY_MES, SAVE_CONTA_RECEBER } from '../models/conta-receber';
+import { ContaReceber, ContaReceberResumoPorMes, ContaReceberResumoPorMesDetalhe, CRIAR_CONTA_RECEBER, DELETE_CONTA_RECEBER_BY_ID, FETCH_ALL_CONTAS_RECEBER_BY_CONTRATO, FETCH_RESUMO_BY_MES, FETCH_RESUMO_BY_MES_DETALHE, SAVE_CONTA_RECEBER } from '../models/conta-receber';
 import { Page, PageRequest } from 'src/app/core/models';
 import { DataUtils } from './data.service';
 
@@ -130,6 +130,25 @@ export class ContaReceberService {
       fetchPolicy: 'network-only', // Or 'no-cache'      
     }).pipe(
       map(result => result.data.fetchResumoByMes as ContaReceberResumoPorMes),
+      // tap(value => {
+      //     console.log(value);
+      // }),
+    );
+  }
+
+  fetchResumoPorMesDetalhe(dataRererencia: Date, pageRequest: PageRequest): Observable<Page<ContaReceberResumoPorMesDetalhe>> {
+    return this.apollo.query<any>({
+      query: FETCH_RESUMO_BY_MES_DETALHE,
+      variables: {
+        dataRef: DataUtils.formatDateToYYYYMMDD(dataRererencia),
+        page: pageRequest.page,
+        size: pageRequest.size,
+        sort: pageRequest.sorts || [],
+      },
+      context: { uri: URL_ADMIN },
+      fetchPolicy: 'network-only', // Or 'no-cache'      
+    }).pipe(
+      map(result => result.data.fetchResumoByMesDetalhe as Page<ContaReceberResumoPorMesDetalhe>),
       // tap(value => {
       //     console.log(value);
       // }),

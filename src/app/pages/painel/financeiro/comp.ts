@@ -9,13 +9,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
+import { CardComponent } from "src/app/shared/components";
 import { CustomDateAdapter, MAT_CUSTOM_DATE_FORMATS } from 'src/app/shared/components/adapter/custom/custom-date.adapter';
 import Cliente from 'src/app/shared/models/cliente';
-import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
-import { ContaReceberService } from 'src/app/shared/services/conta.receber.service';
 import { ContaReceberResumoPorMes } from 'src/app/shared/models/conta-receber';
-import { CardComponent } from "src/app/shared/components";
-import { NgChartsModule } from 'ng2-charts';
+import { ContaReceberService } from 'src/app/shared/services/conta.receber.service';
+import { FinanceiroResumoGraficoComponent } from './componente/resumo.grafico';
+import { FinanceiroResumoTabelaComponent } from './componente/resumo.tabela';
 
 @Component({
   selector: 'app-painel-financeiro',
@@ -28,19 +28,14 @@ import { NgChartsModule } from 'ng2-charts';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatDatepickerModule,
-    // MatCardModule,
-    // MatIconModule,
-    // MatTooltipModule,
-    // MatSelectModule,
-    InnercardComponent,
-    CardComponent,
-    NgChartsModule,
-
+    MatDatepickerModule,    
+    CardComponent,    
+    FinanceiroResumoGraficoComponent,
+    FinanceiroResumoTabelaComponent
   ],
   providers: [
     { provide: DateAdapter, useClass: CustomDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_CUSTOM_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: MAT_CUSTOM_DATE_FORMATS },    
   ]
 })
 export class PainelFinanceiroComp implements OnInit {
@@ -54,15 +49,11 @@ export class PainelFinanceiroComp implements OnInit {
 
   @ViewChild(FormGroupDirective)
   private formDir!: FormGroupDirective;
-
   @Input({ required: true }) cliente!: Cliente | null;
   form!: UntypedFormGroup;
-
-  resumo = signal<ContaReceberResumoPorMes | null>(null);
-
+  
   ngOnInit(): void {
     this._createForm();
-    this._fetchResumoPorMes();
   }
 
   titulocabecalho(): string {
@@ -103,26 +94,12 @@ export class PainelFinanceiroComp implements OnInit {
   public selecionarMes(normalizedMonthAndYear: Date): void {
     // Define o valor do FormControl com o mês e o ano selecionados        
     this.form.get('dataRef')?.setValue(normalizedMonthAndYear);
-    this._fetchResumoPorMes();
-  }
-
-  private _fetchResumoPorMes() {
-    const dataRef = this.form.get('dataRef')?.value;    
-    this.spinner.showUntilCompleted(this.contaReceberService.fetchResumoPorMes(dataRef)).subscribe({
-      next: (result) => {
-        this.resumo.set(result)
-        this.notification.showSuccess('Operação realizada com sucesso.');
-      },
-      error: (err) => {
-        this.notification.showError(err.message);
-        console.error('Erro ao recarregar as contas a receber:', err);
-      }
-
-    });
   }
 
   // Método que será chamado quando o usuário fechar o date picker
   public fecharPicker(picker: any): void {
     picker.close();
   }
+
+
 }

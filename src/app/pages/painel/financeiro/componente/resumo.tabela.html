@@ -1,0 +1,85 @@
+<section class="sectionTabela">
+  <app-card [titulo]="titulo()" [estiloCard]="{'margin-top': '1em'}">
+    @if(loading()){
+    <div style="display: flex; justify-content: center;">
+      <mat-spinner></mat-spinner>
+    </div>
+    } @else if(!resumo().empty){
+    <section class="lista">
+      <table mat-table [dataSource]="resumo().content" matSort (matSortChange)="sortData($event)"
+        class="mat-elevation-z4">
+
+        <ng-container matColumnDef="contrato">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="contrato"> Nome Fantasia </th>
+          <td mat-cell *matCellDef="let element"> {{element.contrato.numeroContrato}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cliente">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="cliente"> Cliente </th>
+          <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="dataVencimento">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="dataVencimento"> Data de Vencimento </th>
+          <td mat-cell *matCellDef="let element"> {{element.dataVencimento | date:'dd/MM/yyyy'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="valorTotal">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="valorTotal"> Valor </th>
+          <td mat-cell *matCellDef="let element"> {{element.valorTotal | currency: 'BRL'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="dataPagamento">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="dataPagamento"> Data de Pagamento </th>
+          <td mat-cell *matCellDef="let element"> {{element.dataPagamento | date:'dd/MM/yyyy'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="valorPago">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="valorPago"> Valor Pago </th>
+          <td mat-cell *matCellDef="let element"> {{element.valorPago | currency: 'BRL'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="diasAtraso">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="diasAtraso"> Dias em atrazo </th>
+          <td mat-cell *matCellDef="let element"> {{element.diasAtraso }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="acoes">
+          <th mat-header-cell *matHeaderCellDef> Açoes</th>
+          <td mat-cell *matCellDef="let element" cass="cursorSelect">
+            <a matTooltip="Exibir dados" aria-hidden="false" matTooltip="Visualizar">
+              <mat-icon color="primary">topic</mat-icon>
+            </a>
+            <a matTooltip="Editar dados" aria-hidden="false">
+              <mat-icon color="primary">edit</mat-icon>
+            </a>
+          </td>
+
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <!-- [ngClass]="getLineClass(row.statusCliente)" -->
+      </table>
+
+      <mat-paginator class="mat-elevation-z5" [length]="resumo().totalElements" [pageIndex]="resumo().number"
+        [pageSize]="pageSize"
+        (page)="page.set({ page: $event.pageIndex, size: $event.pageSize }); fetchResumoPorMesDetalhe()"
+        [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons />
+    </section>
+    } @else {
+    <span>Nenhum registro encontrado</span>
+    }
+  </app-card>
+</section>
+
+<!-- 2. Pagamentos em Aberto (Inadimplentes)
+Esta é uma seção crítica para a gestão. Aqui, o usuário verá os contratos que deveriam ter sido pagos no mês, mas ainda não foram. É útil incluir:
+
+Nome do Cliente/Contrato: Quem precisa pagar.
+
+Valor a Receber: O valor pendente.
+
+Data de Vencimento: A data original de vencimento da conta.
+
+Dias de Atraso: Uma informação crucial. Você pode até usar cores para indicar o nível de atraso (ex: amarelo para poucos dias, vermelho para um atraso considerável). -->

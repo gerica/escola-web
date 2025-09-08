@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { Router } from '@angular/router';
-import { AuthService, LoadingProgressService, LoadingSpinnerService, NotificationService } from 'src/app/core/services';
-import { ContratoService } from 'src/app/shared/services/contrato.service';
-import { InnercardComponent } from "../../shared/components/innercard/innercard.component";
+import { UserRole } from 'src/app/core/models';
+import { AuthService } from 'src/app/core/services';
+import { CardComponent } from 'src/app/shared/components';
+import { FinanceiroResumoGraficoComponent } from '../painel/financeiro/componente/resumo.grafico';
+import { FinanceiroResumoTabelaComponent } from '../painel/financeiro/componente/resumo.tabela';
 
 
 @Component({
@@ -14,20 +15,25 @@ import { InnercardComponent } from "../../shared/components/innercard/innercard.
   imports: [
     CommonModule,
     MatButtonModule,
-    InnercardComponent
+    CardComponent,
+    FinanceiroResumoGraficoComponent,
+    FinanceiroResumoTabelaComponent
   ]
 })
-export class HomeComponent implements OnInit {
-  private readonly router = inject(Router);
+export class HomeComponent {
   private readonly authService = inject(AuthService);
-  private readonly notification = inject(NotificationService);
-  private readonly spinner = inject(LoadingSpinnerService);
-  private readonly contratoService = inject(ContratoService);
+  // private readonly router = inject(Router);
+  // private readonly authService = inject(AuthService);
+  // private readonly notification = inject(NotificationService);
+  // private readonly spinner = inject(LoadingSpinnerService);
+  // private readonly contratoService = inject(ContratoService);
 
 
-  ngOnInit(): void {
+  isUsuarioTemPapel(): boolean {
+    // Exemplo em um componente ou serviço
+    const rolesPermitidas = [UserRole.ADMIN_EMPRESA, UserRole.FINANCEIRO];
+
+    return this.authService.isUsuarioTemPapel(rolesPermitidas) || false;
   }
-
-
 
 }

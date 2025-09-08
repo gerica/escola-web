@@ -13,28 +13,11 @@
   </app-card>
 </section>
 
-<section>
-  <app-card [titulo]="titulocabecalho()" [estiloCard]="{'margin-top': '1em'}">
-    <div class="containerResumo">
-      <div class="containerTotais">
-        <div>
-          <b> Total de Pagamentos Esperados: </b>{{resumo()?.totalEsperado |currency}}
-        </div>
-        <div>
-          <b>Total Recebido: </b>{{resumo()?.totalRecebido |currency}}
-        </div>
-        <div>
-          <b>Total em Aberto: </b>{{resumo()?.totalEmAberto |currency}}
-        </div>
-      </div>
-      <div>
-        <div>
-          Grafico de pizza
-          <!-- Porcentagem de Recebimento: Uma métrica visual que mostra o progresso do recebimento (ex: "75% do esperado já
-          foi
-          recebido"). -->
-        </div>
-      </div>
-    </div>
-  </app-card>
+<section class="sectionResumo">
+  <div>
+    <app-financeiro-resumo-grafico [dataRef]="form.get('dataRef')?.value" />
+  </div>
+  <div style="flex-grow: 1;">
+    <app-financeiro-resumo-tabela [dataRef]="form.get('dataRef')?.value" />
+  </div>
 </section>

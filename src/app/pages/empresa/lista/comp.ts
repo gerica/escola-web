@@ -43,7 +43,7 @@ import { EmpresaDetalheDialog } from './detalhe';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    InnercardComponent,
+    // InnercardComponent,
     CnpjPipe,
     TelefonePipe,
     ActionsComponent,

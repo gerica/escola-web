@@ -37,6 +37,8 @@ export const modulosPorPerfil = {
     moduloContaReceber,
     moduloContaPagar,
     moduloRelatorio,
+    moduloPainel,
+    moduloPainelResumoFinanceiro
   ],
   COORDENADOR: [
     moduloInicial,

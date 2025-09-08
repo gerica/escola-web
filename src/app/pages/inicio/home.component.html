@@ -1,4 +1,4 @@
-<app-innercard titulo="Inicial" [estiloCardTitulo]="{'padding': '1em',}">
+<app-card titulo="Inicial" [estiloCardTitulo]="{'padding': '1em',}">
 
   <section class="divContainer">
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
@@ -10,4 +10,15 @@
     <button mat-raised-button color="primary" (click)="getOutoContrato()">Outros contratos</button> -->
 
   </section>
-</app-innercard>
+  @if(isUsuarioTemPapel()){
+
+  <section class="sectionResumo">
+    <div>
+      <app-financeiro-resumo-grafico />
+    </div>
+    <div style="flex-grow: 1;">
+      <app-financeiro-resumo-tabela />
+    </div>
+  </section>
+  }
+</app-card>

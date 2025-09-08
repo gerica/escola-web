@@ -1,0 +1,34 @@
+<section class="sectionGrafico">
+  <app-card [titulo]="titulo()" [estiloCard]="{'margin-top': '1em'}">
+    @if(loading()){
+    <div style="display: flex; justify-content: center;">
+      <mat-spinner></mat-spinner>
+    </div>
+    } @else if(hasDataForChart()){
+    <div class="containerResumo">
+      <div>
+        <div>
+          <canvas baseChart [type]="'pie'" [datasets]="chartDatasets()" [labels]="pieChartLabels"
+            [options]="pieChartOptions">
+          </canvas>
+        </div>
+      </div>
+      <div class="containerTotais">
+        <div>
+          <b>Total Recebido: </b>{{resumo()?.totalRecebido |currency}}
+        </div>
+        <div>
+          <b>Total em Aberto: </b>{{resumo()?.totalEmAberto |currency}}
+        </div>
+        <div>
+          <b>Total Esperado: </b>{{resumo()?.totalEsperado |currency}}
+        </div>
+      </div>
+    </div>
+    } @else {
+    <div>
+      Nehuma informação para essa data selecionada.
+    </div>
+    }
+  </app-card>
+</section>

@@ -211,4 +211,18 @@ export class AuthService {
     this._token.set(null);
     this.setLoggedUser(undefined);
   }
+
+  isUsuarioTemPapel(rolesAProcurar: UserRole[]): boolean {
+    // Acesso seguro aos papéis do usuário
+    const userRoles = this.loggedUser()?.roles;
+
+    // Se o usuário ou seus papéis não existirem, retorne false imediatamente.
+    if (!userRoles || userRoles.length === 0) {
+      return false;
+    }
+
+    // Verifica se pelo menos um dos papéis de `rolesAProcurar`
+    // está presente em `userRoles`. Agora a comparação é segura e tipada.
+    return rolesAProcurar.some(role => userRoles.includes(role));
+  }
 }
