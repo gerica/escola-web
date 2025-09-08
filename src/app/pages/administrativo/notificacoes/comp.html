@@ -1,0 +1,25 @@
+<app-card titulo="Configuração da notificação" [estiloCard]="{'margin-top': '1em',}">
+  <form [formGroup]="form">
+    <section>
+      <mat-checkbox formControlName="notificacaoAutomatica">Noficicação automática</mat-checkbox>
+    </section>
+  </form>
+
+  <mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>chat</mat-icon>
+        WhatsApp
+      </ng-template>
+      <app-whatsapp-manter />
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>mail</mat-icon>
+        E-mail
+      </ng-template>
+      <app-email-manter />
+    </mat-tab>
+  </mat-tab-group>
+
+</app-card>

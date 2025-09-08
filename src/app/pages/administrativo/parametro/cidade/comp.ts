@@ -15,7 +15,6 @@ import { BehaviorSubject, finalize, forkJoin, switchMap, tap } from 'rxjs';
 import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operators';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
-import { EditorComponent } from 'src/app/shared/components/editor/editor.component';
 import { Cidade } from 'src/app/shared/models/cidade';
 import { CHAVE_CONTRATO_CIDADE_PADRAO, CHAVE_CONTRATO_MODELO_PADRAO, Parametro } from 'src/app/shared/models/parametro';
 import { AdministrativoService } from 'src/app/shared/services/admin.service';
@@ -40,8 +39,7 @@ import { InnercardComponent } from "../../../../shared/components/innercard/inne
     MatDatepickerModule,
     MatAutocompleteModule,
     MatDivider,
-    MatProgressSpinner,
-    EditorComponent
+    MatProgressSpinner
   ]
   
 })

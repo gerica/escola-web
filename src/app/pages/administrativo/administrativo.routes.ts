@@ -8,6 +8,7 @@ import { NotFoundComponent } from '../not-found';
 import { ParametroManterComp } from './parametro/comp';
 import { AuxiliarManterComp } from './tabelas-auxiliar/comp';
 import { CursoManterComp } from './tabelas-auxiliar/curso/comp';
+import { NotificacaoManterComp } from './notificacoes/comp';
 
 const localResolver: ResolveFn<Empresa> = route => {
   return inject(LoadingSpinnerService).showUntilCompleted(inject(EmpresaService).recuperarPorId(+route.paramMap.get('id')!));
@@ -31,6 +32,10 @@ export const routes: Routes = [
   {
     path: 'tabelas-auxiliares',
     component: AuxiliarManterComp,
+  },
+  {
+    path: 'notificacoes',
+    component: NotificacaoManterComp,
   },
   { path: '**', component: NotFoundComponent },
 ];

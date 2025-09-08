@@ -54,4 +54,20 @@ export class AdministrativoService {
         );
     }
 
+
+    salvarMensagemWhatsapp(entity: Partial<Parametro>): Observable<Parametro> {
+        return this.apollo.mutate<any>({
+            mutation: SALVAR_PARAMETRO,
+            variables: {
+                request: {
+                    chave: CHAVE_CONTRATO_MODELO_PADRAO,
+                    modeloContrato: entity.modeloContrato
+                },
+            },
+            context: { uri: URL_ADMIN },
+            // fetchPolicy: 'network-only', // Or 'cache-first' network-only
+        }).pipe(map(result => result.data.salvarParametro as Parametro)
+        );
+    }
+
 }

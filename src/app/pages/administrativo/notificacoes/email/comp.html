@@ -1,0 +1,13 @@
+<form [formGroup]="form" (submit)="submit()">
+  <app-innercard>
+    <section>
+      <editor-component formControlName="textoNofificacao" placeholder="Informe o texto"
+        height="300px"></editor-component>
+    </section>
+
+    <section class="container">
+      <button mat-raised-button color="primary" type="submit">Salvar</button>
+    </section>
+
+  </app-innercard>
+</form>
