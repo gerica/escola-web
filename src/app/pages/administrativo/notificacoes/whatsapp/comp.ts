@@ -7,7 +7,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { InnercardComponent } from 'src/app/shared/components';
 import { EditorComponent } from 'src/app/shared/components/editor/editor.component';
-import { Parametro } from 'src/app/shared/models/parametro';
+import { CHAVE_MENSAGEM_WHATSAPP, Parametro } from 'src/app/shared/models/parametro';
 import { AdministrativoService } from 'src/app/shared/services/admin.service';
 
 @Component({
@@ -15,9 +15,6 @@ import { AdministrativoService } from 'src/app/shared/services/admin.service';
   templateUrl: './comp.html',
   styleUrls: ['../comp.scss'],
   imports: [
-    // CommonModule,    
-    // InnercardComponent,    
-    // MatButtonModule,
     InnercardComponent,
     MatTabsModule,
     MatIconModule,
@@ -38,17 +35,37 @@ export class WhatsAppComp implements OnInit {
 
   form!: FormGroup;
   toolbarConfig: any[] = [
-    ['bold', 'italic', 'underline', 'strike'],
+    ['bold', 'italic', 'strike'],
   ];
+  variavelMesExtenso = '${mesCapitalizado}';
+  variavelTurmaNome = '${turma.nome}';
+  variavelMomeEmpresa = '${nomeEmpresa}';
 
   ngOnInit(): void {
+    this._recuperarConfiguracoes();
     this._createForm();
   }
 
   private _createForm() {
     this.form = this.fb.group({
-      textoNofificacao: new FormControl('', [Validators.required]),
+      valor: new FormControl('', [Validators.required]),
     });
+  }
+
+  private _recuperarConfiguracoes() {
+    this.spinner.showUntilCompleted(this.admService.findByChave(CHAVE_MENSAGEM_WHATSAPP)).subscribe({
+      next: (result) => {
+        this._initFormsModelo(result);
+      },
+      error: (err) => {
+        this.notification.showError(err.message);
+        console.error('Erro ao executar chamada ao backend:', err);
+      }
+    });
+  }
+
+  private _initFormsModelo(value: Parametro) {
+    this.form.patchValue({ ...value });
   }
 
   submit() {
@@ -59,7 +76,7 @@ export class WhatsAppComp implements OnInit {
       return;
     }
     this.spinner.showUntilCompleted(
-      this.admService.salvarModeloContrato(this.form.value as Partial<Parametro>)).subscribe({
+      this.admService.salvarParametro(CHAVE_MENSAGEM_WHATSAPP, this.form.value as Partial<Parametro>)).subscribe({
         next: _ => {
           this.notification.showSuccess('Operação realizada com sucesso.');
         },

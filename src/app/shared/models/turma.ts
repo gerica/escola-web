@@ -8,7 +8,7 @@ export interface Turma {
   id: number,
   curso: Curso,
   empresa: Empresa,
-  nome: String,
+  nome: string,
   codigo: String,
   capacidadeMaxima: number
   status: StatusTurma,

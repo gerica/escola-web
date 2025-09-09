@@ -1,7 +1,7 @@
 <form [formGroup]="form" (submit)="submit()">
-  <app-innercard >
+  <app-innercard>
     <section>
-      <editor-component formControlName="textoNofificacao" placeholder="Informe o texto" [toolbarConfig]="toolbarConfig"
+      <editor-component formControlName="valor" placeholder="Informe o texto" [toolbarConfig]="toolbarConfig"
         height="300px"></editor-component>
     </section>
 
@@ -11,3 +11,16 @@
 
   </app-innercard>
 </form>
+
+<section style="margin-top: 1rem;">
+  <div>
+    Para utilizar o mês corrente utilize essa variável: <b>{{variavelMesExtenso}}</b>
+  </div>
+  <div>
+    Para utilizar o nome da turma utilize essa variável: <b>{{variavelTurmaNome}}</b>
+  </div>
+  <div>
+    Para utilizar o nome da empresa utilize essa variável: <b>{{variavelMomeEmpresa}}</b>    
+  </div>
+
+</section>

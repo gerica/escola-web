@@ -30,7 +30,7 @@ export class AdministrativoService {
             variables: {
                 request: {
                     chave: CHAVE_CONTRATO_CIDADE_PADRAO,
-                    codigoMunicipio: entity.cidade?.codigo
+                    // codigoMunicipio: entity.cidade?.codigo
                 },
 
             },
@@ -39,29 +39,13 @@ export class AdministrativoService {
         );
     }
 
-    salvarModeloContrato(entity: Partial<Parametro>): Observable<Parametro> {
+    salvarParametro(chave: String, entity: Partial<Parametro>): Observable<Parametro> {
         return this.apollo.mutate<any>({
             mutation: SALVAR_PARAMETRO,
             variables: {
                 request: {
-                    chave: CHAVE_CONTRATO_MODELO_PADRAO,
-                    modeloContrato: entity.modeloContrato
-                },
-            },
-            context: { uri: URL_ADMIN },
-            // fetchPolicy: 'network-only', // Or 'cache-first' network-only
-        }).pipe(map(result => result.data.salvarParametro as Parametro)
-        );
-    }
-
-
-    salvarMensagemWhatsapp(entity: Partial<Parametro>): Observable<Parametro> {
-        return this.apollo.mutate<any>({
-            mutation: SALVAR_PARAMETRO,
-            variables: {
-                request: {
-                    chave: CHAVE_CONTRATO_MODELO_PADRAO,
-                    modeloContrato: entity.modeloContrato
+                    chave: chave,
+                    valor: entity.valor
                 },
             },
             context: { uri: URL_ADMIN },

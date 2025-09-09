@@ -16,7 +16,7 @@ import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { debounceDistinctUntilChanged, minTime } from 'src/app/core/rxjs-operators';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { Cidade } from 'src/app/shared/models/cidade';
-import { CHAVE_CONTRATO_CIDADE_PADRAO, CHAVE_CONTRATO_MODELO_PADRAO, Parametro } from 'src/app/shared/models/parametro';
+import { CHAVE_CONTRATO_CIDADE_PADRAO, CHAVE_CONTRATO_MODELO_PADRAO, CHAVE_MENSAGEM_WHATSAPP, Parametro } from 'src/app/shared/models/parametro';
 import { AdministrativoService } from 'src/app/shared/services/admin.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../../shared/components/innercard/innercard.component";
@@ -108,7 +108,7 @@ export class CidadeParamManterComp implements OnInit {
   }
 
   private _initFormCidadePadrao(): void {
-    const codigoMunicipio = this.parametroCidadePadrao()?.codigoMunicipio;
+    const codigoMunicipio = this.parametroCidadePadrao()?.valor;
     if (codigoMunicipio) {
       this.utilService.recuperarPorCodigo(codigoMunicipio).subscribe({
         next: (result) => {
@@ -164,7 +164,7 @@ export class CidadeParamManterComp implements OnInit {
       return;
     }
     this.spinner.showUntilCompleted(
-      this.admService.salvarModeloContrato(this.formModeloContrato.value as Partial<Parametro>)).subscribe({
+      this.admService.salvarParametro(CHAVE_CONTRATO_CIDADE_PADRAO, this.formModeloContrato.value as Partial<Parametro>)).subscribe({
         next: (result) => {
           this.parametroCidadePadrao.set(result);
           this.notification.showSuccess('Operação realizada com sucesso.');

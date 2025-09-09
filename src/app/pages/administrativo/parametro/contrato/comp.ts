@@ -53,7 +53,7 @@ export class ContratoParamManterComp implements OnInit {
 
   formModeloContrato!: FormGroup;
 
-  parametroModeloContrato = signal<Parametro | null>(null);
+  // parametroModeloContrato = signal<Parametro | null>(null);
 
   srvTextSubject = new BehaviorSubject<string>('');
   cidades = signal(emptyPage<Cidade>());
@@ -69,15 +69,15 @@ export class ContratoParamManterComp implements OnInit {
 
   private _createForm() {
     this.formModeloContrato = new UntypedFormGroup({
-      modeloContrato: new UntypedFormControl('', [Validators.required]),
+      valor: new UntypedFormControl('', [Validators.required]),
     });
   }
 
   private _recuperarConfiguracoes() {
     this.spinner.showUntilCompleted(this.admService.findByChave(CHAVE_CONTRATO_MODELO_PADRAO)).subscribe({
-      next: (result) => {        
-        this.parametroModeloContrato.set(result);
-        this._initFormsModelo();
+      next: (result) => {
+        // this.parametroModeloContrato.set(result);
+        this._initFormsModelo(result);
       },
       error: (err) => { // <--- Add error handling
         this.notification.showError(err.message);
@@ -86,8 +86,8 @@ export class ContratoParamManterComp implements OnInit {
     });
   }
 
-  private _initFormsModelo() {
-    this.formModeloContrato.patchValue({ ...this.parametroModeloContrato() });
+  private _initFormsModelo(value: Parametro) {
+    this.formModeloContrato.patchValue({ ...value });
   }
 
   onSubmitModeloConrato() {
@@ -98,7 +98,7 @@ export class ContratoParamManterComp implements OnInit {
       return;
     }
     this.spinner.showUntilCompleted(
-      this.admService.salvarModeloContrato(this.formModeloContrato.value as Partial<Parametro>)).subscribe({
+      this.admService.salvarParametro(CHAVE_CONTRATO_MODELO_PADRAO, this.formModeloContrato.value as Partial<Parametro>)).subscribe({
         next: _ => {
           this.notification.showSuccess('Operação realizada com sucesso.');
         },
