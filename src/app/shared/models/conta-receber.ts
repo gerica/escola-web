@@ -32,6 +32,8 @@ export interface ContaReceberResumoPorMesDetalhe {
 }
 
 
+
+
 export const CRIAR_CONTA_RECEBER = gql`
   mutation CriarContasReceber($idContrato: ID!){  
     criarContasReceber(idContrato:$idContrato)
@@ -115,5 +117,11 @@ export const FETCH_RESUMO_BY_MES_DETALHE = gql`
         diasAtraso
       }
     }
+  }
+`;
+
+export const FETCH_STATUS_CONTAS_RECEBER_BY_CONTRATO = gql`  
+  query FetchStatusContasReceberByContrato($idContrato: ID!) { 
+    fetchStatusContasReceberByContrato(idContrato:$idContrato)
   }
 `;

@@ -10,5 +10,4 @@ export const StatusContaReceberLabelMapping: Record<StatusContaReceber, string> 
     [StatusContaReceber.PAGA]: 'Paga',
     [StatusContaReceber.VENCIDA]: 'Vencida',
     [StatusContaReceber.CANCELADA]: 'Cancelada',
-
 };

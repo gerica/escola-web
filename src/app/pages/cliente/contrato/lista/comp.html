@@ -89,13 +89,20 @@
           <!-- <a matTooltip="Contas a receber" aria-hidden="false" [routerLink]="['/conta/receber/contrato', element.id]">
             <mat-icon color="warn">wallet</mat-icon>
           </a> -->
-          @if(!element.contaCriada){
-          <a matTooltip="Contas ainda não criada" aria-hidden="false" [routerLink]="['/conta/receber/contrato', element.id]">
+          @if(statusContaReceberContrato[0]===element.statusContasReceberContrato){
+          <a matTooltip="Contas ainda não criada" aria-hidden="false"
+            [routerLink]="['/conta/receber/contrato', element.id]">
             <mat-icon color="accent">wallet</mat-icon>
           </a>
-          } @else {
-          <a matTooltip="Contas a receber em dia" aria-hidden="false" [routerLink]="['/conta/receber/contrato', element.id]">
+          } @else if(statusContaReceberContrato[1] === element.statusContasReceberContrato){
+          <a matTooltip="Contas a receber em dia" aria-hidden="false"
+            [routerLink]="['/conta/receber/contrato', element.id]">
             <mat-icon color="primary">wallet</mat-icon>
+          </a>
+          } @else {
+          <a matTooltip="Contas a receber em vencidas" aria-hidden="false"
+            [routerLink]="['/conta/receber/contrato', element.id]">
+            <mat-icon color="warn">wallet</mat-icon>
           </a>
           }
           <!-- <a matTooltip="Contas a receber" aria-hidden="false" [routerLink]="['/conta/receber/contrato', element.id]">

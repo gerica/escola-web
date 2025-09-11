@@ -2,9 +2,10 @@ import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
 import { URL_ADMIN } from '../common/constants';
-import { ContaReceber, ContaReceberResumoPorMes, ContaReceberResumoPorMesDetalhe, CRIAR_CONTA_RECEBER, DELETE_CONTA_RECEBER_BY_ID, FETCH_ALL_CONTAS_RECEBER_BY_CONTRATO, FETCH_RESUMO_BY_MES, FETCH_RESUMO_BY_MES_DETALHE, SAVE_CONTA_RECEBER } from '../models/conta-receber';
+import { ContaReceber, ContaReceberResumoPorMes, ContaReceberResumoPorMesDetalhe, CRIAR_CONTA_RECEBER, DELETE_CONTA_RECEBER_BY_ID, FETCH_ALL_CONTAS_RECEBER_BY_CONTRATO, FETCH_RESUMO_BY_MES, FETCH_RESUMO_BY_MES_DETALHE, FETCH_STATUS_CONTAS_RECEBER_BY_CONTRATO, SAVE_CONTA_RECEBER } from '../models/conta-receber';
 import { Page, PageRequest } from 'src/app/core/models';
 import { DataUtils } from './data.service';
+import { StatusContaReceberContrato } from '../models/status-conta-receber-contrato.enum';
 
 @Injectable({ providedIn: 'root' })
 export class ContaReceberService {
@@ -151,6 +152,22 @@ export class ContaReceberService {
       map(result => result.data.fetchResumoByMesDetalhe as Page<ContaReceberResumoPorMesDetalhe>),
       // tap(value => {
       //     console.log(value);
+      // }),
+    );
+  }
+
+  checarStatusContaReceber(idContrato: number): Observable<StatusContaReceberContrato> {    
+    return this.apollo.query<any>({
+      query: FETCH_STATUS_CONTAS_RECEBER_BY_CONTRATO,
+      variables: {
+        idContrato
+      },
+      context: { uri: URL_ADMIN },
+      fetchPolicy: 'network-only', // Or 'no-cache'      
+    }).pipe(
+      map(result => result.data.fetchStatusContasReceberByContrato as StatusContaReceberContrato),
+      // tap(value => {
+      //   console.log("Received GraphQL data:", value);
       // }),
     );
   }

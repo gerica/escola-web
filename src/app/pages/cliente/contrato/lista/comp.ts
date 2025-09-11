@@ -13,7 +13,7 @@ import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { debounceTime, distinctUntilChanged, finalize, forkJoin, map, mergeMap, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, forkJoin, map, mergeMap, of, Subject, takeUntil } from 'rxjs';
 import { emptyPage, firstPageAndSort, Page, PageRequest } from 'src/app/core/models';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { CardComponent } from 'src/app/shared/components';
@@ -25,6 +25,7 @@ import { UtilsService } from 'src/app/shared/services/utils.service';
 import { ContratoDetalheDialog } from './detalhe';
 import { ContaReceberService } from 'src/app/shared/services/conta.receber.service';
 import { Observable } from '@apollo/client/utilities';
+import { StatusContaReceberContrato } from 'src/app/shared/models/status-conta-receber-contrato.enum';
 
 @Component({
   selector: 'app-contratos-list',
@@ -74,8 +75,9 @@ export class ContratoListComp implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   statusContrato = Object.values(StatusContrato);
   statusContratoLabelMapping = StatusContratoLabelMapping;
+  statusContaReceberContrato = Object.values(StatusContaReceberContrato);
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     if (this.isModuloFinanceiro) {
       this.moduloFinanceiro.set(true);
       this.moduloAdmin.set(false);
@@ -120,18 +122,18 @@ export class ContratoListComp implements OnInit, OnDestroy {
         const contratos = pageResult.content;
 
         // 3. Se não houver contratos, retorne a página vazia para evitar erros
-        if (contratos.length === 0) {
-          return Observable.of(pageResult);
+        if (contratos.length === 0 || !this.moduloFinanceiro()) {          
+          return of(pageResult);
         }
 
         // 4. Mapeia cada contrato para uma nova chamada de API (ex: para contas a receber)
         const calls = contratos.map(contrato =>
-          this.contaReceberService.buscar(contrato.id).pipe(
+          this.contaReceberService.checarStatusContaReceber(contrato.id).pipe(
             // 5. Usa 'map' para combinar os dados originais do contrato com o resultado da nova chamada
-            map(resultConta => {
+            map(resultConta => {              
               return {
                 ...contrato, // Mantém todos os dados do contrato original
-                contaCriada: resultConta.length > 0
+                statusContasReceberContrato: resultConta
               } as Contrato;
             })
           )

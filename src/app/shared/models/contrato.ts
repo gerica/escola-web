@@ -1,7 +1,8 @@
 import { gql } from "apollo-angular";
-import { StatusContrato } from "./status-contrato.enum";
-import { PeriodoPagamento } from "./periodos-pagamento.enum";
 import Cliente from "./cliente";
+import { PeriodoPagamento } from "./periodos-pagamento.enum";
+import { StatusContaReceberContrato } from "./status-conta-receber-contrato.enum";
+import { StatusContrato } from "./status-contrato.enum";
 
 export default interface Contrato {
   id: number,
@@ -21,7 +22,7 @@ export default interface Contrato {
   dataProximoPagamento: Date,
   observacoes: string,
   contratoDoc: string,
-  contaCriada: boolean
+  statusContasReceberContrato: StatusContaReceberContrato
 }
 
 export interface ContratoSalvoModal {
