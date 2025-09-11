@@ -8,21 +8,23 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
-import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
+import { debounceTime, distinctUntilChanged, finalize, forkJoin, map, mergeMap, Subject, takeUntil } from 'rxjs';
+import { emptyPage, firstPageAndSort, Page, PageRequest } from 'src/app/core/models';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
-import Contrato from 'src/app/shared/models/contrato';
-import { ContratoService } from 'src/app/shared/services/contrato.service';
-import { InnercardComponent } from "../../../../shared/components/innercard/innercard.component";
-import { ContratoDetalheDialog } from './detalhe';
-import { StatusContrato, StatusContratoLabelMapping } from 'src/app/shared/models/status-contrato.enum';
-import { MatSelectModule } from '@angular/material/select';
+import { CardComponent } from 'src/app/shared/components';
 import { ActionsComponent } from 'src/app/shared/components/actions/actions.component';
+import Contrato from 'src/app/shared/models/contrato';
+import { StatusContrato, StatusContratoLabelMapping } from 'src/app/shared/models/status-contrato.enum';
+import { ContratoService } from 'src/app/shared/services/contrato.service';
 import { UtilsService } from 'src/app/shared/services/utils.service';
+import { ContratoDetalheDialog } from './detalhe';
+import { ContaReceberService } from 'src/app/shared/services/conta.receber.service';
+import { Observable } from '@apollo/client/utilities';
 
 @Component({
   selector: 'app-contratos-list',
@@ -42,7 +44,7 @@ import { UtilsService } from 'src/app/shared/services/utils.service';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    InnercardComponent,
+    CardComponent,
     MatSelectModule,
     ActionsComponent
   ]
@@ -55,6 +57,7 @@ export class ContratoListComp implements OnInit, OnDestroy {
   private readonly contratosService = inject(ContratoService);
   private readonly dialog = inject(MatDialog);
   private readonly utilService = inject(UtilsService);
+  private readonly contaReceberService = inject(ContaReceberService);
 
   moduloAdmin = signal<boolean>(true);
   moduloFinanceiro = signal<boolean>(false);
@@ -100,12 +103,60 @@ export class ContratoListComp implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  buscarContratos() {
+  buscarContratos2() {
     this.spinner
       .showUntilCompleted(this.contratosService.buscar(this.ctrlFiltro.value, this.ctrlStatusContrato.value, this.page()))
       .subscribe(result => {
         this.contratos.set(result);
       });
+  }
+
+  buscarContratos() {
+    // this.spinner.show(); // Inicia o spinner
+    this.spinner.showUntilCompleted(this.contratosService.buscar(this.ctrlFiltro.value, this.ctrlStatusContrato.value, this.page())).pipe(
+      // 1. Recebe a resposta paginada do backend
+      mergeMap(pageResult => {
+        // 2. Extrai a lista de contratos da resposta
+        const contratos = pageResult.content;
+
+        // 3. Se não houver contratos, retorne a página vazia para evitar erros
+        if (contratos.length === 0) {
+          return Observable.of(pageResult);
+        }
+
+        // 4. Mapeia cada contrato para uma nova chamada de API (ex: para contas a receber)
+        const calls = contratos.map(contrato =>
+          this.contaReceberService.buscar(contrato.id).pipe(
+            // 5. Usa 'map' para combinar os dados originais do contrato com o resultado da nova chamada
+            map(resultConta => {
+              return {
+                ...contrato, // Mantém todos os dados do contrato original
+                contaCriada: resultConta.length > 0
+              } as Contrato;
+            })
+          )
+        );
+
+        // 6. Usa 'forkJoin' para esperar que todas as chamadas de contas a receber terminem
+        return forkJoin(calls).pipe(
+          // 7. Mapeia o resultado do 'forkJoin' de volta para um objeto Page
+          map(enriquecidos => ({
+            ...pageResult, // Mantém os metadados da página original
+            content: enriquecidos // Substitui a lista de contratos pela nova lista enriquecida
+          }))
+        );
+      }),
+    ).subscribe({
+      next: pageFinal => {
+        this.contratos.set(pageFinal as Page<Contrato>);
+        // Você pode querer armazenar o objeto Page completo em um sinal separado para a paginação
+        // this.pageContratos.set(pageFinal);
+      },
+      error: err => {
+        // Lidar com o erro
+        console.error('Erro ao buscar e enriquecer contratos', err);
+      }
+    });
   }
 
   sortData(sort: Sort) {
@@ -137,6 +188,19 @@ export class ContratoListComp implements OnInit, OnDestroy {
         }
       }
       );
+  }
+
+  contaReceberCriada(entity: Contrato): boolean {
+    // this.contaReceberService.buscar(entity.id).subscribe({
+    //   next: (result) => {
+    //     return result.length > 0;
+    //   },
+    //   error: (err) => {
+    //     this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+    //     console.error('Erro ao baixar anexo:', err);
+    //   }
+    // });
+    return false;
   }
 
 }

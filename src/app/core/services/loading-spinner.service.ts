@@ -7,7 +7,7 @@ import { finalize, switchMap, tap } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 export class LoadingSpinnerService {
   isLoading = signal(false);
-  private loadingCount = 0;
+  loadingCount = 0;
 
   showUntilCompleted<T>(obs$: Observable<T>, loadingOffAuto = true): Observable<T> {
     return of(null).pipe(

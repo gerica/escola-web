@@ -1,9 +1,29 @@
 <app-card titulo="Configuração da notificação" [estiloCard]="{'margin-top': '1em',}">
-  <form [formGroup]="form">
-    <section>
-      <mat-checkbox formControlName="notificacaoAutomatica">Noficicação automática</mat-checkbox>
-    </section>
-  </form>
+  <app-innercard titulo="Configuração geral">
+
+    <form [formGroup]="form" (submit)="submit()">
+      <section>
+        <mat-checkbox formControlName="notificacaoAutomatica">Noficicação automática</mat-checkbox>
+        @if(form.get('notificacaoAutomatica')?.value){
+        <mat-form-field appearance="outline">
+          <mat-label>Dias em atraso</mat-label>
+          <input matInput placeholder="dias em atraso" formControlName="qtdDiasAtraso">
+          <!-- Validação de campo obrigatório -->
+          @if(form.controls['qtdDiasAtraso'].hasError('required') && (form.controls['qtdDiasAtraso'].touched ||
+          form.controls['qtdDiasAtraso'].dirty)){
+          <mat-error>
+            A quantidade de dias em atraso é <strong>obrigatório</strong>
+          </mat-error>
+          }
+        </mat-form-field>
+        }
+      </section>
+
+      <section class="container">
+        <button mat-raised-button color="primary" type="submit">Salvar</button>
+      </section>
+    </form>
+  </app-innercard>
 
   <mat-tab-group>
     <mat-tab>

@@ -3,7 +3,7 @@
   Permite cadastrar e editar informações de uma empresa.
   Utiliza Angular Material para os componentes de UI e Reactive Forms para o gerenciamento do formulário.
 -->
-<app-innercard titulo="Manter Empresa" [estiloCardTitulo]="{'padding': '1em'}">
+<app-card titulo="Manter Empresa" [estiloCardTitulo]="{'padding': '1em'}">
 
   <!-- Formulário reativo para os dados da empresa -->
   <form [formGroup]="form" (submit)="onSubmit()">
@@ -150,4 +150,4 @@
     </mat-tab-group>
   </form>
 
-</app-innercard>
+</app-card>

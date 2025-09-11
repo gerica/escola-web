@@ -1,5 +1,5 @@
 <section class="sectionTabela">
-  <app-card [titulo]="titulo()" [estiloCard]="{'margin-top': '1em'}">
+  <app-innercard [titulo]="titulo()" [estiloCard]="{'margin-top': '1em'}">
     @if(loading()){
     <div style="display: flex; justify-content: center;">
       <mat-spinner></mat-spinner>
@@ -78,7 +78,7 @@
     } @else {
     <span>Nenhum registro encontrado</span>
     }
-  </app-card>
+  </app-innercard>
 </section>
 
 <!-- 2. Pagamentos em Aberto (Inadimplentes)

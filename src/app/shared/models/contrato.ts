@@ -21,6 +21,7 @@ export default interface Contrato {
   dataProximoPagamento: Date,
   observacoes: string,
   contratoDoc: string,
+  contaCriada: boolean
 }
 
 export interface ContratoSalvoModal {

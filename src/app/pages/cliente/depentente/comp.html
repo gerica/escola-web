@@ -1,4 +1,4 @@
-<app-innercard titulo="Dependentes" [estiloCardTitulo]="{'padding': '1em',}">
+<app-innercard titulo="Dependentes">
   <form [formGroup]="form" (submit)="onSubmit()">
 
     <section>
@@ -41,7 +41,7 @@
       </mat-form-field>
     </section>
     <section>
-      
+
       <mat-form-field appearance="outline">
         <mat-label>Sexo</mat-label>
         <mat-select formControlName="sexo">
@@ -76,7 +76,7 @@
   </form>
 </app-innercard>
 @if(dependentesCliente().length > 0){
-<app-innercard titulo="Lisa de Dependentes" [estiloCardTitulo]="{'padding': '1em',}">
+<app-innercard titulo="Lisa de Dependentes" [estiloCard]="{'margin-top': '1em'}">
   <div class="containerDependente">
     @for (item of dependentesCliente(); track $index) {
     <mat-card appearance="outlined">

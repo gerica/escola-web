@@ -29,7 +29,7 @@ export const modulosPorPerfil = {
     moduloAdminCurso,
     moduloAdminPerfil,
     moduloAdminParametros,
-    moduloAdminTipoDocumentosModelos,
+    // moduloAdminTipoDocumentosModelos,
     moduloAdminTabelasAuxiliares,
     moduloAdminNotificacao,
     // financeiro

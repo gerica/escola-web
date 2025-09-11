@@ -1,19 +1,22 @@
-.lista {
-  
-}
-
-.containerControles {  
+.containerControles {
   display: flex;
   justify-content: space-between;
-  // align-items: center;
+}
+
+.flex-grow {
+  flex: 1;
+  /* Permite que o elemento se expanda e ocupe o espaço extra */
+  display: flex;
+  /* Adicione este display para controlar o layout interno da div */
+  align-items: center;
+  /* Alinha os itens verticalmente */
 }
 
 .cursorSelect{
   cursor: pointer;
 }
 
-
 mat-form-field {
   margin: 0 0.5rem;
-  width: 65%;
+  width: 50%;
 }

@@ -1,4 +1,4 @@
-<app-innercard titulo="Manter Cliente" [estiloCardTitulo]="{'padding': '1em',}">
+<app-card titulo="Manter Cliente" [estiloCardTitulo]="{'padding': '1em',}">
 
   <form [formGroup]="form" (submit)="onSubmit()">
     <mat-tab-group>
@@ -8,7 +8,7 @@
           Dados
         </ng-template>
 
-        <app-innercard class="cardInner">
+        <app-innercard class="cardInner" titulo="Dados">
           <section class="containerLinha">
             <mat-form-field appearance="outline">
               <mat-label>Nome</mat-label>
@@ -149,4 +149,4 @@
     </mat-tab-group>
   </form>
 
-</app-innercard>
+</app-card>

@@ -9,7 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { NotificationService } from 'src/app/core/services';
-import { CardComponent } from "src/app/shared/components";
+import { CardComponent, InnercardComponent } from "src/app/shared/components";
 import { CustomDateAdapter, MAT_CUSTOM_DATE_FORMATS } from 'src/app/shared/components/adapter/custom/custom-date.adapter';
 import Cliente from 'src/app/shared/models/cliente';
 import { ContaReceberService } from 'src/app/shared/services/conta.receber.service';
@@ -27,11 +27,12 @@ import { FinanceiroResumoTabelaComponent } from './componente/resumo.tabela';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatDatepickerModule,    
-    CardComponent,    
+    MatDatepickerModule,
+    CardComponent,
     FinanceiroResumoGraficoComponent,
-    FinanceiroResumoTabelaComponent
-  ],
+    FinanceiroResumoTabelaComponent,
+    InnercardComponent
+],
   providers: [
     { provide: DateAdapter, useClass: CustomDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_CUSTOM_DATE_FORMATS },    

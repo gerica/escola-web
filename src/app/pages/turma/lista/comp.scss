@@ -26,6 +26,14 @@ mat-form-field {
 
 .containerControles {
   display: flex;
-  // justify-content: space-between;
-  // align-items: center;
+  justify-content: space-between;
+}
+
+.flex-grow {
+  flex: 1;
+  /* Permite que o elemento se expanda e ocupe o espaço extra */
+  display: flex;
+  /* Adicione este display para controlar o layout interno da div */
+  align-items: center;
+  /* Alinha os itens verticalmente */
 }

@@ -14,7 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, RouterModule } from '@angular/router';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/core/components';
-import { emptyPage, firstPageAndSort, PageRequest, User } from 'src/app/core/models';
+import { emptyPage, firstPageAndSort, PageRequest, User, UserRole } from 'src/app/core/models';
 import { AuthService, LoadingSpinnerService, NotificationService } from 'src/app/core/services';
 import { KEY_SUPER_ADMIN_TOKEN, KEY_SUPER_ADMIN_USER } from 'src/app/shared/common/constants';
 import { ActionsComponent } from 'src/app/shared/components/actions/actions.component';
@@ -43,12 +43,11 @@ import { CardComponent } from "src/app/shared/components";
     MatTooltipModule,
     MatFormFieldModule,
     MatInputModule,
-    ReactiveFormsModule,
-    InnercardComponent,
+    ReactiveFormsModule,    
     PrimeiraMaiusculaPipe,
     ActionsComponent,
     CardComponent
-]
+  ]
 })
 export class ListComp implements OnInit, OnDestroy {
 
@@ -59,7 +58,7 @@ export class ListComp implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
-  private readonly utilService = inject(UtilsService);  
+  private readonly utilService = inject(UtilsService);
 
   usuarios = signal(emptyPage<Usuario>());
   ctrlFiltro = new FormControl('', { nonNullable: true });
@@ -152,19 +151,25 @@ export class ListComp implements OnInit, OnDestroy {
 
   // Function to pass to the child component
   download(type: string) {
-     this.spinner.showUntilCompleted(this.usuarioService.downloadFile(type, this.ctrlFiltro.value))
-       .subscribe({
-         next: (result) => {
-           this.utilService.downloadFile(result);
-         },
-         error: (err) => {
-           this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
-           console.error('Erro ao baixar anexo:', err);
-         }
-       }
-       );
-   }
- 
-  
+    this.spinner.showUntilCompleted(this.usuarioService.downloadFile(type, this.ctrlFiltro.value))
+      .subscribe({
+        next: (result) => {
+          this.utilService.downloadFile(result);
+        },
+        error: (err) => {
+          this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+          console.error('Erro ao baixar anexo:', err);
+        }
+      }
+      );
+  }
+
+  isUsuarioSuperAdmin(): boolean {
+    // Exemplo em um componente ou serviço
+    const rolesPermitidas = [UserRole.SUPER_ADMIN];
+
+    return this.authService.isUsuarioTemPapel(rolesPermitidas) || false;
+  }
+
 
 }

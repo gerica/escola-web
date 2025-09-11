@@ -1,23 +1,25 @@
-<section>
-  <app-card titulo="Filtros">
-    <form [formGroup]="form">
-      <mat-form-field appearance="outline">
-        <mat-label>Mês de Referência</mat-label>
-        <input matInput [matDatepicker]="dpMes" formControlName="dataRef" placeholder="MM/AAAA" />
-        <mat-datepicker-toggle matSuffix [for]="dpMes"></mat-datepicker-toggle>
-        <mat-datepicker #dpMes startView="multi-year" (monthSelected)="selecionarMes($event)"
-          (monthSelected)="dpMes.close()">
-        </mat-datepicker>
-      </mat-form-field>
-    </form>
-  </app-card>
-</section>
+<app-card titulo="Resumo Financeiro">
+  <section>
+    <app-innercard titulo="Filtros">
+      <form [formGroup]="form">
+        <mat-form-field appearance="outline">
+          <mat-label>Mês de Referência</mat-label>
+          <input matInput [matDatepicker]="dpMes" formControlName="dataRef" placeholder="MM/AAAA" />
+          <mat-datepicker-toggle matSuffix [for]="dpMes"></mat-datepicker-toggle>
+          <mat-datepicker #dpMes startView="multi-year" (monthSelected)="selecionarMes($event)"
+            (monthSelected)="dpMes.close()">
+          </mat-datepicker>
+        </mat-form-field>
+      </form>
+    </app-innercard>
+  </section>
 
-<section class="sectionResumo">
-  <div>
-    <app-financeiro-resumo-grafico [dataRef]="form.get('dataRef')?.value" />
-  </div>
-  <div style="flex-grow: 1;">
-    <app-financeiro-resumo-tabela [dataRef]="form.get('dataRef')?.value" />
-  </div>
-</section>
+  <section class="sectionResumo">
+    <div>
+      <app-financeiro-resumo-grafico [dataRef]="form.get('dataRef')?.value" />
+    </div>
+    <div style="flex-grow: 1;">
+      <app-financeiro-resumo-tabela [dataRef]="form.get('dataRef')?.value" />
+    </div>
+  </section>
+</app-card>

@@ -1,33 +1,35 @@
-<app-innercard titulo="Turmas" [estiloCardTitulo]="{'padding': '1em',}" [estiloCard]="{'margin-top': '1em'}">
+<app-card titulo="Turmas" [estiloCardTitulo]="{'padding': '1em',}">
   <section class="containerControles">
-    <mat-form-field appearance="outline">
-      <mat-label>Filtrar por nome descrição e categoria </mat-label>
-      <input matInput [formControl]="ctrlFiltro" placeholder="nome descrição e categoria" (keydown.enter)="buscar()" />
-      <button *ngIf="ctrlFiltro.value" matSuffix mat-icon-button aria-label="Filtro" (click)="limparEbuscar()">
-        <mat-icon>close</mat-icon>
-      </button>
-      <button *ngIf="ctrlFiltro.value" matSuffix mat-icon-button aria-label="Filtro" (click)="buscar()">
-        <mat-icon>search</mat-icon>
-      </button>
-    </mat-form-field>
+    <div class="flex-grow">
+      <mat-form-field appearance="outline">
+        <mat-label>Filtrar por nome descrição e categoria </mat-label>
+        <input matInput [formControl]="ctrlFiltro" placeholder="nome descrição e categoria"
+          (keydown.enter)="buscar()" />
+        <button *ngIf="ctrlFiltro.value" matSuffix mat-icon-button aria-label="Filtro" (click)="limparEbuscar()">
+          <mat-icon>close</mat-icon>
+        </button>
+        <button *ngIf="ctrlFiltro.value" matSuffix mat-icon-button aria-label="Filtro" (click)="buscar()">
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" style="width: 35%;">
-      <mat-label>Status</mat-label>
-      <mat-select [formControl]="ctrlStatusTurma" multiple>
-        @for (item of statusTurma; track item) {
-        <mat-option [value]="item">{{statusTurmaLabelMapping[item]}}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-    
+      <mat-form-field appearance="outline" style="width: 20%;">
+        <mat-label>Status</mat-label>
+        <mat-select [formControl]="ctrlStatusTurma" multiple>
+          @for (item of statusTurma; track item) {
+          <mat-option [value]="item">{{statusTurmaLabelMapping[item]}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <app-buttons-actions (clickDonwload)="download($event)">
+        <button mat-raised-button color="primary" routerLink="/turma/manter">Nova turma</button>
+      </app-buttons-actions>
+    </div>
   </section>
 
-  <section class="containerControles" style="justify-content: flex-end;">
-    <app-buttons-actions (clickDonwload)="download($event)">
-      <button mat-raised-button color="primary" routerLink="/turma/manter">Nova turma</button>      
-    </app-buttons-actions>
-  </section>
-  
   @if(!turmas().empty){
   <section class="lista">
     <table mat-table [dataSource]="turmas().content" matSort (matSortChange)="sortData($event)"
@@ -100,4 +102,4 @@
   } @else {
   <span>Nenhum registro cadastrado</span>
   }
-</app-innercard>
+</app-card>

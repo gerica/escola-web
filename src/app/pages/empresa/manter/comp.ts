@@ -21,6 +21,7 @@ import { EmpresaService } from 'src/app/shared/services/empresa.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
 import { ListComp } from '../empresa-usuario/comp';
 import { MSG_SUCESS } from 'src/app/shared/common/constants';
+import { CardComponent } from 'src/app/shared/components';
 
 
 @Component({
@@ -30,6 +31,7 @@ import { MSG_SUCESS } from 'src/app/shared/common/constants';
   imports: [
     CommonModule,
     RouterModule,
+    CardComponent,
     InnercardComponent,
     ReactiveFormsModule,
     MatButtonModule,

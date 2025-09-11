@@ -24,6 +24,7 @@ import { UtilsService } from 'src/app/shared/services/utils.service';
 import { InnercardComponent } from "../../../shared/components/innercard/innercard.component";
 import { ContatoComp } from '../contato/comp';
 import { DependenteComp } from '../depentente/comp';
+import { CardComponent } from 'src/app/shared/components';
 
 @Component({
   selector: 'app-contrato-manter',
@@ -32,6 +33,7 @@ import { DependenteComp } from '../depentente/comp';
   imports: [
     CommonModule,
     RouterModule,
+    CardComponent,
     InnercardComponent,
     ReactiveFormsModule,
     MatButtonModule,

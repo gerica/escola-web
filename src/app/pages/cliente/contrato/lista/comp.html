@@ -1,109 +1,122 @@
-<app-innercard titulo="Lista de contratos" [estiloCardTitulo]="{'padding': '1em',}">
+<app-card titulo="Lista de contratos" [estiloCardTitulo]="{'padding': '1em',}">
 
   <section class="containerControles">
-    <mat-form-field appearance="outline">
-      <mat-label>Filtrar por número do contrato, nome do cliente e data início</mat-label>
-      <input matInput [formControl]="ctrlFiltro" placeholder="Nome ou Email" (keydown.enter)="buscarContratos()" />
-      <button *ngIf="ctrlFiltro.value" matSuffix mat-icon-button aria-label="Filtro" (click)="buscarContratos()">
-        <mat-icon>search</mat-icon>
-      </button>
-    </mat-form-field>
+    <div class="flex-grow">
+      <mat-form-field appearance="outline">
+        <mat-label>Filtrar por número do contrato, nome do cliente e data início</mat-label>
+        <input matInput [formControl]="ctrlFiltro" placeholder="Nome ou Email" (keydown.enter)="buscarContratos()" />
+        <button *ngIf="ctrlFiltro.value" matSuffix mat-icon-button aria-label="Filtro" (click)="buscarContratos()">
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" style="width: 20%;">
-      <mat-label>Status contrato</mat-label>
-      <mat-select [formControl]="ctrlStatusContrato" multiple>
-        @for (item of statusContrato; track item) {
-        <mat-option [value]="item">{{statusContratoLabelMapping[item]}}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-  </section>
+      <mat-form-field appearance="outline" style="width: 20%;">
+        <mat-label>Status contrato</mat-label>
+        <mat-select [formControl]="ctrlStatusContrato" multiple>
+          @for (item of statusContrato; track item) {
+          <mat-option [value]="item">{{statusContratoLabelMapping[item]}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
 
-  <section class="containerControles" style="justify-content: flex-end;">
     @if(moduloAdmin()){
-    <app-buttons-actions (clickDonwload)="download($event)" [showBtnDownload]="!contratos().empty">
-      <button mat-raised-button color="primary" routerLink="/cliente/contrato/manter">Novo Contrato</button>
-    </app-buttons-actions>
+    <div>
+      <app-buttons-actions (clickDonwload)="download($event)" [showBtnDownload]="!contratos().empty">
+        <button mat-raised-button color="primary" routerLink="/cliente/contrato/manter">Novo Contrato</button>
+      </app-buttons-actions>
+    </div>
     }
   </section>
 
-  <app-innercard>
-    @if(!contratos().empty){
-    <section class="lista">
-      <table mat-table [dataSource]="contratos().content" matSort (matSortChange)="sortData($event)"
-        class="mat-elevation-z8">
+  @if(!contratos().empty){
+  <section class="lista">
+    <table mat-table [dataSource]="contratos().content" matSort (matSortChange)="sortData($event)"
+      class="mat-elevation-z8">
 
-        <!-- Position Column -->
-        <ng-container matColumnDef="numeroContrato">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="numeroContrato"> Número Contrato </th>
-          <td mat-cell *matCellDef="let element"> {{element.numeroContrato}} </td>
-        </ng-container>
+      <!-- Position Column -->
+      <ng-container matColumnDef="numeroContrato">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="numeroContrato"> Número Contrato </th>
+        <td mat-cell *matCellDef="let element"> {{element.numeroContrato}} </td>
+      </ng-container>
 
-        <ng-container matColumnDef="cliente">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="cliente"> Cliente </th>
-          <td mat-cell *matCellDef="let element"> {{element.nomeCliente}} </td>
-        </ng-container>
+      <ng-container matColumnDef="cliente">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="cliente"> Cliente </th>
+        <td mat-cell *matCellDef="let element"> {{element.nomeCliente}} </td>
+      </ng-container>
 
-        <!-- Name Column -->
-        <ng-container matColumnDef="dataInicio">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="dataInicio"> Data incio </th>
-          <td mat-cell *matCellDef="let element"> {{element.dataInicio | date: 'dd/MM/yyyy'}} </td>
-        </ng-container>
+      <!-- Name Column -->
+      <ng-container matColumnDef="dataInicio">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="dataInicio"> Data incio </th>
+        <td mat-cell *matCellDef="let element"> {{element.dataInicio | date: 'dd/MM/yyyy'}} </td>
+      </ng-container>
 
-        <!-- Name Column -->
-        <ng-container matColumnDef="dataFim">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="dataFim"> Data final </th>
-          <td mat-cell *matCellDef="let element"> {{element.dataFim | date: 'dd/MM/yyyy'}} </td>
-        </ng-container>
+      <!-- Name Column -->
+      <ng-container matColumnDef="dataFim">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="dataFim"> Data final </th>
+        <td mat-cell *matCellDef="let element"> {{element.dataFim | date: 'dd/MM/yyyy'}} </td>
+      </ng-container>
 
-        <!-- Symbol Column -->
-        <ng-container matColumnDef="valorTotal">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="valorTotal">Valor Total</th>
-          <td mat-cell *matCellDef="let element"> {{element.valorTotal | currency: 'BRL'}} </td>
-        </ng-container>
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="valorTotal">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="valorTotal">Valor Total</th>
+        <td mat-cell *matCellDef="let element"> {{element.valorTotal | currency: 'BRL'}} </td>
+      </ng-container>
 
-        <ng-container matColumnDef="desconto">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="desconto">Desconto </th>
-          <td mat-cell *matCellDef="let element"> {{(element.desconto)/100 | percent}} </td>
-        </ng-container>
+      <ng-container matColumnDef="desconto">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="desconto">Desconto </th>
+        <td mat-cell *matCellDef="let element"> {{(element.desconto)/100 | percent}} </td>
+      </ng-container>
 
-        <!-- Symbol Column -->
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="statusContrato">Status </th>
-          <td mat-cell *matCellDef="let element"> {{getStatus(element.statusContrato)}} </td>
-        </ng-container>
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="statusContrato">Status </th>
+        <td mat-cell *matCellDef="let element"> {{getStatus(element.statusContrato)}} </td>
+      </ng-container>
 
-        <ng-container matColumnDef="acoes">
-          <th mat-header-cell *matHeaderCellDef> </th>
-          <td mat-cell *matCellDef="let element" class="cursorSelect">
-            @if(moduloAdmin()){
-            <a matTooltip="Exibir dados" aria-hidden="false" (click)="visualizar(element)">
-              <mat-icon color="primary">web_asset</mat-icon>
-            </a>
-            <a matTooltip="Editar dados" aria-hidden="false" [routerLink]="['/cliente/contrato/manter', element.id]">
-              <mat-icon color="primary">edit</mat-icon>
-            </a>
-            } @else if(moduloFinanceiro()){
-            <a matTooltip="Contas a receber" aria-hidden="false" [routerLink]="['/conta/receber/contrato', element.id]">
-              <mat-icon color="primary">credit_score</mat-icon>
-            </a>
-            }
-          </td>
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let element" class="cursorSelect">
+          @if(moduloAdmin()){
+          <a matTooltip="Exibir dados" aria-hidden="false" (click)="visualizar(element)">
+            <mat-icon color="primary">web_asset</mat-icon>
+          </a>
+          <a matTooltip="Editar dados" aria-hidden="false" [routerLink]="['/cliente/contrato/manter', element.id]">
+            <mat-icon color="primary">edit</mat-icon>
+          </a>
+          } @else if(moduloFinanceiro()){
 
-        </ng-container>
+          <!-- <a matTooltip="Contas a receber" aria-hidden="false" [routerLink]="['/conta/receber/contrato', element.id]">
+            <mat-icon color="warn">wallet</mat-icon>
+          </a> -->
+          @if(!element.contaCriada){
+          <a matTooltip="Contas ainda não criada" aria-hidden="false" [routerLink]="['/conta/receber/contrato', element.id]">
+            <mat-icon color="accent">wallet</mat-icon>
+          </a>
+          } @else {
+          <a matTooltip="Contas a receber em dia" aria-hidden="false" [routerLink]="['/conta/receber/contrato', element.id]">
+            <mat-icon color="primary">wallet</mat-icon>
+          </a>
+          }
+          <!-- <a matTooltip="Contas a receber" aria-hidden="false" [routerLink]="['/conta/receber/contrato', element.id]">
+            <mat-icon color="color-info">wallet</mat-icon>
+          </a> -->
+          }
+        </td>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
 
 
-      <mat-paginator class="mat-elevation-z5" [length]="contratos().totalElements" [pageIndex]="contratos().number"
-        [pageSize]="pageSize" (page)="page.set({ page: $event.pageIndex, size: $event.pageSize }); buscarContratos()"
-        [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons />
-    </section>
-    } @else {
-    <span>Nenhum cliente cadastrado</span>
-    }
-  </app-innercard>
+    <mat-paginator class="mat-elevation-z5" [length]="contratos().totalElements" [pageIndex]="contratos().number"
+      [pageSize]="pageSize" (page)="page.set({ page: $event.pageIndex, size: $event.pageSize }); buscarContratos()"
+      [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons />
+  </section>
+  } @else {
+  <span>Nenhum cliente cadastrado</span>
+  }
 
-</app-innercard>
+</app-card>

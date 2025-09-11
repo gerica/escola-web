@@ -18,7 +18,6 @@ import { LoadingSpinnerService, NotificationService } from 'src/app/core/service
 import { InnercardComponent } from 'src/app/shared/components';
 import { Cargo } from 'src/app/shared/models/cargo';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
-import { AdministrativoService } from 'src/app/shared/services/admin.service';
 import { CargoService } from 'src/app/shared/services/cargo.service';
 
 

@@ -9,28 +9,25 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { forkJoin } from 'rxjs';
 import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { AuthService, LoadingSpinnerService, NotificationService } from 'src/app/core/services';
-import { CardComponent } from 'src/app/shared/components';
+import { InnercardComponent } from 'src/app/shared/components';
 import { ContaReceberResumoPorMesDetalhe } from 'src/app/shared/models/conta-receber';
 import { CHAVE_MENSAGEM_WHATSAPP } from 'src/app/shared/models/parametro';
 import { Turma } from 'src/app/shared/models/turma';
 import { AdministrativoService } from 'src/app/shared/services/admin.service';
 import { ContaReceberService } from 'src/app/shared/services/conta.receber.service';
-import { ContratoService } from 'src/app/shared/services/contrato.service';
 import { MatriculaService } from 'src/app/shared/services/matricula.service';
 
 @Component({
   selector: 'app-financeiro-resumo-tabela',
   templateUrl: './resumo.tabela.html',
   styleUrls: ['./comp.scss'],
-  imports: [CommonModule,
-    CardComponent,
+  imports: [CommonModule,    
     MatPaginatorModule,
     MatSortModule,
     MatIconModule,
     MatTableModule,
     MatProgressSpinnerModule,
-    MatTooltipModule,
-  ],
+    MatTooltipModule, InnercardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FinanceiroResumoTabelaComponent implements OnInit {
@@ -112,25 +109,15 @@ export class FinanceiroResumoTabelaComponent implements OnInit {
   }
 
   abrirWhatsApp(item: ContaReceberResumoPorMesDetalhe): void {
-    // this.spinner.showUntilCompleted(this.matriculaService.recuperarPorCodigo(item.contrato.numeroContrato)).subscribe({
-    //   next: (result) => {
-    //     this._enviarMensagemWhatsApp(result.turma)
-    //   },
-    //   error: (err) => {
-    //     this.notification.showError(err.message);
-    //     console.error('Erro ao recarregar as contas a receber:', err);
-    //   }
-    // });
-
     this.spinner.loadingOn();
-    (this.spinner as any).loadingCount++; // Accessing private property, see note below
+    this.spinner.loadingCount++; // Accessing private property, see note below
 
     forkJoin({
       resultWhatsapp: this.admService.findByChave(CHAVE_MENSAGEM_WHATSAPP),
       resultMatricula: this.matriculaService.recuperarPorCodigo(item.contrato.numeroContrato),
     }).subscribe({
       next: (results) => {
-        console.log(results);
+        // console.log(results);
         const { resultWhatsapp, resultMatricula } = results;
         this._enviarMensagemWhatsApp(resultWhatsapp.valor, resultMatricula.turma)
       },
@@ -138,48 +125,12 @@ export class FinanceiroResumoTabelaComponent implements OnInit {
         console.error('Error fetching admin parameters:', error);
       },
       complete: () => {
-        (this.spinner as any).loadingCount--;
-        if ((this.spinner as any).loadingCount === 0) {
+        this.spinner.loadingCount--;
+        if (this.spinner.loadingCount === 0) {
           this.spinner.loadingOff();
         }
       }
     });
-  }
-
-  private _enviarMensagemWhatsApp2(textoComunicacao: string, turma: Turma): void {
-    const nomeEmpresa = this.authService.loggedUser()?.empresa.nomeFantasia;
-    const data = new Date(this._dataRef);
-
-    // Usa Intl.DateTimeFormat para obter o nome do mês por extenso em português.
-    const mesExtenso = new Intl.DateTimeFormat('pt-BR', { month: 'long' }).format(data);
-
-    // Obtém o ano da data.
-    const ano = data.getFullYear();
-
-    // Capitaliza a primeira letra do mês.
-    const mesCapitalizado = mesExtenso.charAt(0).toUpperCase() + mesExtenso.slice(1);
-
-    const numero = '5561992489493'; // Seu número de telefone
-    // A mensagem em si. Você pode usar crases (``) para facilitar a interpolação de variáveis.
-    // const mensagem = `Olá. Aqui é a ${nomeEmpresa}\n\nEste é um lembrete sobre o pagamento pendente referente ao mês ${mesCapitalizado}, para a turma ${turma.nome} que ainda não foi registrado em nosso sistema.\nSe o pagamento já foi realizado, por favor, ignore esta notificação.\nAtenciosamente,`;
-    // const mensagem = `Olá!    
-
-    // Notamos que o pagamento da mensalidade de ${mesCapitalizado} para a turma ${turma.nome} ainda não foi registrado em nosso sistema.    
-    // Se você já realizou o pagamento, por favor, desconsidere esta notificação.    
-    // Estamos à disposição para qualquer dúvida.
-
-    // Atenciosamente,
-
-    // ${nomeEmpresa}`
-    // Codifica a mensagem para URL, substituindo espaços e caracteres especiais
-    const mensagemCodificada = encodeURIComponent(textoComunicacao);
-    console.log(mensagemCodificada);
-
-    // const url = `https://wa.me/${numero}?text=${mensagemCodificada}`;
-
-    // // // Abre o link em uma nova aba do navegador
-    // window.open(url, '_blank');
-    this.notification.showSuccess('Operação realizada com sucesso.');
   }
 
   private _enviarMensagemWhatsApp(textoComunicacao: string, turma: Turma): void {
@@ -197,7 +148,7 @@ export class FinanceiroResumoTabelaComponent implements OnInit {
     // Negrito: **
     mensagemFormatada = mensagemFormatada.replace(/<strong>(.*?)<\/strong>/g, '*$1*');
     // Itálico: _
-    mensagemFormatada = mensagemFormatada.replace(/<em>(.*?)<\/em>/g, '_$1_');    
+    mensagemFormatada = mensagemFormatada.replace(/<em>(.*?)<\/em>/g, '_$1_');
     // Tachado: ~
     mensagemFormatada = mensagemFormatada.replace(/<s>|<\/s>/g, '~');
 

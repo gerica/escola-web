@@ -22,7 +22,7 @@ import { catchError, EMPTY, Subject, switchMap, takeUntil } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/core/components';
 import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { AuthService, LoadingSpinnerService, NotificationService } from 'src/app/core/services';
-import { InnercardComponent } from 'src/app/shared/components';
+import { CardComponent, InnercardComponent } from 'src/app/shared/components';
 import { ActionsComponent } from 'src/app/shared/components/actions/actions.component';
 import { StatusTurma, StatusTurmaLabelMapping } from 'src/app/shared/models/status-turma.enum';
 import { Turma } from 'src/app/shared/models/turma';
@@ -53,7 +53,7 @@ import { UtilsService } from 'src/app/shared/services/utils.service';
     MatProgressSpinnerModule,
     MatTooltipModule,
     PrimeiraMaiusculaPipe,
-    InnercardComponent,
+    CardComponent,
     MatDividerModule,
     ActionsComponent,
   ],

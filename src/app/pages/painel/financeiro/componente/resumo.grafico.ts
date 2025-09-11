@@ -4,7 +4,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ChartOptions } from 'chart.js';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { NotificationService } from 'src/app/core/services';
-import { CardComponent } from 'src/app/shared/components';
+import { InnercardComponent } from 'src/app/shared/components';
 import { ContaReceberResumoPorMes } from 'src/app/shared/models/conta-receber';
 import { ContaReceberService } from 'src/app/shared/services/conta.receber.service';
 
@@ -12,7 +12,7 @@ import { ContaReceberService } from 'src/app/shared/services/conta.receber.servi
   selector: 'app-financeiro-resumo-grafico',
   templateUrl: './resumo.grafico.html',
   styleUrls: ['./comp.scss'],
-  imports: [CommonModule, BaseChartDirective, CardComponent, MatProgressSpinnerModule],
+  imports: [CommonModule, BaseChartDirective, MatProgressSpinnerModule, InnercardComponent],
   providers: [provideCharts(withDefaultRegisterables())],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

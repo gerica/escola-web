@@ -1,4 +1,4 @@
-<app-card titulo="Lista de usuarios" >
+<app-card titulo="Lista de usuarios">
   <!-- [estiloCardTitulo]="{'padding': '1em',}" -->
 
   <section class="containerControles">
@@ -15,72 +15,72 @@
     </app-buttons-actions>
   </section>
 
-  <app-innercard>
-    @if(!usuarios().empty){
-    <section class="lista">
-      <table mat-table [dataSource]="usuarios().content" matSort (matSortChange)="sortData($event)"
-        class="mat-elevation-z8">
+  @if(!usuarios().empty){
+  <section class="lista">
+    <table mat-table [dataSource]="usuarios().content" matSort (matSortChange)="sortData($event)"
+      class="mat-elevation-z8">
 
-        <!-- Position Column -->
-        <ng-container matColumnDef="username">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="username"> Usuário </th>
-          <td mat-cell *matCellDef="let element"> {{element.username}} </td>
-        </ng-container>
+      <!-- Position Column -->
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="username"> Usuário </th>
+        <td mat-cell *matCellDef="let element"> {{element.username}} </td>
+      </ng-container>
 
-        <!-- Position Column -->
-        <ng-container matColumnDef="firstname">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="firstname"> Nome </th>
-          <td mat-cell *matCellDef="let element"> {{element.firstname}} </td>
-        </ng-container>
+      <!-- Position Column -->
+      <ng-container matColumnDef="firstname">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="firstname"> Nome </th>
+        <td mat-cell *matCellDef="let element"> {{element.firstname}} </td>
+      </ng-container>
 
-        <!-- Symbol Column -->
-        <ng-container matColumnDef="empresa">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="empresa">Empresa </th>
-          <td mat-cell *matCellDef="let element"> {{element.empresa?.nomeFantasia}} </td>
-        </ng-container>
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="empresa">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="empresa">Empresa </th>
+        <td mat-cell *matCellDef="let element"> {{element.empresa?.nomeFantasia}} </td>
+      </ng-container>
 
-        <!-- Symbol Column -->
-        <ng-container matColumnDef="roles">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="roles">Perfil(is) </th>
-          <td mat-cell *matCellDef="let element"> {{element.roles | primeiraMaiuscula}} </td>
-        </ng-container>
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="roles">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="roles">Perfil(is) </th>
+        <td mat-cell *matCellDef="let element"> {{element.roles | primeiraMaiuscula}} </td>
+      </ng-container>
 
-        <!-- Symbol Column -->
-        <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="email">E-mail </th>
-          <td mat-cell *matCellDef="let element"> {{element.email}} </td>
-        </ng-container>
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="email">E-mail </th>
+        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+      </ng-container>
 
-        <ng-container matColumnDef="acoes">
-          <th mat-header-cell *matHeaderCellDef> </th>
-          <td mat-cell *matCellDef="let element" class="cursorSelect">
-            <a matTooltip="Exibir dados" aria-hidden="false" (click)="visualizar(element)" matTooltip="Visualizar">
-              <mat-icon color="primary">topic</mat-icon>
-            </a>
-            <a matTooltip="Editar dados" aria-hidden="false" [routerLink]="['/usuario/manter', element.id]">
-              <mat-icon color="primary">edit</mat-icon>
-            </a>
-            <a matTooltip="Impersonar" aria-hidden="false" (click)="impersonate(element)">
-              <mat-icon color="primary">group</mat-icon>
-            </a>
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let element" class="cursorSelect">
+          <a matTooltip="Exibir dados" aria-hidden="false" (click)="visualizar(element)" matTooltip="Visualizar">
+            <mat-icon color="primary">topic</mat-icon>
+          </a>
+          <a matTooltip="Editar dados" aria-hidden="false" [routerLink]="['/usuario/manter', element.id]">
+            <mat-icon color="primary">edit</mat-icon>
+          </a>
+          @if(isUsuarioSuperAdmin()){
+          <a matTooltip="Impersonar" aria-hidden="false" (click)="impersonate(element)">
+            <mat-icon color="primary">group</mat-icon>
+          </a>
+          }
 
-          </td>
+        </td>
 
-        </ng-container>
+      </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        <!-- [ngClass]="getLineClass(row.statusCliente)" -->
-      </table>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <!-- [ngClass]="getLineClass(row.statusCliente)" -->
+    </table>
 
 
-      <mat-paginator class="mat-elevation-z5" [length]="usuarios().totalElements" [pageIndex]="usuarios().number"
-        [pageSize]="pageSize" (page)="page.set({ page: $event.pageIndex, size: $event.pageSize }); buscarUsuarios()"
-        [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons />
-    </section>
-    } @else {
-    <span>Nenhum registro cadastrado</span>
-    }
-  </app-innercard>
+    <mat-paginator class="mat-elevation-z5" [length]="usuarios().totalElements" [pageIndex]="usuarios().number"
+      [pageSize]="pageSize" (page)="page.set({ page: $event.pageIndex, size: $event.pageSize }); buscarUsuarios()"
+      [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons />
+  </section>
+  } @else {
+  <span>Nenhum registro cadastrado</span>
+  }
 
 </app-card>

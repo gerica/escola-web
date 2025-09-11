@@ -16,7 +16,7 @@ import { catchError, EMPTY, switchMap } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/core/components';
 import { emptyPage, firstPageAndSort, PageRequest } from 'src/app/core/models';
 import { LoadingSpinnerService, NotificationService } from 'src/app/core/services';
-import { InnercardComponent } from 'src/app/shared/components';
+import { CardComponent, InnercardComponent } from 'src/app/shared/components';
 import { Curso, DuracaoUnidadeLabelMapping } from 'src/app/shared/models/curso';
 import { PrimeiraMaiusculaPipe } from 'src/app/shared/pipe/primeira-maiuscula.pipe';
 import { CursoService } from 'src/app/shared/services/curso.service';
@@ -39,6 +39,7 @@ import { CursoService } from 'src/app/shared/services/curso.service';
     MatPaginatorModule,
     PrimeiraMaiusculaPipe,
     MatSortModule,
+    CardComponent,
     InnercardComponent,
     MatSelectModule,
   ],
