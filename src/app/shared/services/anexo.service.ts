@@ -34,7 +34,8 @@ export class AnexoService {
                     conteudoBase64,
                 }
             },
-            context: { uri: URL_ADMIN }
+            context: { uri: URL_ADMIN },
+            fetchPolicy: 'network-only' // Para sempre buscar a lista mais recente
         }).pipe(
             map(result => result.data!.uploadAnexo),
             // tap(value => {

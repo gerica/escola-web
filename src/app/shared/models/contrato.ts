@@ -17,7 +17,7 @@ export default interface Contrato {
   statusContrato: StatusContrato,
   descricao: string,
   termosCondicoes: string,
-  dataAssinatura: Date,
+  dataAssinatura: Date | null,
   periodoPagamento: PeriodoPagamento,
   dataProximoPagamento: Date,
   observacoes: string,

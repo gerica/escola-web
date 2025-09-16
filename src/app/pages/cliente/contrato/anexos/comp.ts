@@ -155,6 +155,9 @@ export class AnexosContratoComp implements OnInit {
           this.anexos.update(values => {
             return values.filter(anexo => anexo.id !== anexoId);
           });
+          if (this.anexos().length === 0) {
+            this._salvarContrato(null);
+          }
         },
         error: (err) => {
           this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
@@ -178,7 +181,7 @@ export class AnexosContratoComp implements OnInit {
       });
   }
 
-  
+
   dialogAssinarContrato() {
     const dialogRef$ = this.dialog.open(AssinarContratoDialogComponent, {
       width: '550px',
@@ -188,34 +191,52 @@ export class AnexosContratoComp implements OnInit {
     dialogRef$.afterClosed().subscribe(result => {
       if (result) {
         // this.salvar(result);
-        this.spinner.showUntilCompleted(this.contratoService.salvar(this.contrato!.id,
-          {
-            ...this.contrato,
-            dataAssinatura: result.dataAssinatura
-          }
-        ))
-          .subscribe({
-            next: _ => {
-
-              this.notification.showSuccess(MSG_SUCESS);
-              if (this.inModal) {
-                const dadosSalvos: ContratoSalvoModal = {
-                  mensagem: MSG_SUCESS,
-                  sucesso: true
-
-                };
-                this.contratoSalvo.emit(dadosSalvos);
-              } else {
-                this.router.navigate(['/cliente/contrato']);
-              }
-            },
-            error: (err) => {
-              this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
-              console.error('Erro ao recuperar dados:', err);
-            }
-          })
+        this._salvarContrato(result.dataAssinatura);
       }
     });
+  }
+
+  private _salvarContrato(dataAssinatura: Date | null) {
+    this.spinner.showUntilCompleted(this.contratoService.salvar(this.contrato!.id,
+      {
+        ...this.contrato,
+        dataAssinatura: dataAssinatura
+      }
+    ))
+      .subscribe({
+        next: result => {
+          this.notification.showSuccess(MSG_SUCESS);
+          if (this.inModal) {
+            const dadosSalvos: ContratoSalvoModal = {
+              mensagem: MSG_SUCESS,
+              sucesso: true
+
+            };
+            this.contratoSalvo.emit(dadosSalvos);
+          } else {
+            this._recuperarContrato()
+            // this.router.navigate(['/cliente/contrato']);
+          }
+        },
+        error: (err) => {
+          this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+          console.error('Erro ao recuperar dados:', err);
+        }
+      })
+  }
+
+  private _recuperarContrato() {
+    if (this.contrato) {
+      this.spinner.showUntilCompleted(this.contratoService.recuperarPorId(this.contrato.id)).subscribe({
+        next: result => {
+          this.contrato = result
+        },
+        error: (err) => {
+          this.notification.showError('Erro: ' + (err.message || 'Erro desconhecido.'));
+          console.error('Erro ao recuperar dados:', err);
+        }
+      });
+    }
   }
 
 }

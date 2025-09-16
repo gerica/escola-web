@@ -36,7 +36,7 @@ export const modulosPorPerfil = {
     moduloConta,
     moduloContaReceber,
     moduloContaPagar,
-    moduloRelatorio,
+    // moduloRelatorio,
     moduloPainel,
     moduloPainelResumoFinanceiro
   ],

@@ -3,7 +3,7 @@
     <div class="header-container">
       <h2>Anexar arquivos</h2>
       <div class="containerButtons">
-        @if(anexos().length > 0){
+        @if(anexos().length > 0 && !contrato?.dataAssinatura){
         <button mat-raised-button color="primary" type="button" (click)="dialogAssinarContrato()">
           <span>Assinar Contrato</span>
           <mat-icon>edit_square</mat-icon>
