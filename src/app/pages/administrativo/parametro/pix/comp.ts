@@ -24,10 +24,10 @@ import { InnercardComponent } from "../../../../shared/components/innercard/inne
     // RouterModule,
     InnercardComponent,
     ReactiveFormsModule,
-    MatButtonModule,    
+    MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
-    MatInputModule,       
+    MatInputModule,
   ]
 
 })
@@ -49,7 +49,9 @@ export class PixComp implements OnInit {
 
   private _createForm() {
     this.form = new UntypedFormGroup({
-      valor: new UntypedFormControl('', [Validators.required]),
+      chavePix: new UntypedFormControl('', [Validators.required]),
+      nomeRecebedor: new UntypedFormControl('', [Validators.required]),
+      cidadeRecebedor: new UntypedFormControl('', [Validators.required]),
     });
   }
 
@@ -66,8 +68,9 @@ export class PixComp implements OnInit {
     });
   }
 
-  private _initFormsModelo(value: Parametro) {
-    this.form.patchValue({ ...value });
+  private _initFormsModelo(parametro: Parametro) {
+    const { valor } = parametro;
+    this.form.patchValue({ ...JSON.parse(valor) });
   }
 
   onSubmit() {
@@ -77,8 +80,13 @@ export class PixComp implements OnInit {
       this.form.markAsDirty();
       return;
     }
+
+    const payload = {
+      valor: this.form.value as Partial<Parametro>
+    }
+    
     this.spinner.showUntilCompleted(
-      this.admService.salvarParametro(CHAVE_PIX, this.form.value as Partial<Parametro>)).subscribe({
+      this.admService.salvarParametro(CHAVE_PIX, payload as Partial<Parametro>)).subscribe({
         next: _ => {
           this.notification.showSuccess('Operação realizada com sucesso.');
         },

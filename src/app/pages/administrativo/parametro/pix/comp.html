@@ -3,15 +3,38 @@
     <section>
       <mat-form-field appearance="outline">
         <mat-label>Chave Pix</mat-label>
-        <input matInput placeholder="Chave Pix" formControlName="valor">
+        <input matInput placeholder="Chave Pix" formControlName="chavePix">
         <!-- Validação de campo obrigatório -->
-        @if(form.controls['valor'].hasError('required') && (form.controls['valor'].touched ||
-        form.controls['valor'].dirty)){
+        @if(form.controls['chavePix'].hasError('required') && (form.controls['chavePix'].touched ||
+        form.controls['chavePix'].dirty)){
         <mat-error>
           A chave pix é <strong>obrigatório</strong>
         </mat-error>
         }
       </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Nome do Recebedor</mat-label>
+        <input matInput placeholder="Chave Pix" formControlName="nomeRecebedor">
+        <!-- Validação de campo obrigatório -->
+        @if(form.controls['nomeRecebedor'].hasError('required') && (form.controls['nomeRecebedor'].touched ||
+        form.controls['nomeRecebedor'].dirty)){
+        <mat-error>
+          O nome do Recebedor pix é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Cidade do Recebedor</mat-label>
+        <input matInput placeholder="Chave Pix" formControlName="cidadeRecebedor">
+        <!-- Validação de campo obrigatório -->
+        @if(form.controls['cidadeRecebedor'].hasError('required') && (form.controls['cidadeRecebedor'].touched ||
+        form.controls['cidadeRecebedor'].dirty)){
+        <mat-error>
+          A Cidade do Recebedor pix é <strong>obrigatório</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+      
     </section>
 
     <section class="container">

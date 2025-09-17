@@ -45,7 +45,7 @@ export class AdministrativoService {
             variables: {
                 request: {
                     chave: chave,
-                    valor: entity.valor
+                    valor: JSON.stringify(entity.valor)
                 },
             },
             context: { uri: URL_ADMIN },
